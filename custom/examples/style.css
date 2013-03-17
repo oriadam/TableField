@@ -1,0 +1,19 @@
+fieldset
+{
+	direction:rtl;
+	white-space:normal;    
+	width:600px;
+}
+
+#idListTable td
+{
+	vertical-align:top;
+}
+
+.csTFKSCB_On  { color:#000; font-weight:bold;   }
+.csTFKSCB_Off { color:#ccc;  font-weight:normal; }
+
+/* Hide the [Main Menu] and [Log] tabs from the tool bar */
+#idCtrlMain        { display:none; }
+#idCtrlLog         { display:none; }
+

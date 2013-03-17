@@ -1,0 +1,1076 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TableField\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-03-17 04:43+0200\n"
+"PO-Revision-Date: 2013-03-17 04:43+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts\n"
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:44
+msgid "GO"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:45
+msgid "DO"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:53
+msgid "-- Select mode --"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:54
+msgid "Field class and parameters"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:55
+msgid "Display order of fields +indexed? +searchable?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:56
+msgid "Default sort in table"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:57
+msgid "Limits +null? +empty?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:58
+msgid "Permissions (can be used to hide fields)"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:59
+msgid "Fields names"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:60
+msgid "Comments and actions"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:61
+msgid "Database changes - edit table and fields"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:65
+msgid "Select Table"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:103
+msgid "order"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:103
+msgid "index"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:103
+msgid "search"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:156
+msgid "Ascending"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:159
+msgid "Descending"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:164
+msgid "Order by"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:164
+msgid "Direction"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:178
+msgid "asc"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:251
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:421
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:425
+msgid "view"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:251
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:422
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:426
+msgid "edit"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:251
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:423
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:427
+msgid "new"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:251
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:424
+msgid "del"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:279
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:385
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:435
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:490
+msgid "Table"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:378
+msgid "label"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:425
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:426
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:427
+msgid "action"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:483
+msgid "Minimum"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:483
+msgid "Maximum"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:483
+msgid "Empty"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:483
+msgid "NULL"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:655
+msgid "rename"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:655
+msgid "Delete"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:19
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:229
+msgid "No DB connection! Try again later, go to <A href=\"tfinstall.php\">tfinstall.php</A> or report to administrator"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:33
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:243
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:46
+msgid "Sorry, you are not super user"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:53
+msgid "Adding Table"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:136
+msgid "Could not detect type of"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:153
+msgid "Adding field of class"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:160
+msgid "Skipping previously added Table "
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:163
+msgid "This Table was not found in your database"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:182
+msgid "Tables Wizard"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:183
+msgid "Quickly add existing tables to the TableField system."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:184
+msgid "Following Field types will be detected:"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:184
+msgid "primary-key, string, text, number, date/time/timestamp, enum, set <small>(=list of enums)</small>."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:185
+msgid "When done here go to <a href=tftedit.php>TF Tables manager</a> for fine tuning of the Fields classes and parameters."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:186
+msgid "For example, you may want to change a text field to html, a number to xkey, a string to email, add calculated values etc..."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:193
+msgid "Tables currently not in TableField system"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:209
+msgid "Tables already in TableField system"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:220
+msgid "Not found in your database"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:63
+msgid "TableField version"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:64
+msgid "Database"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:65
+msgid "Database name"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:66
+msgid "Backup database every X days. 0 to disable."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:67
+msgid "Use the <a href=tfwizard.php>New-Tables Wizard</a> to import existing tables into TableField system"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:71
+msgid "To change database connection: Remove <code>custom/dbconfig.php</code> and <code>custom/install_done</code>, then go to <a href=tfinstall.php>tfinstall.php</a>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:72
+msgid "Project, HTML and display options"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:73
+msgid "Project name (html &lt;title> tag and home link)"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:75
+msgid "Use pretty select boxes"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:76
+msgid "Links to the top bar. One link per line.<br>Format: <code>name|link|parameters (e.g target=_blank)</code>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:77
+msgid "Will be put inside the <head> tag"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:78
+msgid "Will be put first in the <body>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:79
+msgid "Will be put last in the <body>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:80
+msgid "Set the locale translation language of Table Field. Gettext-compatible language code. To add languages see gettext documentation."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:81
+msgid "Use a right-to-left UI?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:82
+msgid "URL and path locations"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:83
+msgid "Relative location of website root, relative to TF admin url. Set to <code class=inline>../</code> when TableField is installed at <u>example.com/tf</u> or <u>example.com/admin</u>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:84
+msgid "Relative location of file paths of the actual website, relative to the TF admin location. Set to <code class=inline>../</code> when TableField is installed under something like <u>/var/www/example.com/tf</u>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:85
+msgid "Authorization"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:86
+msgid "Allow anonymous access? Anonymous users group is <code>anonymous</code>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:87
+msgid "Keep user always logged in as long as the browser is still open"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:88
+msgid "User session expires after X minutes"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:89
+msgid "Advanced and Developer options"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:90
+msgid "When updating an item report the fields that were changed."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:91
+msgid "Show debug notifications? Defines PHP const DEBUG"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:92
+msgid "Show PHP errors and warnings? which ones? see <A href=\"http://php.net/errorfunc.constants\" target=_blank>error_reporting() documentation</A>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:93
+msgid "Print ALL sql queries into document (printed as remarks, visible with view-source)"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:94
+msgid "Character set for HTML. Should be <code>UTF-8</code>"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:95
+msgid "Custom configuration keys. Values saved in PHP in $tf['<i>fieldname</i>'].<br>One line per field. Format: <code>fieldname|type|Description of the field</code><br>Available field types: <code>string,numeric,boolean,text,html,language,theme,readonly,"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:108
+msgid "Error parsing custom field - Please note the correct format. Line number:"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:113
+msgid "Error parsing custom field - Field name can only consist of abc and _. Line number:"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:116
+msgid "Error parsing custom field - field key already exists. Line number:"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:158
+msgid "Next backup time updated to"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:158
+msgid "Last backup created at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:186
+msgid "Unknown Post key"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:191
+msgid "No changes made."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:199
+msgid "Backing up to "
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:204
+msgid "Save settings FAILED to"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:206
+msgid "Settings saved to"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:222
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:178
+msgid "<t>/custom</t> folder is accessible to the world! This is a major security issue. Please restrict access to"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:256
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfconfigure.php:323
+msgid "Backup previous settings file"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:19
+msgid "Change Password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:24
+msgid "Password validation doesn't match"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:28
+msgid "Password is too easy to guess"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:31
+msgid "Wrong current password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:35
+msgid "Password change failed"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:38
+msgid "Something went wrong with changing the password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:40
+msgid "Password changed successfully"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:51
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1013
+msgid "Current password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:52
+msgid "New Password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:53
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1010
+msgid "...and again"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/chpass.php:54
+msgid "Change password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:56
+msgid "Action aborted - Bad file name"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:64
+msgid "Download failed - File not found"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:65
+msgid "Download failed - headers already sent. Please notify admin"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:77
+msgid "Delete - File not found"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:78
+msgid "File deleted"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:79
+msgid "Unable to delete file"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:83
+msgid "Zip failed - File not found"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:89
+msgid "Zipped file created at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:91
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:161
+msgid "Unable to zip file"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:149
+msgid "Database backup created at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:157
+msgid "Zip file created at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:165
+msgid "Failed mysql dump to"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:185
+msgid "Download created files"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:192
+msgid "Delete this file"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:194
+msgid "Zip it"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:199
+msgid "Actions"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:200
+msgid "Backup Database"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:201
+msgid "Backup Database (zip only)"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfout.php:204
+msgid "Delete this file?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:188
+msgid "Processing Request..."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:212
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:435
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:443
+msgid "Invalid Post Data!"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:212
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:328
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:388
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:417
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:435
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:443
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:466
+msgid "Please copy the following data and paste to site admin"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:225
+msgid "You are not allowed to change"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:232
+msgid "Update item failed - item not found"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:239
+msgid "Field not found in existing table. Please notify admin"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:249
+msgid "Skipping unchanged value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:252
+msgid "User not allowed to edit"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:255
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:284
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:349
+msgid "Invalid value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:260
+msgid "Skipping unchanged set value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:269
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:293
+msgid "Skipping Array value received in POST for"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:281
+msgid "User is not allowed to edit"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:303
+msgid "Update item cancelled - nothing to update"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:318
+msgid "Item Partially Updated"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:320
+msgid "Item Updated"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:328
+msgid "Update item failed"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:340
+msgid "You are not allowed to add to"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:358
+msgid "You cannot set this const value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:360
+msgid "Invalid const value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:377
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:417
+msgid "Add item failed"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:386
+msgid "New blank item added"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:388
+msgid "Add blank item failed."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:407
+msgid "New item added with problems"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:409
+msgid "New item added"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:439
+msgid "You are not allowed to delete from"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:450
+msgid "Nothing to remove, item not found"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:462
+msgid "Item removed"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:464
+msgid "Nothing to delete"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:466
+msgid "Error delete item"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:476
+msgid "Finished processing request."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:557
+msgid "Bad search key"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:600
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1195
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1229
+msgid "Add?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:601
+msgid "Update?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:628
+msgid "View"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:630
+msgid "Edit"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:632
+msgid "Add"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:658
+msgid "Save changes"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:663
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:700
+msgid "Search"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:670
+msgid "Log"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:680
+msgid "Main Menu"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:685
+msgid "Layout"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:686
+msgid "Boxes Layout"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:687
+msgid "List Layout"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:688
+msgid "Spreadsheet Layout"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:690
+msgid "Full Mode"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:692
+msgid "Mini Mode"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:709
+msgid "not"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:716
+msgid "has"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:717
+msgid "begins"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:718
+msgid "ends"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:719
+msgid "is"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:720
+msgid "≡"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:721
+msgid ">"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:722
+msgid "<"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:723
+msgid "≥"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:724
+msgid "≤"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:725
+msgid "regexp"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:726
+msgid "is empty"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:727
+msgid "is true"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:728
+msgid "is null"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:732
+msgid "and"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:732
+msgid "or"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:737
+msgid "Quickly go to id"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:741
+msgid "Clear Search"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:742
+msgid "Search!"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:823
+msgid "Bad search method at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:916
+msgid "Edit this record?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:917
+msgid "Edit item id"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:921
+msgid "Update this record"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:923
+msgid "Delete this record"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:968
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1156
+msgid "Save"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1011
+msgid "Wrong value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1016
+msgid "Primary key value is missing or null at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1122
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1132
+msgid "Add it?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1140
+msgid "Add new items"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1142
+msgid "Add this record"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1186
+msgid "Add new"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1205
+msgid "Array as value at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1286
+msgid "Total"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1286
+msgid "records"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1291
+msgid "Show"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1299
+msgid "per page"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1308
+msgid "Titles every"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1329
+msgid "Discard Changes?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:170
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:445
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:464
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2522
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3002
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3102
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3156
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3224
+msgid "Bad class at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:105
+msgid "Settings"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:109
+msgid "TF Configuration"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:112
+msgid "Tables&amp;Fields screen"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:113
+msgid "TF Tables Manager"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:116
+msgid "TF Users screen"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:119
+msgid "Backups"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:146
+msgid "Hello,"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:147
+msgid "Username:"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:148
+msgid "Group:"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:150
+msgid "Change your password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/header.php:152
+msgid "Log off"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/auth.php:294
+msgid "User name or Email"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/auth.php:295
+msgid "Password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/auth.php:296
+msgid "Login"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/oria.inc.php:1151
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/oria.inc.php:1177
+msgid "Continue"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/oria.inc.php:1171
+msgid "Go Back"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:441
+msgid "Value is missing at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:959
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1007
+msgid "Enter new password"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:962
+msgid "again"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:965
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1016
+msgid "password mismatched"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1040
+msgid "Open full screen"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1042
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1060
+msgid "Change direction (RTL/LTR)"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1058
+msgid "preview"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1059
+msgid "edit HTML"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1720
+msgid "delete"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2291
+msgid "First"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2292
+msgid "Zero"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2293
+msgid "Last"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2294
+msgid "Reset"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2329
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2331
+msgid " Stars"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2416
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2436
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2438
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2454
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2505
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2508
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2560
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2664
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2778
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2785
+msgid "value missing at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2419
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2442
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2457
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2483
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2512
+msgid "expression not balanced at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2493
+msgid "not a number at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2544
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2601
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2615
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2633
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2845
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2874
+msgid "Error reading data at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2593
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2898
+msgid "value is wrong at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2842
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2871
+msgid "XKey not found at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3239
+msgid "Delete this row"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3240
+msgid "Delete this row?"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3251
+msgid "Done. Save changes to edit the new parameter."
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3251
+msgid "Add param"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3356
+msgid "Only SELECT queries allowed at"
+msgstr ""
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3372
+msgid "Error with calculated query at"
+msgstr ""
+

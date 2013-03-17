@@ -1,0 +1,28 @@
+body,fieldset,table,#idPaging,#idCtrlBar
+{
+    direction:rtl;
+}
+
+/* font awesome switch prev/back */
+
+.icon-backward::before {
+content: "\f04e";
+}
+.icon-forward::before {
+content: "\f04a";
+}
+
+/* idLog is always LTR
+#idLog span        { padding-left:0; padding-right:24px; background-position:right top; }
+#idLog span.logDetail { padding-left:0; padding-right:36px; }
+#idLog .logTitle { color:#222; font-weight:bold; padding-left:0; padding-right:10px; }
+#idLog span:before { padding-right:0px; padding-left:6px; }
+#idLog span.logDetail:first-letter,
+#idLog .logTitle:first-letter { padding:0px; }
+*/
+
+.form-horizontal .controls { margin-left:10px; margin-right:180px; }
+.form-horizontal .control-label { float:right; text-align:left; }
+.bs-docs-example-legend { left:auto; right:-1px; }
+
+[class*="span"] { float:right; }
