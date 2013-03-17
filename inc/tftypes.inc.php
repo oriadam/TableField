@@ -133,6 +133,24 @@ class TfType {
 		return '';
 	}
 
+	function search_methods() {
+		return array(
+			'has'=>'has',
+			'a' =>'begins with',
+			'z' =>'ends with',
+			'ci'=>'is',
+			'rx'=>'RegEx',
+			'eq'=>'≡',
+			'lt'=>'<',
+			'gt'=>'>',
+			'lte'=>'≤',
+			'gte'=>'≥',
+			'n'=>'is null',
+			'b'=>'is true',
+			'e'=>'is empty',
+			'in'=>'in');
+	}
+
 	// Return sql expression to compare to something
 	// $not - is negative search?
 	// methods: see https://code.google.com/p/tablefield/wiki/Search_and_Sort_Options
@@ -504,7 +522,7 @@ class TfTypeenums extends TfTypeenum {
 ////////////////////////////////////////
 // Primary Key type
 // not editable, not null, auto_incremented
-class TfTypepkey extends TfType {
+class TfTypepkey extends TfTypenumber {
 
 	function sqlType() {
 		return "BIGINT UNSIGNED NOT NULL AUTO_INCREMENT";
@@ -545,6 +563,19 @@ class TfTypestring extends TfType {
 				return "VARCHAR(" . $this->fetch['okmax'] . ")";
 		else
 			return "VARCHAR(255)";
+	}
+
+	function search_methods() {
+		return array(
+			'has'=>'has',
+			'a' =>'begins with',
+			'z' =>'ends with',
+			'ci'=>'is (ci)',
+			'rx'=>'RegEx',
+			'eq'=>'is (cs)',
+			'n'=>'is null',
+			'e'=>'is empty',
+			'in'=>'in');
 	}
 
 	function validate($value) {
@@ -836,6 +867,33 @@ class TfTypenumber extends TfType {
 	function htmlInput($override=array()) {
 		$override['type']='number';
 		return parent::htmlInput($override);
+	}
+
+	function search_methods() {
+		return array(
+			'eq'=>'≡',
+			'lt'=>'<',
+			'gt'=>'>',
+			'lte'=>'≤',
+			'gte'=>'≥',
+			'n'=>'never entered',
+			'in'=>'in');
+	}
+
+	function to_select_where($method,$query,$not=false) {
+		if ($method!='in') return parent::to_select_where($method,$query,$not);
+		// method == in
+		if (empty($this->tname))
+			$f=sqlf($this->fname);
+		else
+			$f=sqlf($this->tname).'.'.sqlf($this->fname);
+		if (strpos($query,' ')!==false) $query=str_replace(' ',',',$query);
+		$query=explode(',',$query);
+		foreach($query as $k=>$v)
+			if (!is_numeric($v) || $v==='') unset($query[$k]);
+		if (count($query)==0) return false;
+		$query=implode(',',$query);
+		return ($not?'NOT ':'')." $f IN ($query)";
 	}
 
 }
@@ -1512,6 +1570,7 @@ class TfTypefile extends TfType {
 		}
 	}
 
+
 }
 
 // class TfTypefile
@@ -1943,6 +2002,17 @@ class TfTypeboolean extends TfType {
 		$override['readonly']='readonly';
 		return $this->htmlInput($override);
 	}
+
+	function search_methods() {
+		if ($this->fetch['oknull'])
+			return array(
+				'n'=>'is null',
+				'b'=>'is true');
+		else
+			return array(
+				'b'=>'is true');
+	}
+
 
 }
 
