@@ -139,18 +139,6 @@ if (count($_POST)) {
 
 	// set new next backup time
 	$k = str_replace('.',DOTWORKAROUND, 'db.autobackup');
-	/*
-	if (array_key_exists('db.autobackup',$_POST)) addToLog('YESS');
-	else addToLog('NOOO');
-
-	addToLog((1*$_POST['db'.DOTWORKAROUND.'autobackup']));
-
-	if ($_POST['db.autobackup']!=$tf['db.autobackup']) addToLog('DIFF');
-	else addToLog('SAMMME');
-
-	if (file_exists(__DIR__.'/custom/nextbackup')) addToLog('EXXX');
-	else addToLog('NOT EXXX');
-*/
 	if (array_key_exists($k,$_POST) && (1*$_POST[$k]>0) && $_POST[$k]!=$tf['db.autobackup'] && file_exists(__DIR__.'/custom/nextbackup')) {
 		$lasttime=1*file_get_contents(__DIR__.'/custom/nextbackup')-(86400*$tf['db.autobackup']);
 		$nexttime=$lasttime+(86400*$_POST[$k]);

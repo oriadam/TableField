@@ -74,7 +74,7 @@ if (empty($_GET['t'])) {
 	$tf['sqlf_pkey']=sqlf($t->pkey);
 }
 
-// set xkey=xid xkey1=xid1 , xkey2=xid2 ...
+// set xkey=idname&xid=12 xkey1=idname&xid1=12, xkey2=idname&xid2=12...
 if ($t) {
 	foreach ($t->fields as $k => $f) $t->fields[$k]->fetch['const']=null;
 	for($i=1;$i<=count($_GET);$i++)
@@ -167,7 +167,7 @@ if (!$tf['quiet'])
 if ($t) {
 	if (DEBUG && count($_POST) && !$tf['quiet']) echo "<!-- ".var_export($_POST,1)." -->";
 	if (count($_POST)) processPost($t,$tf,$_POST,$_GET);
-	displayTable($t,$tf,$_GET);
+	if (!$tf['quiet']) displayTable($t,$tf,$_GET);
 } else {
 	if (!$tf['quiet']) {
 		displayMainMenu();
@@ -545,7 +545,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 	////////////////// get from GET: searches s1,s2,s3...
 	$searches=array();
-	$defaultsearch=array('f'=>'','q'=>'','not'=>false,'how'=>'in','chain'=>'','virgin'=>true);
+	$defaultsearch=array('f'=>'','q'=>'','not'=>false,'how'=>'has','chain'=>'','virgin'=>true);
 	// s1=f.q.-how.chain
 	for($i=1;$i<=count($GET);$i++) {
 		if (array_key_exists("s$i",$GET)) {
@@ -557,7 +557,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					addToLog(_("Bad search key"). ' <t>'.he($g[0]).'</t>',LOGBAD,__LINE__);
 				} else {
 					$s['f']=$g[0];
-					if (empty($g[2])) $g[2]='in'; // default
+					if (empty($g[2])) $g[2]='has'; // default
 					if (strpos($g[2],'-')===0) {
 						$s['not']=true;
 						$g[2]=substr($g[2],1); // remove -
@@ -566,7 +566,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 						$g[1]=str_replace('%2E','.',$g[1]);
 						unset($s['virgin']);
 						$s['q']=$g[1];
-						if ($g[2]=='in'||$g[2]=='a'||$g[2]=='z'||$g[2]=='ci'||$g[2]=='eq'||$g[2]=='lt'||$g[2]=='gt'||$g[2]=='lte'||$g[2]=='gte'||$g[2]=='rx'||$g[2]=='b'||$g[2]=='e'||$g[2]=='n') $s['how']=$g[2];
+						if ($g[2]=='has'||$g[2]=='a'||$g[2]=='z'||$g[2]=='ci'||$g[2]=='eq'||$g[2]=='lt'||$g[2]=='gt'||$g[2]=='lte'||$g[2]=='gte'||$g[2]=='rx'||$g[2]=='b'||$g[2]=='e'||$g[2]=='n') $s['how']=$g[2];
 						if (!empty($g[3]) && $g[3]=='or') $s['chain']='or';
 						else $s['chain']='and';
 						$searches[]=$s;
@@ -713,9 +713,10 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 								}
 								echo '</select>'
 								.'<select size=1 class="search-how" onkeydown="if (event.keyCode==13) searchSubmit()">'
-									.'<option '.($s['how']=='in' ?'selected':'').' value="in">' ._('has')
+									.'<option '.($s['how']=='has'?'selected':'').' value="has">'._('has')
 									.'<option '.($s['how']=='a'  ?'selected':'').' value="a" >' ._('begins')
 									.'<option '.($s['how']=='z'  ?'selected':'').' value="z" >' ._('ends')
+									.'<option '.($s['how']=='in' ?'selected':'').' value="in">' ._('in')
 									.'<option '.($s['how']=='ci' ?'selected':'').' value="ci">' ._('is')
 									.'<option '.($s['how']=='eq' ?'selected':'').' value="eq">' ._('≡')
 									.'<option '.($s['how']=='gt' ?'selected':'').' value="gt">' ._('>')

@@ -142,7 +142,8 @@ class TfType {
 			$where=($not?'NOT ':'').' '.sqlf($this->fname);
 		else
 			$where=($not?'NOT ':'').' '.sqlf($this->tname).'.'.sqlf($this->fname);
-			if ($method=='in')  $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
+
+			if ($method=='has') $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='a' )  $where.=" LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='z' )  $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
 		elseif ($method=='ci')  $where.=" LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
@@ -155,6 +156,7 @@ class TfType {
 		elseif ($method=='n')   $where.=' IS NULL';
 		elseif ($method=='b')   $where.=''; // boolean - leave as is
 		elseif ($method=='e')   $where.="='' "; // empty
+		elseif ($method=='in')  $where=($not?'NOT ':'')." CONCAT('%',".sqlf($this->fname).",'%') LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
 		else return false; // unknown method
 		return $where;
 	}
@@ -2722,7 +2724,7 @@ class TfTypexkey extends TfType {
 	}
 
 	function to_select_where($method,$query,$not=false) {
-		if (is_numeric($query) && $method!='in' && $method!='a' && $method!='z' && $method!='ci' && $method!='rx')
+		if (is_numeric($query) && $method!='has' && $method!='in' && $method!='a' && $method!='z' && $method!='ci' && $method!='rx')
 			return parent::to_select_where($method,$query,$not); // search by id
 		// otherwise search by display name
 		$fname=$this->fname;
@@ -3384,7 +3386,7 @@ class TfTypecalculated extends TfTypefictive {
 		if (empty($q)) return '';
 
 		$where=($not?'NOT ':'')."($q)";
-			if ($method=='in')  $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
+			if ($method=='has') $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='a' )  $where.=" LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='z' )  $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
 		elseif ($method=='ci')  $where.=" LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
@@ -3397,6 +3399,7 @@ class TfTypecalculated extends TfTypefictive {
 		elseif ($method=='n')   $where.=' IS NULL';
 		elseif ($method=='b')   $where.=''; // boolean - leave as is
 		elseif ($method=='e')   $where.="='' "; // empty
+		elseif ($method=='in')  $where=($not?'NOT ':'')." CONCAT('%',($q),'%') LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
 		else return false; // unknown method
 		return $where;
 	}

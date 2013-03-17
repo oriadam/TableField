@@ -40,7 +40,7 @@ if (!empty($tf['html.chosen'])) {
 if (!empty($tf['db.autobackup']) && !defined('OUTDIR')) {
 	define('NEXTBACKUP',__DIR__.'/../custom/nextbackup');
 	if (!file_exists(NEXTBACKUP) || (1*file_get_contents(NEXTBACKUP))<time()) {
-		$_GET=array('silent'=>true,'act'=>'dump','zip'=>'2');
+		$_GET=array('silent'=>'1','act'=>'dump','zip'=>'2');
 		$tf['tf.tfout-no-user-check']=true;
 		include(__DIR__.'/../tfout.php');
 		if (file_exists(__DIR__.'/../'.LASTBACKUP)) {

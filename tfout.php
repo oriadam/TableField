@@ -98,7 +98,7 @@ elseif ($act=='zip' && $fn) {
 if ($act=='dump') {
 //	if (!$fn) $fn=$tf['db.name'].'.'.date('Y-m-d-H-i-s').'.'.bin2hex(openssl_random_pseudo_bytes(6)).'.sql';
 	if (!$fn) $fn=$tf['db.name'].'.'.date('Y-m-d-H-i-s').'.sql';
-	if (empty($_GET['zip']) || $_GET['zip']=='0') {
+	if (empty($_GET['zip'])) {
 		define('LASTBACKUP',OUTDIR.$fn);
 	} else {
 		define('LASTBACKUP',OUTDIR."$fn.zip");
