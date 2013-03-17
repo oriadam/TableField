@@ -78,8 +78,11 @@ if (empty($_GET['t'])) {
 if ($t) {
 	foreach ($t->fields as $k => $f) $t->fields[$k]->fetch['const']=null;
 	for($i=1;$i<=count($_GET);$i++)
-		if (isset($_GET["xkey$i"]) && isset($_GET["xid$i"]) && isset($t->fields[$_GET["xkey$i"]]))
-			$t->fields[$_GET["xkey$i"]]->fetch['const'] = $_GET["xid$i"];
+		if (isset($_GET["xkey$i"]) && isset($_GET["xid$i"])) {
+			$_GET["xkey$i"]=str_replace('`','',$_GET["xkey$i"]);
+			if (isset($t->fields[$_GET["xkey$i"]]))
+				$t->fields[$_GET["xkey$i"]]->fetch['const'] = $_GET["xid$i"];
+		}
 }
 
 ///// d = Layout (Display mode)
@@ -939,28 +942,49 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 		// Sub Tables Sub-Tables Subtables
 		$htmlSubs = '';
+		$keycount = 0;
+		$subxkey='';
 		if (!empty($t->subtables)) {
 			foreach ($t->subtables as $subfetch) {
 				$subname = trim($subfetch['tname']);
 				if ($subname != '') {
-					$sub = new TfTable($subname);
+					$sub = new TfTable($subfetch);
 					if ($sub->userCan($tf['user'], 'view')) {
-						$subxkey = ''; // get xkey=xid
-						$keycount = '';
 						foreach ($sub->fields as $f) {
 							if (!empty($f->xtable) && $f->xtable == $t->tname) {
+								$keycount++;
 								$subxkey.="xkey{$keycount}=$f->fname&xid{$keycount}=\$curid";
-								$keycount = 1 + $keycount;
+
+								$subact = 'view';
+								if ($tf['act'] == 'edit' && $sub->userCan($tf['user'], $tf['act'])) // if user can't edit, show 'view' mode
+									$subact = $tf['act']{0};
+
+								// open new <tr> with iframe below current <tr>
+								$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub->fetch['label']).'" onclick="'
+									."tfopensub('?t=$subname&d=l&i=1&nn=0&n=1&sc=0&no=1&a=$subact&$subxkey',\$curid,this,$keycount)".'">'."\n"
+									.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
 							}
 						}
-						$subact = 'view';
-						if ($tf['act'] == 'edit' && $sub->userCan($tf['user'], $tf['act'])) // if user can't edit, show 'view' mode
-							$subact = $tf['act']{0};
-						// open new <tr> with iframe below current <tr>
-						$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub->fetch['label']).'" onclick="'
-							."tfopensub('?t=$subname&d=l&i=1&nn=0&n=1&sc=0&no=1&a=$subact&$subxkey',\$curid,this,$keycount)".'">'
-							.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
 					}
+				}
+			}
+		}
+		foreach ($t->fields as $f) {
+			if (!empty($f->xtable)) {
+				$sub = new TfTable($f->xtable);
+				if ($sub->userCan($tf['user'], 'view')) {
+					$keycount++;
+					$subxkey.="xkey{$keycount}=$f->xkey&xid{$keycount}=\$\$".$f->fname;
+
+					$subact = 'view';
+					if ($tf['act'] == 'edit' && $sub->userCan($tf['user'], $tf['act'])) // if user can't edit, show 'view' mode
+						$subact = $tf['act']{0};
+
+					// open new <tr> with iframe below current <tr>
+					$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub->fetch['label']).'" onclick="'
+						."tfopensub('?t=$f->xtable&d=l&i=1&nn=0&n=1&sc=0&no=1&a=$subact&$subxkey',\$curid,this,$keycount)".'">'."\n"
+						.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
+
 				}
 			}
 		}
@@ -1028,8 +1052,14 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$f->eid = $f->fname.'_'.$curid;
 			}
 
-			$htmlActionsCur = str_replace(array('$curid','$rowc','$pkey','$tname','$layout'),array(1*$curid,$rowc,$t->pkey,$t->tname,$tf['d']),$htmlActions);
-			$htmlSubsCur = str_replace(array('$curid','$rowc','$pkey'),array($curid,$rowc,$t->pkey),$htmlSubs);
+			$search=array('$curid','$rowc','$pkey','$tname','$layout');
+			$replace=array(1*$curid,$rowc,$t->pkey,$t->tname,$tf['d']);
+			foreach($t->fields as $f) {
+				$search[]='$$'.$f->fname;
+				$replace[]=$f->value;
+			}
+			$htmlActionsCur = str_replace($search,$replace,$htmlActions);
+			$htmlSubsCur = str_replace($search,$replace,$htmlSubs);
 			// repeat title in list mode
 			if ($titleevery && $tf['d']=='l' && (($rowc-1) % $titleevery == 0)) // list
 				echo $title;

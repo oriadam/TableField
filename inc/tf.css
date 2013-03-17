@@ -1,7 +1,7 @@
 /* this file is under images folder on purpose, so they will all be relative to current folder */
 
 /* bootstrap fixes */
-body { font-size:13px; line-height:15px; }
+body { font-size:13px; line-height:15px; overflow:auto; }
 iframe { border:none; max-width:none; }
 table { max-width: none; } /* max-width:100% causes overflow scroll to disapear on chrome */
 input[type="text"],
@@ -185,6 +185,7 @@ table,.table,table.table { border-color:#ddd; border-collapse: collapse; }
 .th.actions         { text-align:center; }
 .actions            { white-space:nowrap; }
 .subtableiframe     { overflow:visible; }
+.subdiv             { }
 
 .csNewTitleTr       { background:#4ae; }
 .csNewTitle         { text-align:center; font-weight:bold; letter-spacing: 3px; color:#fff; border-radius: 6px; }

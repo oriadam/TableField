@@ -242,8 +242,9 @@ function TftCreateTable($table, $just_return_sql = false) {
 // the format is a normal fetched information from the tf info table
 function TftGetSubtables($tname) {
 	global $tf;
-	$res = mysql_query("SELEcT * FROM " . sqlf($tf['tbl.info']) . " WHERE CONCAT('&',`params`,'&') LIKE " . sqlv("%&xtable=$tname&%") . " ORDER BY `order` DESC,`tname`,`fname`");
 	$subs = array();
+	//$res = mysql_query("SELEcT * FROM " . sqlf($tf['tbl.info']) . " WHERE (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=$tname&%").") OR (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=%")." AND `tname`=".sqlv($tname).") ORDER BY `order` DESC,`tname`,`fname`");
+	$res = mysql_query("SELEcT * FROM " . sqlf($tf['tbl.info']) . " WHERE (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=$tname&%").") ORDER BY `order` DESC,`tname`,`fname`");
 	while ($row = mysql_fetch_assoc($res)) {
 		$row['pkey'] = TftTablePkey($row['tname']);
 		$subs[] = $row;

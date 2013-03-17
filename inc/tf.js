@@ -515,30 +515,37 @@ function tfopenedit(href,curid,obj,layout,dialogTitle) {
 
 // open a sub-table row subtables sub tables
 function tfopensub(href,curid,obj,keycount) {
-	var iframeid='sub_'+curid+'_'+keycount;
-	var iframejq=$('#'+iframeid);
-	if (iframejq.length) { // already exists, show/hide it
-		iframejq.toggle();
-
-	} else { // create iframe
-
-		if (iframejq.length) { // object already created
-			iframejq.show();
-		} else {
-			// create iframe object
-			iframejq=$('<iframe>').attr('src',href).attr('id',iframeid).attr('scrolling','no').resizable().addClass('subtableiframe');
-			iframejq.on('load',function(){iframejq.height(iframejq.contents().find('body').height()+5).width(iframejq.contents().width()+15)});
-			var tr=$('<tr class=subtr>');
-			var td=$('<td colspan="100%">');
-			td.appendTo(tr);
-			iframejq.appendTo(td);
-			tr.insertAfter($(obj).parents('tr'));
-		}
+	var divid='sub_'+curid+'_'+keycount;
+	var divj=$('#'+divid);
+	if (divj.length) { // already exists, show/hide it
+		divj.toggle();
+		tfsubfixsize(divid);
+	} else {
+		// create iframe object and wrapper div object
+		iframej=$('<iframe>').attr({'src':href,'divid':divid,'scrolling':'no','width':'100%','height':'100%'}).addClass('subtableiframe')
+			.load(function() {
+				//alert($(this).attr('divid'));
+				tfsubfixsize($(this).attr('divid'));
+				$(this).contents().get(0).divid=$(this).attr('divid');
+			});
+		var divj=$('<div>').attr('id',divid).addClass('subdiv').append(iframej);
+		$('<tr class=subtr>').append($('<td colspan="100%">').append(divj)).insertAfter($(obj).parents('tr'));
 	}
-	if (iframejq.filter(':hidden').length) { // hidden
+	if (divj.filter(':hidden').length) { // hidden
 		$(obj).removeClass('icon-folder-open-alt').addClass('icon-folder-open');
 	} else { // visible
 		$(obj).removeClass('icon-folder-open').addClass('icon-folder-open-alt');
+	}
+}
+function tfsubfixsize(divid) {
+	var divj=$('#'+divid);
+	var iframej=divj.find('iframe');
+	divj.height(iframej.contents().find('body').height()+5);
+	divj.width(iframej.contents().width()+5);
+	if (window.parent && window.parent!==window) {
+		if (window.document.divid) {
+			window.parent.tfsubfixsize(window.document.divid);
+		}
 	}
 }
 
