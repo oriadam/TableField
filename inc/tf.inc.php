@@ -34,17 +34,38 @@ define('LOGDEBUG',5);
 define('LOGTITLE',6);
 function addToLog($msg, $type=0,$line=0,$detail=false) {
 	global $tf;
-	$style='';
-	if ($type) {
-		if ($type==LOGGOOD ) $style.='logGood ' .(!$detail?'icon-ok-sign ':'');
-		if ($type==LOGBAD  ) $style.='logBad '  .(!$detail?'icon-warning-sign ':'');
-		if ($type==LOGSAME ) $style.='logSame ' .(!$detail?'icon-info-sign ':'');
-		if ($type==LOGDEBUG) $style.='logDebug '.(!$detail?'icon-wrench ':'');
-		if ($type==LOGTITLE) $style.='logTitle ';
-		if ($detail) $style.='logDetail ';
-	}
+	///// On screen $tf[log] /////
+	    if ($type==0) $style='logLine';
+	elseif ($type==LOGGOOD ) $style='logGood' .(!$detail?' icon-ok-sign':'');
+	elseif ($type==LOGBAD  ) $style='logBad'  .(!$detail?' icon-warning-sign':'');
+	elseif ($type==LOGSAME ) $style='logSame' .(!$detail?' icon-info-sign':'');
+	elseif ($type==LOGDEBUG) $style='logDebug'.(!$detail?' icon-wrench':'');
+	elseif ($type==LOGTITLE) $style='logTitle';
+	if ($detail) $style.=' logDetail';
 	if ($line) $line="title='line $line'";
 	$tf['log'].="<span class='$style' $line>$msg</span>";
+
+	///// DATABASE tf_log ////
+	if (!empty($tf['db.ok']) && !empty($tf['tbl.log'])) {
+			if ($type==0) $style='logLine';
+		elseif ($type==LOGGOOD ) $style='logGood';
+		elseif ($type==LOGBAD  ) $style='logBad';
+		elseif ($type==LOGSAME ) $style='logSame';
+		elseif ($type==LOGDEBUG) $style='logDebug';
+		elseif ($type==LOGTITLE) $style='logTitle';
+		if ($detail) $style.='+';
+
+		$who=null;
+		if (@tfCheckLogin()) $who=@tfGetUserId();
+
+		mysql_query('INSERT INTO '.sqlf($tf['tbl.log']).' SET'
+			.' `what`='.sqlv($style)
+			.' `who`='.sqlv($who)
+			.' `ip`='.sqlv($_SERVER['REMOTE_ADDR'])
+			.' `ex`='.sqlv($msg)
+			.' `line`='.sqlv($line)
+		);
+	}
 }
 
 // add statistics information to database

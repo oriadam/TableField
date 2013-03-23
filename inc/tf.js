@@ -117,8 +117,8 @@ function searchSubmit(clearSearch) {
 					if (e.find('.search-not').get(0).checked) not='-';
 					var chain='';
 					var c=e.find('.search-chain').get(0);
-					if (c.options[c.selectedIndex].value=='or') chain='.or';
-					search['s'+count]=encodeURIComponent(f.replace(/\./,'%2E') +'.'+q.replace(/\./,'%2E')+'.'+not+how+chain); // double encode dots
+					if (c.options[c.selectedIndex].value=='or') chain='or';
+					search['s'+count]=encodeURI(f.replace(/\./,'%2E') +'.'+not+how+'.'+q.replace(/\./,'%2E')+'.'+chain); // double encode dots
 					count++;
 				}
 			}

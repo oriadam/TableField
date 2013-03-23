@@ -115,6 +115,9 @@ function displayNavBar() {
 							if (TftUserCan($tf['user'],'edit',$tf['tbl.users'],'')) {
 								?><li><a href="./?t=<?=$tf['tbl.users']?>"><?=_('TF Users screen')?></a></li><?
 							}
+							if (TftUserCan($tf['user'],'view',$tf['tbl.log'],'')) {
+								?><li><a href="./?t=<?=$tf['tbl.log']?>"><?=_('TF Log')?></a></li><?
+							}
 							if (TftUserCan($tf['user'],'view','','')) {
 								?><li><a href="tfout.php"><?=_('Backups')?></a></li><?
 							}

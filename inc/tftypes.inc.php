@@ -67,7 +67,6 @@ class TfType {
 
 	// Set $this->error and return false
 	function valerror($error = null) {
-		global $tf;
 		if ($error !== null)
 			$this->error = $error; // $this->error = _($error);
 		return false;

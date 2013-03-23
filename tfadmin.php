@@ -255,7 +255,7 @@ function processPost(&$t,&$tf,&$POST) { // pass by reference because there's no 
 														$skipped[]=array(_('User not allowed to edit')." <t>$html_id</t> <f>$html_f</f>",LOGBAD,__LINE__,true);
 													} else {
 														if (!$f->validate($postval)) {  // value not valid - do not update
-															$skipped[]=array(_('Invalid value at')." <t>$html_id</t> <f>$fhtml_f</f> $f->error",LOGBAD,__LINE__,true);
+															$skipped[]=array(_('Invalid value at')." <t>$html_id</t> <f>$html_f</f> $f->error",LOGBAD,__LINE__,true);
 														} else {
 															// set the valid value
 															$f->set($postval);
@@ -445,7 +445,7 @@ function processPost(&$t,&$tf,&$POST) { // pass by reference because there's no 
 						if (empty($POST['___id'][$rowc])) {
 							addToLog(_("Invalid Post Data!").' '._('Please copy the following data and paste to site admin'),LOGBAD,__LINE__);
 							addToLog("<code>___del is empty at $rowc=".he(var_export($POST['___del'],1)).'</code>',LOGBAD,__LINE__,true);
-						} else {
+						} elseif ($act) {
 							$sqlv_id = sqlv($POST['___id'][$rowc]);
 							$html_id = he($t->fields[$t->pkey]->fetch['label'].'='.$POST['___id'][$rowc]);
 							$res = sqlRun("SELECT * FROM $tf[sqlf_tname] WHERE $tf[sqlf_pkey]=$sqlv_id");
@@ -470,7 +470,7 @@ function processPost(&$t,&$tf,&$POST) { // pass by reference because there's no 
 									addToLog('<sqlerr>'.sqlError().'</sqlerr> <sql>'.sqlLastQuery().'</sql>',LOGBAD,__LINE__,true);
 								}
 							}//___id not found in post
-						}//missing id from post
+						}//missing id from post + if $act
 					}//foreach del
 				}//$t->userCan delete from this table
 			}// ___del is array
@@ -549,29 +549,35 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	////////////////// get from GET: searches s1,s2,s3...
 	$searches=array();
 	$defaultsearch=array('f'=>'','q'=>'','not'=>false,'how'=>'has','chain'=>'','virgin'=>true);
-	// s1=f.q.-how.chain
+	// s1=f.-how.q.chain
 	for($i=1;$i<=count($GET);$i++) {
 		if (array_key_exists("s$i",$GET)) {
 			$g=explode('.',$GET["s$i"]);
 			$s=$defaultsearch;
-			if (@$g[0]!='') {
+			if (count($g)!==4) {
+				addToLog(_('Bad search'),LOGBAD,__LINE__);
+			} elseif ($g[0]=='') {
+				addToLog(_('Bad search'),LOGBAD,__LINE__);
+			} else {
 				$g[0]=str_replace('%2E','.',$g[0]);
 				if (!array_key_exists($g[0], $t->fields)) {
-					addToLog(_("Bad search key"). ' <t>'.he($g[0]).'</t>',LOGBAD,__LINE__);
+					addToLog(_("Bad search"). ' <t>key='.he($g[0]).'</t>',LOGBAD,__LINE__);
 				} else {
 					$s['f']=$g[0];
-					if (empty($g[2])) $g[2]='has'; // default
-					if (strpos($g[2],'-')===0) {
+					$g[1]=str_replace('%2E','.',$g[1]);
+					if (strpos($g[1],'-')===0) {
 						$s['not']=true;
-						$g[2]=substr($g[2],1); // remove -
+						$g[1]=substr($g[1],1); // remove -
 					}
-					if (@$g[1]!=''||$g[2]=='b'||$g[2]=='n'||$g[2]=='e') {
-						$g[1]=str_replace('%2E','.',$g[1]);
-						unset($s['virgin']);
-						$s['q']=$g[1];
-						if ($g[2]=='has'||$g[2]=='a'||$g[2]=='z'||$g[2]=='ci'||$g[2]=='eq'||$g[2]=='lt'||$g[2]=='gt'||$g[2]=='lte'||$g[2]=='gte'||$g[2]=='rx'||$g[2]=='b'||$g[2]=='e'||$g[2]=='n') $s['how']=$g[2];
+					if (!array_key_exists($g[1],$t->fields[$g[0]]->search_methods())) {
+						addToLog(_("Bad search"). ' <t>how='.he($g[1]).'</t>',LOGBAD,__LINE__);
+					} else {
+						$s['how']=$g[1];
+						$g[2]=str_replace('%2E','.',$g[2]);
+						$s['q']=$g[2];
 						if (!empty($g[3]) && $g[3]=='or') $s['chain']='or';
 						else $s['chain']='and';
+						unset($s['virgin']);
 						$searches[]=$s;
 					}
 				}
@@ -1214,7 +1220,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			// start form
 			if ($tf['d']=='b') { // bpx
 				echo "<table id='cont_$rowc' class='tableBox tfRow new'>";
-				echo "<tr class='tr csNewTitleTr' id='cont_$rowc'><td class=csNewTitle colspan=$countcols>".($t->fetch['labelnew']?$t->fetch['labelnew']:$_('Add new')).'</td></tr>';
+				echo "<tr class='tr csNewTitleTr' id='cont_$rowc'><td class=csNewTitle colspan=$countcols>".($t->fetch['labelnew']?$t->fetch['labelnew']:_('Add new')).'</td></tr>';
 			}
 			if ($titleevery && $tf['d']=='l' && ($newscount+$rowc) % $titleevery == 0) // list
 				echo $title . "<tr>";
