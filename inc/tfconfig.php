@@ -30,6 +30,7 @@ $tf['db.autobackup'] = 0; // numeric. Backup database every X days. 0 to disable
 
 // TableField info tables names
 $tf['tbl.info'] = ''; // The name of the TF information table (traditionally "tf_info")
+$tf['tbl.meta'] = ''; // The name of the TF Meta information table - additional fields for the information table (traditionally "tf_meta")
 $tf['tbl.users'] = ''; // The name of the TF users table (traditionally "tf_users")
 $tf['tbl.log'] = ''; // The name of the TF actions log table (traditionally "tf_log")
 
@@ -66,6 +67,8 @@ $tf['url.img'] = 'tfimg'; // string. The table-field images and style css files 
 
 // general log
 if (!array_key_exists('log',$tf)) $tf['log'] = '';
+// general cache
+if (!array_key_exists('cache',$tf)) $tf['cache'] = array();
 
 ////////// INCLUDE DATABASE PREFERENCES ////////
 $fn = __DIR__.'/../custom/dbconfig.php';

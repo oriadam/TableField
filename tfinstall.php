@@ -53,8 +53,8 @@ if (!file_exists(FLAGNAME) && count($_POST)) {
 		$errors['tbl_users'] = 'Please enter main TF users table name. Default tf_users';
 	if (empty($_POST['tbl_log']))
 		$errors['tbl_log'] = 'Please enter main TF log table name. Default tf_log';
-	if (empty($_POST['tbl_trans']))
-		$errors['tbl_trans'] = 'Please enter main TF translations table name. Default tf_trans';
+	if (empty($_POST['tbl_meta']))
+		$errors['tbl_meta'] = 'Please enter main TF information meta table name. Default tf_meta';
 	if (empty($_POST['root_user']))
 		$errors['root_user'] = 'Please set a user name for the super user. Default `root`';
 	if (empty($_POST['root_pass']))
@@ -88,8 +88,8 @@ if (!file_exists(FLAGNAME) && count($_POST)) {
 		$errors['tbl_users'] = $e_name;
 	if (!isset($errors['tbl_log']) && !preg_match($v_name, $_POST['tbl_log']))
 		$errors['tbl_log'] = $e_name;
-	if (!isset($errors['tbl_trans']) && !preg_match($v_name, $_POST['tbl_trans']))
-		$errors['tbl_trans'] = $e_name;
+	if (!isset($errors['tbl_meta']) && !preg_match($v_name, $_POST['tbl_meta']))
+		$errors['tbl_meta'] = $e_name;
 	if (!isset($errors['root_user']) && !preg_match($v_name, $_POST['root_user']))
 		$errors['root_user'] = $e_name;
 	if (!isset($errors['root_pass']) && strlen($_POST['root_pass']) < 6)
@@ -142,7 +142,7 @@ global $tf;
 			$str.="\n\$tf['tbl.info'    ]='" . fixstr($_POST['tbl_info'])."';";
 			$str.="\n\$tf['tbl.users'   ]='" . fixstr($_POST['tbl_users'])."';";
 			$str.="\n\$tf['tbl.log'     ]='" . fixstr($_POST['tbl_log'])."';";
-			$str.="\n\$tf['tbl.trans'   ]='" . fixstr($_POST['tbl_trans'])."';";
+			$str.="\n\$tf['tbl.meta'    ]='" . fixstr($_POST['tbl_meta'])."';";
 //			$str.="\n\$tf['root.email']='" . fixstr($_POST['root_email'])."';";
 			// Write it to a real file
 			if (!file_put_contents(FILENAME, $str)) {
@@ -160,7 +160,7 @@ global $tf;
 				    'PUT_TBL_INFO_HERE',
 				    'PUT_TBL_USERS_HERE',
 				    'PUT_TBL_LOG_HERE',
-				    'PUT_TBL_TRANS_HERE',
+				    'PUT_TBL_META_HERE',
 				    'PUT_ROOT_USER_HERE',
 				    'PUT_ROOT_PASS_HERE',
 				    'PUT_ROOT_NAME_HERE',
@@ -175,7 +175,7 @@ global $tf;
 				    $_POST['tbl_info'],
 				    $_POST['tbl_users'],
 				    $_POST['tbl_log'],
-				    $_POST['tbl_trans'],
+				    $_POST['tbl_meta'],
 				    $_POST['root_user'],
 				    $rootpassmd5,
 				    $_POST['root_name'],
@@ -273,12 +273,12 @@ if (!count($_POST)) {
 			<u class="b1tn text-small" style="cursor:pointer" onclick="$('#dbtech').slideDown();$(this).css('position','absolute').fadeOut()"><small>Advanced: TableField tables names and charset <i class="icon-chevron-down"></i></small></u>
 		</div>
 		<div id=dbtech style="display:none">
-			<div class=control-group><label><div class=control-label>Charset          </div><div class=controls><input type=text name='db_charset'   value="<?=htmlentities(@$_POST['db_charset'])?>" > <span class="text-error"><?=@$errors['db_charset']?> <small class=muted>usually <code>utf8</code></small></div></label></div>
-			<div class=control-group><label><div class=control-label>Collation        </div><div class=controls><input type=text name='db_collation' value="<?=htmlentities(@$_POST['db_collation'])?>" > <span class="text-error"><?=@$errors['db_collation']?> <small class=muted>usually <code>utf8_unicode_ci</code></small></div></label></div>
-			<div class=control-group><label><div class=control-label>TF info table    </div><div class=controls><input type=text name='tbl_info'     value="<?=htmlentities(@$_POST['tbl_info'])?>" > <span class="text-error"><?=@$errors['tbl_info']?></div></label></div>
-			<div class=control-group><label><div class=control-label>TF users table   </div><div class=controls><input type=text name='tbl_users'    value="<?=htmlentities(@$_POST['tbl_users'])?>" > <span class="text-error"><?=@$errors['tbl_users']?></div></label></div>
-			<div class=control-group><label><div class=control-label>TF log table     </div><div class=controls><input type=text name='tbl_log'      value="<?=htmlentities(@$_POST['tbl_log'])?>" > <span class="text-error"><?=@$errors['tbl_log']?></div></label></div>
-			<div class=control-group><label><div class=control-label>Translation table</div><div class=controls><input type=text name='tbl_trans'    value="<?=htmlentities(@$_POST['tbl_trans'])?>" > <span class="text-error"><?=@$errors['tbl_trans']?></div></label></div>
+			<div class=control-group><label><div class=control-label>Charset       </div><div class=controls><input type=text name='db_charset'   value="<?=htmlentities(@$_POST['db_charset'])?>" > <span class="text-error"><?=@$errors['db_charset']?> <small class=muted>usually <code>utf8</code></small></div></label></div>
+			<div class=control-group><label><div class=control-label>Collation     </div><div class=controls><input type=text name='db_collation' value="<?=htmlentities(@$_POST['db_collation'])?>" > <span class="text-error"><?=@$errors['db_collation']?> <small class=muted>usually <code>utf8_unicode_ci</code></small></div></label></div>
+			<div class=control-group><label><div class=control-label>TF info table </div><div class=controls><input type=text name='tbl_info'     value="<?=htmlentities(@$_POST['tbl_info'])?>" > <span class="text-error"><?=@$errors['tbl_info']?></div></label></div>
+			<div class=control-group><label><div class=control-label>TF info meta  </div><div class=controls><input type=text name='tbl_meta'     value="<?=htmlentities(@$_POST['tbl_meta'])?>" > <span class="text-error"><?=@$errors['tbl_meta']?></div></label></div>
+			<div class=control-group><label><div class=control-label>TF users table</div><div class=controls><input type=text name='tbl_users'    value="<?=htmlentities(@$_POST['tbl_users'])?>" > <span class="text-error"><?=@$errors['tbl_users']?></div></label></div>
+			<div class=control-group><label><div class=control-label>TF log table  </div><div class=controls><input type=text name='tbl_log'      value="<?=htmlentities(@$_POST['tbl_log'])?>" > <span class="text-error"><?=@$errors['tbl_log']?></div></label></div>
 		</div>
 	</div></fieldset>
 	<fieldset class="bs-docs-example">
@@ -303,7 +303,7 @@ function setTbl(){
 	e['tbl_info' ].value=p+'info';
 	e['tbl_users'].value=p+'users';
 	e['tbl_log'  ].value=p+'log';
-	e['tbl_trans'].value=p+'trans';
+	e['tbl_meta' ].value=p+'meta';
 }
 setTbl();
 function checkPW () {

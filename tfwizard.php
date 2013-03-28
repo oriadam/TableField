@@ -114,7 +114,7 @@ if (count($_POST)) {
 							$vals=explode(',',$match[1]);
 							for ($i=0;$i<count($vals);$i++)
 								$vals[$i]=urlencode(trim($vals[$i],"'"));
-							$cols[$f]['params']='values='.implode(',',$vals);
+							$cols[$f]['meta']=array('values'=>implode(',',$vals));
 						}
 					} else if (strpos($type,'int')!==false || strpos($type,'double')!==false || strpos($type,'float')!==false || strpos($type,'numeric')!==false || strpos($type,'decimal')!==false || strpos($type,'bit')!==false) {
 						$cols[$f]['class']='number';
@@ -128,8 +128,8 @@ if (count($_POST)) {
 					} else if (strpos($type,'timestamp')!==false || strpos($type,'time')!==false || strpos($type,'date')!==false || strpos($type,'year')!==false) {
 						$cols[$f]['class']=$type;
 						$cols[$f]['searchable']=0;
-						if (@$cols[$f]['default']=='0000-00-00 00:00:00') unset($cols[$f]['default']);
-						if (@$cols[$f]['default']=='CURRENT_TIMESTAMP') unset($cols[$f]['default']);
+						if (@$cols[$f]['default']=='0000-00-00 00:00:00') unset($cols[$f]['default']); // here and not below, because
+						if (@$cols[$f]['default']=='CURRENT_TIMESTAMP') unset($cols[$f]['default']);   // i cannot unset below
 					} else {
 						$cols[$f]['class']='';
 						$cols[$f]['searchable']=0;
@@ -138,22 +138,40 @@ if (count($_POST)) {
 
 					$sql='INSERT INTO `'.$tf['tbl.info'].'` SET ';
 					foreach($cols[$f] as $k=>$v) {
-						if ($v===true) {
-							$v='1';
-						} else if ($v===false) {
-							$v='0';
-						} else if ($v===null) {
-							$v='NULL';
-						} else if (is_int($v)) {
-						} else {
-							$v=sqlv($v);
+						if ($k!=='meta') {
+							if ($v===true) {
+								$v='1';
+							} elseif ($v===false) {
+								$v='0';
+							} elseif ($v===null) {
+								$v='NULL';
+							} elseif (is_int($v)) {
+								// leave $v as it is
+							} else {
+								$v=sqlv($v);
+							}
+							$sql.=sqlf($k).'='.$v.',';
 						}
-						$sql.=sqlf($k).'='.$v.',';
-					}
+					}//foreach $cols[$f]
 					addToLog(_('Adding field of class')." <f>$f</f>: <t><b>".$cols[$f]['class']."</b></t>",LOGGOOD,__LINE__,true);
-					$sql=substr($sql,0,strlen($sql)-1); // remove last comma
-					if (DEBUG) addToLog($sql,LOGDEBUG,__LINE__);
+					$sql=substr($sql,0,strlen($sql)-1); // remove last comma. I hate it.
+					if (DEBUG) addToLog($sql,LOGDEBUG,__LINE__,true);
 					mysql_query($sql);
+
+					if (!empty($cols[$f]['meta'])) {
+						$infoid=mysql_insert_id();
+						if (!$infoid) {
+							addToLog(_('No insert_id of last field! cannot add the meta values')." <f>$f</f>: <t>".var_export($cols[$f]['meta'],1).'</t>',LOGBAD,__LINE__,true);
+						} else {
+							foreach ($cols[$f]['meta'] as $k=>$v) {
+								addToLog(_('Adding meta to field')." <f>$f</f>: <t><b>$k=$v</b></t>",LOGGOOD,__LINE__,true);
+								$sql='INSERT INTO `'.$tf['tbl.meta']."` SET `infoid`=$infoid,`meta`=".sqlv($k).',`value`='.sqlv($v);
+								if (DEBUG) addToLog($sql,LOGDEBUG,__LINE__,true);
+								mysql_query($sql);
+							}
+						}
+					}//if meta
+
 				}// end while each fields
 				/////////////////////////// MAGIC ENDS HERE ////////////////////
 			} else {
@@ -182,7 +200,7 @@ if (!empty($tf['log'])) {
 	<h1><?=_('Tables Wizard')?></h1>
 	<p><?=_('Quickly add existing tables to the TableField system.')?>
 	<p><?=_('Following Field types will be detected:')?> <?=_('primary-key, string, text, number, date/time/timestamp, enum, set <small>(=list of enums)</small>.')?></p>
-	<p><?=_('When done here go to <a href=tftedit.php>TF Tables manager</a> for fine tuning of the Fields classes and parameters.')?>
+	<p><?=_('When done here go to <a href=tftedit.php>TF Tables manager</a> for fine tuning of the Fields classes and meta parameters.')?>
 		<?_('For example, you may want to change a text field to html, a number to xkey, a string to email, add calculated values etc...')?>
 	</p>
 

@@ -97,7 +97,7 @@ if (!$t) {
 		}
 	} else {
 		$tf['d'] = $_GET['d'];
-		if (!in_array($tf['d'], array('mm','b','l','s','q'))) {
+		if (!in_array($tf['d'], array('mm','b','l','s','q','1'))) {
 			fatal("Unknown Layout (".he($tf['d']).")");
 		}
 	}
@@ -156,7 +156,7 @@ if ($tf['nonew']) $tf['news'] = 0;
 elseif (array_key_exists('news',$_GET)) $tf['news']=1*$_GET['news'];
 elseif ($t && $t->params && array_key_exists('news',$t->params)) $tf['news']=1*$t->params['news'];
 elseif ($tf['mini']) $tf['news']=1;
-else $tf['news']=10;
+else $tf['news']=2;
 
 $tf['noedit'] = chkBool(Get('ne'), chkBool(@$t->params['noedit'], chkBool(@$t->params['ne'], $tf['mini'])));
 if ($tf['act'] == 'new') $tf['nopage'] = 1;  // no paging on 'add mode'
@@ -508,7 +508,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	$istr = '';
 	$rowc=0; // html row counter
 
-    ////////////////// get from GET: page, items per page, repeat title every
+      ////////////////// get from GET: page, items per page, repeat title every
 	if (isset($GET['p'])) {
 		$page=1*$GET['p'];
 		if ($page==0) $page=1;
@@ -678,23 +678,15 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		else $cs='btn-info';
 		echo '<button id=idCtrlLog '.(empty($tf['log'])? 'disabled':'').' href="#idLog" class="'.$btn.' '.$cs.'" data-toggle="modal"><i class="act icon-tasks'.(empty($tf['log'])? '':' icon-white').'"></i> '._('Log').'</button> ';
 
-		if ($tf['mini']) {
-
-			// close window
-			//echo '<button id=idCtrlClose class="'.$btn.' pull-right" onclick="window.close()"><i class="act icon-remove-sign"></i> '._('Close Window').'</button>';
-
-		} else { ////////////////////////
-
-			// main menu
+		if (!$tf['mini'])
 			echo '<a id=idCtrlMain href="./?" class="'.$btn.' "><i class="act icon-home"></i> '._('Main Menu').'</a> ';
 
-		}//not mini
-
 		// layout
-		echo '<div class="'.$btn.' disabled" id=idCtrlLayout>'._('Layout').' '
-			.'<a id=idCtrlBox  href="'.reGet(array('d'=>'b')).'" title="'._('Boxes Layout').'"      ><i class="act icon-th    '.($tf['d']=='b'?'icon-white':'').'"></i></a>'
-			.'<a id=idCtrlList href="'.reGet(array('d'=>'l')).'" title="'._('List Layout').'"       ><i class="act icon-list  '.($tf['d']=='l'?'icon-white':'').'"></i></a>'
-			.'<a id=idCtrlSS   href="'.reGet(array('d'=>'s')).'" title="'._('Spreadsheet Layout').'"><i class="act icon-table '.($tf['d']=='s'?'icon-white':'').'"></i></a>';
+		echo '<div class="'.$btn.' disabled" id=idCtrlLayout>'.($tf['mini']?'':_('Layout'))
+			.'<a id=idCtrlBox  href="'.reGet(array('d'=>'b')).'" title="'._('Boxes Layout')      .'"><i class="act icon-th'       .($tf['d']=='b'?' icon-white':'').'"></i></a>'
+			.'<a id=idCtrlList href="'.reGet(array('d'=>'l')).'" title="'._('List Layout')       .'"><i class="act icon-list'     .($tf['d']=='l'?' icon-white':'').'"></i></a>'
+			//.'<a id=idCtrlSS   href="'.reGet(array('d'=>'s')).'" title="'._('Spreadsheet Layout').'"><i class="act icon-table'    .($tf['d']=='s'?' icon-white':'').'"></i></a>'
+			.'<a id=idCtrlStat href="'.reGet(array('d'=>'1')).'" title="'._('See Statistics')    .'"><i class="act icon-bar-chart'.($tf['d']=='1'?' icon-white':'').'"></i></a>';
 			if ($tf['mini'])
 				echo '<a id=idCtrlMini href="'.reGet(array('i'=>0)).'" title="'._('Full Mode').'"><i class="act icon-resize-full"></i></a>';
 			else
@@ -774,8 +766,8 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	foreach ($t->fields as $f) // per every field in this table
 		echo $f->htmlFormStart();
 
-	// on NEW mode there's no need to select
-	if ($tf['act'] && $tf['act'] != 'new') {
+	// on NEW mode there's no need to select, unless new were added
+	if ($tf['act'] && ($tf['act'] != 'new' || count($tf['id']))) {
 		// default sql
 
 		////////////////////////// main select: SELECT ///////////////////////////
@@ -813,7 +805,8 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		} else { // multi-where
 
 			// search given by URL query GET
-			$where = '';
+			$where='';
+			$having='';
 			$nextchain='';
 			// search
 			if (count($tf['id'])==0) {
@@ -822,10 +815,10 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 						$t->fields[$s['f']]->tname='extant';
 						$q=$t->fields[$s['f']]->to_select_where($s['how'],$s['q'],$s['not']);
 						if ($q) {
-							if (substr($q,0,7)=='HAVING ')
-								if (!empty($having)) $having.=' AND '.substr($q,7);
-								else $having=substr($q,7);
-							else {
+							if (substr($q,0,7)=='HAVING ') {
+								if (!empty($having)) $having.=' AND ';
+								$having.=substr($q,7);
+							} else {
 								$where.="$nextchain ($q)";
 								$nextchain=$s['chain']=='or'?' OR':' AND';
 							}
@@ -898,10 +891,10 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 		///////////////////////////// main select: GO GO GO //////////////////////
 
-		if (DEBUG || true) print("<!-- $sql -->");
+		if (true || DEBUG || $tf['debug'] || $tf['sql.printall']) print("<!-- ".he($sql)." -->");
 
 		if (!$masterq = sqlRun($sql))
-			fatal(sqlError().' <sql>'.sqlLastQuery().'</sql> (at '.__LINE__.')');
+			fatal(sqlError().' <sql>'.he(sqlLastQuery()).'</sql> (at '.__LINE__.')');
 
 		$total = sqlFoundRows();
 
@@ -948,56 +941,17 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 		// Sub Tables Sub-Tables Subtables
 		$htmlSubs = '';
-		$keycount = 0;
-		$subxkey='';
-		if (!empty($t->subtables)) {
-			foreach ($t->subtables as $subfetch) {
-				$subname = trim($subfetch['tname']);
-				if ($subname != '') {
-					$sub = new TfTable($subfetch);
-					if ($sub->userCan($tf['user'], 'view')) {
-						foreach ($sub->fields as $f) {
-							if (!empty($f->xtable) && $f->xtable == $t->tname) {
-								$keycount++;
-								$subxkey.="xkey{$keycount}=$f->fname&xid{$keycount}=\$curid";
+		$keycount=0;
+		foreach ($t->subtables as $sub) {
+			$keycount++;
+			if (!isset($sub['label'])) $sub['label']="$sub[tname].$sub[fname]";
+			$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub['label']).'" onclick="'
+				."tfopensub('?t=$sub[tname]&a=".$tf['act']{0}."&d=l&i=1&nn=0&n=1&sc=0&no=1&xkey1=$sub[fname]&xid1=\$\$$sub[xkey]',\$curid,this,$keycount)".'">'."\n"
+				.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
+		}//foreach subtables
 
-								$subact = 'view';
-								if ($tf['act'] == 'edit' && $sub->userCan($tf['user'], $tf['act'])) // if user can't edit, show 'view' mode
-									$subact = $tf['act']{0};
-
-								// open new <tr> with iframe below current <tr>
-								$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub->fetch['label']).'" onclick="'
-									."tfopensub('?t=$subname&d=l&i=1&nn=0&n=1&sc=0&no=1&a=$subact&$subxkey',\$curid,this,$keycount)".'">'."\n"
-									.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
-							}
-						}
-					}
-				}
-			}
-		}
-		foreach ($t->fields as $f) {
-			if (!empty($f->xtable)) {
-				$sub = new TfTable($f->xtable);
-				if ($sub->userCan($tf['user'], 'view')) {
-					$keycount++;
-					$subxkey.="xkey{$keycount}=$f->xkey&xid{$keycount}=\$\$".$f->fname;
-
-					$subact = 'view';
-					if ($tf['act'] == 'edit' && $sub->userCan($tf['user'], $tf['act'])) // if user can't edit, show 'view' mode
-						$subact = $tf['act']{0};
-
-					// open new <tr> with iframe below current <tr>
-					$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub->fetch['label']).'" onclick="'
-						."tfopensub('?t=$f->xtable&d=l&i=1&nn=0&n=1&sc=0&no=1&a=$subact&$subxkey',\$curid,this,$keycount)".'">'."\n"
-						.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
-
-				}
-			}
-		}
-
-		if ($tf['nooptions'] && ($tf['act'] == 'edit' || $tf['act'] == 'new')) { // send form - save changes
+		if ($tf['nooptions'] && ($tf['act'] == 'edit' || $tf['act'] == 'new')) // send form - save changes
 			$htmlActions.='<button class="btn btn-mini btn-primary" type="submit" form="idForm"><i class="act icon-thumbs-up icon-white"></i> '._('Save').'</button> ';
-		}
 
 		$title = "\n<TR class=trTitle>";
 		//focus $title.="<td class=tdForFocus desc=for_focus width=1 height=1></td>";
@@ -1035,7 +989,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			echo '<table id="idListTable" class="listTable">';
 		}
 
-		// list
+		// list main loop
 		$rowc=0;
 		while ($row = mysql_fetch_assoc($masterq)) {
 			if ($rowc==0 && !array_key_exists($t->pkey,$row))
@@ -1066,36 +1020,61 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			}
 			$htmlActionsCur = str_replace($search,$replace,$htmlActions);
 			$htmlSubsCur = str_replace($search,$replace,$htmlSubs);
-			// repeat title in list mode
-			if ($titleevery && $tf['d']=='l' && (($rowc-1) % $titleevery == 0)) // list
-				echo $title;
 
-			// <form>
-			echo "<input type=hidden name='___id[$rowc]'  value='$curid'>";
+			if ($tf['d']!='1' && ($tf['act']=='edit' || $tf['act']=='new'))
+				echo "<input type=hidden name='___id[$rowc]'  value='$curid'>";
 
-			// row header for list or table header for boxes
-			if ($tf['d']=='l') { // list
+			////////////////////////////////// LAYOUT: LIST ///////////////////////////////////////
+			if ($tf['d']=='l') {
+				// repeat title in list mode
+				if ($titleevery && (($rowc-1) % $titleevery == 0))
+					echo $title;
 				echo "<tr id='cont_$rowc' class='tr tfRow'>";
 				//focus echo "<td class=tdForFocus desc=for_focus><input class=inputForFocus type=text name='small_thing_for_focus[$rowc]' tabindex=-1 value=''/></td>";
-			} else { // boxes
+
+				// actions
+				if ($htmlActions != '' || $htmlSubs!='')
+					echo "$istr <td class='th actions' desc=for_actions>$htmlActionsCur $htmlSubsCur</td>";
+
+				foreach ($t->fields as $k => $f) {
+					$istr = '';
+					$commentview = str_ireplace(array( '$id','$val','$rowc','$c') , array($curid,$f->value,$rowc,$rowc), $f->fetch['commentview']);
+					$commentedit = str_ireplace(array( '$id','$val','$rowc','$c') , array($curid,$f->value,$rowc,$rowc), $f->fetch['commentedit']);
+					// put fields - edit
+					if ($tf['act'] == 'edit') {
+						if ((!array_key_exists('const',$f->fetch) || $f->fetch['const'] === false) && $f->userCan($tf['user'], 'edit')) {
+							echo $istr.'<td class="edit '.get_class($f).' '.$f->fname.'">'.$f->htmlInput().$commentedit.'</td>';
+						} else if (($f->userCan($tf['user'], 'view') && $tf['showview'])
+							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentedit.'</td>';
+						}
+					}
+
+					// put fields - view
+					if ($tf['act'] == 'view') {
+						if (($f->userCan($tf['user'], 'view'))
+							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="view '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentview.'</td>';
+						}
+					}
+				}//foreach $t->fields
+
+				if ($htmlSubs!='')
+					echo "$istr <td class='th actions2'>$htmlSubsCur</td>";
+
+		///////////////////////////////// LAYOUT: BOXES ///////////////////////////////////////
+			} elseif ($tf['d']=='b') {
 				echo "<table id='cont_$rowc' class='tableBox tfRow'>";
 				//focus echo "<td class=tdForFocus desc=for_focus colspan=2><input class=inputForFocus type=text name='small_thing_for_focus[$rowc]' tabindex=-1 value='' /></td>";
-			}
 
-			// actions
-			if ($htmlActions != '' || $htmlSubs!='') {
-				if ($tf['d']=='l') { // list
-					echo "$istr <td class='th actions' desc=for_actions>$htmlActionsCur $htmlSubsCur</td>";
-				} else {
+				// actions
+				if ($htmlActions != '' || $htmlSubs!='')
 					echo "<tr class='tr trActions'><td class='th thActions'>$actionsTitle</td><td class='tdActions'>$htmlActionsCur $htmlSubsCur</td></tr>";
-				}
-			}
 
-			foreach ($t->fields as $k => $f) {
-				$istr = '';
-				$commentview = str_ireplace(array( '$id','$val','$rowc','$c') , array($curid,$f->value,$rowc,$rowc), $f->fetch['commentview']);
-				$commentedit = str_ireplace(array( '$id','$val','$rowc','$c') , array($curid,$f->value,$rowc,$rowc), $f->fetch['commentedit']);
-				if ($tf['d']=='b') { // box
+				foreach ($t->fields as $k => $f) {
+					$istr = '';
+					$commentview = str_ireplace(array( '$id','$val','$rowc','$c') , array($curid,$f->value,$rowc,$rowc), $f->fetch['commentview']);
+					$commentedit = str_ireplace(array( '$id','$val','$rowc','$c') , array($curid,$f->value,$rowc,$rowc), $f->fetch['commentedit']);
 					$order = $f->fname;
 					$cs = '';
 					$cstd = '';
@@ -1109,72 +1088,43 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 						$m = $orderdir ? '<i class=icon-sort-down></i>':'<i class=icon-sort-up></i>';
 					}
 					$istr = "<tr class='tr'><td class='th $cstd' ><a class='csTitleLink $cs' href=\"" . reGet(array('o' => $order)) . "\">" . ($f->fetch['label']) . "$m</a></td>";
-				}
-
-				// put fields - edit
-				if ($tf['act'] == 'edit') {
-					if ((!array_key_exists('const',$f->fetch) || $f->fetch['const'] === false) && $f->userCan($tf['user'], 'edit')) {
-						echo $istr.'<td class="edit '.get_class($f).' '.$f->fname.'">'.$f->htmlInput().$commentedit.'</td>';
-					} else if (($f->userCan($tf['user'], 'view') && $tf['showview'])
-						   && ($tf['showconst'] || $f->fetch['const'] === false)) {
-						echo $istr.'<td class="const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentedit.'</td>';
+					// put fields - edit
+					if ($tf['act'] == 'edit') {
+						if ((!array_key_exists('const',$f->fetch) || $f->fetch['const'] === false) && $f->userCan($tf['user'], 'edit')) {
+							echo $istr.'<td class="edit '.get_class($f).' '.$f->fname.'">'.$f->htmlInput().$commentedit.'</td>';
+						} else if (($f->userCan($tf['user'], 'view') && $tf['showview'])
+							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentedit.'</td>';
+						}
 					}
-				}
 
-				// put fields - view
-				if ($tf['act'] == 'view') {
-					if (($f->userCan($tf['user'], 'view'))
-						   && ($tf['showconst'] || $f->fetch['const'] === false)) {
-						echo $istr.'<td class="view '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentview.'</td>';
+					// put fields - view
+					if ($tf['act'] == 'view') {
+						if (($f->userCan($tf['user'], 'view'))
+							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="view '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentview.'</td>';
+						}
 					}
-				}
-			}//foreach t
+				}//foreach $t->fields
 
-			// actions #2
-			if ($htmlSubs!='') {
-				if ($tf['d']=='l') { // list
-					echo "$istr <td class='th actions2'>$htmlSubsCur</td>";
-				} else {
+				if ($htmlSubs!='')
 					echo "<tr class='tr actions2'><td class='th'></td><td class='tdActions'>$htmlSubsCur</td></tr>";
-				}
-			}
 
-			// end table for boxes
-			if ($tf['d']=='b') // box
-				echo "</table desc=tableBox>";
+				echo '</table desc=tableBox>';
 
-			// </form> end form
+			///////////////////////////////// LAYOUT: Statistics //////////////////////////////////
+			} elseif ($tf['d']=='1') {
+
+
+
+
+			}// layouts
 		}//while
 	} // end list layout if ($tf['act']!='new')
 
 	///////////////////////////////////////  ADD NEW /////////////////////////////////////////////////
 	$htmlActions = '';
 	if ($tf['act']=='new' || ($tf['act']=='edit' && $tf['news']>0)) {
-
-		// set countcols and title if undefined
-		if (!isset($countcols) || !isset($title) || !isset($istr)) {
-			if ($tf['d']=='l') { // list
-				echo '<table id="idListTable" class="listTable">';
-				$title = '<TR class="tr tr1">';
-				$title.='<td class="th thActions" desc=for_actions>'._('Add it?').'</td>';
-				$countcols = 2;
-				foreach ($t->fields as $f) {
-					if ($f->userCan($tf['user'], 'new')) {
-						//if ($f->fetch['const']===false || ($tf['showconst'] && $f->userCan($tf['user'],'view'))) {
-						$title.="<td class=th>" . $f->fetch['label'] . "</td>";
-						//}
-						$countcols++;
-					}
-				}
-				$title.="<td class='th thActions' desc=for_actions>" . _('Add it?').'</td>';
-			} else {
-				$title = '';
-				$countcols = 2;
-			}
-		}
-
-		if ($tf['d']=='l') // list
-			echo "<tr id=idNewTitleTr class='tr csNewTitleTr'><td class=csNewTitle colspan='100%'>" . _($t->fetch['labelnew'] ? $t->fetch['labelnew'] : 'Add new items') . "</td></tr>\n";
 
 		$htmlActions.='<label class="upthis"><i class="act icon-plus-sign" title="'._('Add this record').'"></i><input name="___up[$rowc]"  type="checkbox" style="display:none;"></label>';
 		// var actions
@@ -1188,101 +1138,166 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$htmlActions.="<a class=csActionLink href=\"$v\">$k</a>";
 			}
 		}
-
-		if ($tf['nooptions'] && ($tf['act'] == 'edit' || $tf['act'] == 'new')) { // send form - save changes
+		if ($tf['nooptions'] && ($tf['act'] == 'edit' || $tf['act'] == 'new')) // send form - save changes
 			$htmlActions.='<button class="btn btn-mini btn-primary" type="submit" form="idForm"><i class="act icon-thumbs-up icon-white"></i> '._('Save').'</button> ';
-		}
 
-		for ($newscount = 0; $newscount < $tf['news']; $newscount++) {
-			$rowc++;
-			$curid = $rowc;
+		///////////////////////////// LAYOUT NEW: LIST ////////////////////////////////
+		if ($tf['d']=='l') {
 
-			$htmlActionsCur = str_replace(array('$curid','$id','$rowc','$c'),array($curid,$curid,$rowc,$rowc),$htmlActions);
-
-			// <form>
-
-			foreach ($t->fields as $k => $f) {
-				// set ename
-				$t->fields[$k]->eid=$f->fname.'_new'.$rowc;
-				$t->fields[$k]->ename=$f->fname."[$rowc]";
-				// set default values
-				$t->fields[$k]->value=$f->fetch['default'];
-				// set last entered values
-				if (!empty($POST[$f->fname][$rowc])) {
-					$t->fields[$k]->value = $POST[$f->fname][$rowc];
+			// set countcols and title if undefined
+			if (!isset($countcols) || !isset($title) || !isset($istr)) {
+				echo '<table id="idListTable" class="listTable">';
+				$title = '<TR class="tr tr1">';
+				$title.='<td class="th thActions" desc=for_actions>'._('Add it?').'</td>';
+				$countcols = 2;
+				foreach ($t->fields as $f) {
+					if ($f->userCan($tf['user'], 'new')) {
+						//if ($f->fetch['const']===false || ($tf['showconst'] && $f->userCan($tf['user'],'view'))) {
+						$title.="<td class=th>" . $f->fetch['label'] . "</td>";
+						//}
+						$countcols++;
+					}
 				}
-				// set const values
-				if ($t->fields[$k]->fetch['const'] !== false && array_key_exists('isconst', $t->fields[$k]->fetch)) {
-					$t->fields[$k]->value = $t->fields[$k]->fetch['isconst'];
-				}
+				$title.="<td class='th thActions' desc=for_actions>" . _('Add it?').'</td>';
 			}
+			echo "<tr id=idNewTitleTr class='tr csNewTitleTr'><td class=csNewTitle colspan='100%'>" . _($t->fetch['labelnew'] ? $t->fetch['labelnew'] : 'Add new items') . "</td></tr>\n";
 
-			// start form
-			if ($tf['d']=='b') { // bpx
-				echo "<table id='cont_$rowc' class='tableBox tfRow new'>";
-				echo "<tr class='tr csNewTitleTr' id='cont_$rowc'><td class=csNewTitle colspan=$countcols>".($t->fetch['labelnew']?$t->fetch['labelnew']:_('Add new')).'</td></tr>';
-			}
-			if ($titleevery && $tf['d']=='l' && ($newscount+$rowc) % $titleevery == 0) // list
-				echo $title . "<tr>";
-			// actions
-			if ($tf['d']=='l') {
+			for ($newscount = 0; $newscount < $tf['news']; $newscount++) {
+				$rowc++;
+				$curid = $rowc;
+
+				$htmlActionsCur = str_replace(array('$curid','$id','$rowc','$c'),array($curid,$curid,$rowc,$rowc),$htmlActions);
+
+				foreach ($t->fields as $k => $f) {
+					// set ename
+					$t->fields[$k]->eid=$f->fname.'_new'.$rowc;
+					$t->fields[$k]->ename=$f->fname."[$rowc]";
+					// set default values
+					$t->fields[$k]->value=$f->fetch['default'];
+					// set last entered values
+					if (!empty($POST[$f->fname][$rowc])) {
+						$t->fields[$k]->value = $POST[$f->fname][$rowc];
+					}
+					// set const values
+					if ($t->fields[$k]->fetch['const'] !== false && array_key_exists('isconst', $t->fields[$k]->fetch)) {
+						$t->fields[$k]->value = $t->fields[$k]->fetch['isconst'];
+					}
+				}
+
+				if ($titleevery && ($newscount+$rowc) % $titleevery == 0)
+					echo $title . "<tr>";
+
+				// actions
 				echo "<tr id='cont_$rowc' class='tr tfRow'>";
 				echo "<td class='tdActions' desc=for_actions>$htmlActionsCur</td>";
-			} else if ($tf['d']=='b') {
-				echo "<tr id='cont_$rowc' class='tr trActions trActions1'><td class='th thActions'>"._('Add?')."</td><td class='tdActions'>$htmlActionsCur</td></tr>";
-			}
 
-			// put fields
-			foreach ($t->fields as $k => $f) {
-				$istr = '';
-				if ($tf['d']=='b')
-					$istr = "<tr class='tr'><td class=th>" . $f->fetch['label'] . "</td>";
-				$val = $f->value;
-				if (is_array($val)) {
-					addToLog(_('Array as value at').' <f>'.$f->fetch['label'].'</f>',LOGDEBUG,__LINE__);
-					$val = var_export($val, 1); // avoid Array to String conversions
-				}
-				$commentview = str_ireplace('$id', $curid, str_ireplace('$val', $val, $f->fetch['commentview']));
-				$commentnew = str_ireplace ('$id', $curid, str_ireplace('$val', $val, $f->fetch['commentnew']));
-				if ($f->userCan($tf['user'], 'new')) {
-					if ($f->fetch['const'] !== false) {
-						$f->value = $f->fetch['const'];
-						if ($tf['showconst'] && $f->userCan($tf['user'], 'view')) {
-							echo $istr.'<td class="new const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
-						}
-						echo $f->htmlQuietNew();
-					} else {
-						echo $istr.'<td class="new '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
+				// put fields
+				foreach ($t->fields as $k => $f) {
+					$istr = '';
+					$val = $f->value;
+					if (is_array($val)) {
+						addToLog(_('Array as value at').' <f>'.$f->fetch['label'].'</f>',LOGDEBUG,__LINE__);
+						$val = var_export($val, 1); // avoid Array to String conversions
 					}
-				} elseif (($f->userCan($tf['user'], 'view') || ($f->userCan($tf['user'], 'edit') && $tf['act'] == 'edit')) && $tf['d']=='l' && $tf['act'] != 'new') {
-					echo "<td></td>";
+					$commentview = str_ireplace('$id', $curid, str_ireplace('$val', $val, $f->fetch['commentview']));
+					$commentnew = str_ireplace ('$id', $curid, str_ireplace('$val', $val, $f->fetch['commentnew']));
+					if ($f->userCan($tf['user'], 'new')) {
+						if ($f->fetch['const'] !== false) {
+							$f->value = $f->fetch['const'];
+							if ($tf['showconst'] && $f->userCan($tf['user'], 'view')) {
+								echo $istr.'<td class="new const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
+							}
+							echo $f->htmlQuietNew();
+						} else {
+							echo $istr.'<td class="new '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
+						}
+					} elseif (($f->userCan($tf['user'], 'view') || ($f->userCan($tf['user'], 'edit') && $tf['act'] == 'edit')) && $tf['d']=='l' && $tf['act'] != 'new') {
+						echo "<td></td>";
+					}
 				}
-			}
 
-			if (false && $htmlActionsCur != '') {
-				if ($tf['d']=='l') {
+				if (false && $htmlActionsCur != '')
 					echo "$istr <td class='th actions' desc=for_actions>$htmlActionsCur</td>";
-				} else {
-					echo "<tr class='tr trActions trActions2'><td class='th thActions'>"._('Add?')."</td><td class='tdActions'>$htmlActionsCur</td></tr>";
-				}
+
+				echo "</tr>";
+			}//for news
+
+			echo "</table>";
+
+		///////////////////////////// LAYOUT NEW: BOXES ////////////////////////////////
+		} elseif ($tf['d']=='b') {
+
+			// set countcols and title if undefined
+			if (!isset($countcols) || !isset($title) || !isset($istr)) {
+				$title = '';
+				$countcols = 2;
 			}
 
-			if ($tf['d']=='l') echo "</tr>";
-			if ($tf['d']=='b') echo "</table>";
-		}//for news
-	}//if news
+			for ($newscount = 0; $newscount < $tf['news']; $newscount++) {
+				$rowc++;
+				$curid = $rowc;
 
-	// end big list table
-	if ($tf['d']=='l')
-		echo "</table>";
+				$htmlActionsCur = str_replace(array('$curid','$id','$rowc','$c'),array($curid,$curid,$rowc,$rowc),$htmlActions);
+
+				foreach ($t->fields as $k => $f) {
+					// set ename
+					$t->fields[$k]->eid=$f->fname.'_new'.$rowc;
+					$t->fields[$k]->ename=$f->fname."[$rowc]";
+					// set default values
+					$t->fields[$k]->value=$f->fetch['default'];
+					// set last entered values
+					if (!empty($POST[$f->fname][$rowc])) {
+						$t->fields[$k]->value = $POST[$f->fname][$rowc];
+					}
+					// set const values
+					if ($t->fields[$k]->fetch['const'] !== false && array_key_exists('isconst', $t->fields[$k]->fetch)) {
+						$t->fields[$k]->value = $t->fields[$k]->fetch['isconst'];
+					}
+				}
+
+				echo "<table id='cont_$rowc' class='tableBox tfRow new'>";
+				echo "<tr class='tr csNewTitleTr' id='cont_$rowc'><td class=csNewTitle colspan=$countcols>".($t->fetch['labelnew']?$t->fetch['labelnew']:_('Add new')).'</td></tr>';
+				echo "<tr id='cont_$rowc' class='tr trActions trActions1'><td class='th thActions'>"._('Add?')."</td><td class='tdActions'>$htmlActionsCur</td></tr>";
+
+				// put fields
+				foreach ($t->fields as $k => $f) {
+					$istr = '';
+					$istr = "<tr class='tr'><td class=th>" . $f->fetch['label'] . "</td>";
+					$val = $f->value;
+					if (is_array($val)) {
+						addToLog(_('Array as value at').' <f>'.$f->fetch['label'].'</f>',LOGDEBUG,__LINE__);
+						$val = var_export($val, 1); // avoid Array to String conversions
+					}
+					$commentview = str_ireplace('$id', $curid, str_ireplace('$val', $val, $f->fetch['commentview']));
+					$commentnew = str_ireplace ('$id', $curid, str_ireplace('$val', $val, $f->fetch['commentnew']));
+					if ($f->userCan($tf['user'], 'new')) {
+						if ($f->fetch['const'] !== false) {
+							$f->value = $f->fetch['const'];
+							if ($tf['showconst'] && $f->userCan($tf['user'], 'view')) {
+								echo $istr.'<td class="new const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
+							}
+							echo $f->htmlQuietNew();
+						} else {
+							echo $istr.'<td class="new '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
+						}
+					}
+				}
+
+				if (false && $htmlActionsCur != '')
+					echo "<tr class='tr trActions trActions2'><td class='th thActions'>"._('Add?')."</td><td class='tdActions'>$htmlActionsCur</td></tr>";
+
+				echo "</table>";
+			}//for news
+		}//if news
+	}
+
 
 	// process htmlFormEnd()
 	foreach ($t->fields as $f) // per every field in this table
 		echo $f->htmlFormEnd();
 
-?>
-</form>
-<?
+	echo '</form>';
+
 	if (!$tf['nopage']) {
 
 		echo '<div id=idPaging class="nav nav-pills navbar-fixed-bottom n1avbar-inner">';

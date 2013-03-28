@@ -261,11 +261,10 @@ function TftCreateTable($table, $just_return_sql = false) {
 
 // return an array of all tables+fields which are subtables of the given table
 // the format is a normal fetched information from the tf info table
-function TftGetSubtables($tname) {
-	global $tf;
+function TftGetSubtables_cancel($table) {
 	$subs = array();
 	//$res = mysql_query("SELEcT * FROM " . sqlf($tf['tbl.info']) . " WHERE (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=$tname&%").") OR (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=%")." AND `tname`=".sqlv($tname).") ORDER BY `order` DESC,`tname`,`fname`");
-	$res = mysql_query("SELEcT * FROM " . sqlf($tf['tbl.info']) . " WHERE (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=$tname&%").") ORDER BY `order` DESC,`tname`,`fname`");
+	$res = mysql_query("SELEcT * FROM " . sqlf($tf['tbl.info']) . " WHERE (CONCAT('&',`params`,'&') LIKE ".sqlv("%&xtable=$table->tname&%").") ORDER BY `order` DESC,`tname`,`fname`");
 	while ($row = mysql_fetch_assoc($res)) {
 		$row['pkey'] = TftTablePkey($row['tname']);
 		$subs[] = $row;
@@ -275,7 +274,7 @@ function TftGetSubtables($tname) {
 
 // return an array of fields and each field is an array of all fetched
 // information from tf info table, about that field.
-function TftFetchTableFields($tname) {
+function TftFetchTableFields_cancel($tname) {
 	global $tf;
 	$fields = array();
 	$res = mysql_query("SELeCT * FROM " . sqlf($tf['tbl.info']) . " WHERE (`tname` LIKE " . sqlv($tname) . ") AND (`fname`<>'') ORDER BY `order` DESC,`fname`");
@@ -367,29 +366,23 @@ function TftUserCan($user, $action, $tname, $fname = '', $row = null) {
 	if (empty($user))
 		$user = tfGetUserGroup();
 
-	if (is_array($row) && array_key_exists('users' . $action, $row)) {
-		return strpos(',' . strtolower($row['users' . $action]) . ',', ',' . $user . ',') !== false;
-	} else {
-		if ($row != null) {
-			error_log("tftUserCan unknown parameter row", E_USER_WARNING);
+	if (!is_array($row) || !array_key_exists('users' . $action, $row)) {
+		if (!empty($tf['cache']["row..$tname..$fname"])) {
+			$row=$tf['cache']["row..$tname..$fname"];
+		} else {
+			$res=mysql_query('SelECT * FROM '.sqlf($tf['tbl.info']).' WHERE (`tname`='.sqlv($tname).' AND `fname`='.sqlv($fname).')');
+			if (!$res) fatal("Error reading tf info table at line ".__LINE__);
+			$row=mysql_fetch_assoc($res);
+			$tf['cache']["row..$tname..$fname"]=$row;
 		}
-		$sql = "SelECT * FROM `" . $tf['tbl.info'] . "`
-             WHERE (`tname`=" . sqlv($tname) . ")
-               AND (`fname`=" . sqlv($fname) . ")";
-		$res = mysql_query($sql);
-		if (!$res)
-			fatal("Error reading tf info table (" . $tf['tbl.info'] . "). Try to backup and remove custom/tfconfig.php then <a href='config.php'>reconfigure TableField</a> <!-- $sql -->");
-		$row = mysql_fetch_assoc($res);
-		$sql = "SEleCT COUNT(*) FROM `" . $tf['tbl.info'] . "`
-                     WHERE (`tname`=" . sqlv($tname) . ")
-                       AND (`fname`=" . sqlv($fname) . ")
-                     AND (FIND_IN_SET('$user',`users{$action}`)>0)";
-		$res = mysql_query($sql);
-		if (!$res)
-			fatal("Error reading tf info table (" . $tf['tbl.info'] . ") for action ($action) <-- $sql -->");
-		$row = mysql_fetch_row($res);
-		return $row[0] > 0;
 	}
+	return strpos(',' . strtolower($row['users' . $action]) . ',', ',' . $user . ',') !== false;
+
+	/*/ Quick database option
+	$res = mysql_query('SEleCT COUNT(*) FROM '.sqlf($tf['tbl.info']).' WHERE (`tname`='.sqlv($tname).' AND `fname`='.sqlv($fname).' AND FIND_IN_SET('.sqlv($user).','.sqlf('users'.$action).')>0)';);
+	if (!$res) fatal("Error reading tf info table at line ".__LINE__);
+	$row = mysql_fetch_row($res);
+	return $row[0] > 0;//*/
 }
 
 // return an array of all tables listed
@@ -406,17 +399,14 @@ function TftAllTables() {
 	return $ret;
 }
 
-// return an array of all tables as keys and their fetched data as objects
+// return an array of all tables as keys and their fetched data as associative array
 function TftFetchAllTables() {
 	global $tf;
 	$res = mysql_query("SELecT * FROM `" . $tf['tbl.info'] . "` WHERE `fname`='' ORDER BY `order` DESC,`label`,`tname`");
-	if (!$res) {
-		die('Critical DB Error - main table is unreadable (' . $tf['tbl.info'] . '). If you have reset your db, please edit custom/dbconfig.php or remove it');
-	}
+	if (!$res) fatal('Critical DB Error - main table is unreadable (' . $tf['tbl.info'] . '). If you have reset your db, please edit custom/dbconfig.php or remove it');
 	$ret = array();
-	while ($row = mysql_fetch_assoc($res)) {
-		$ret[] = $row;
-	}
+	while ($row = mysql_fetch_assoc($res))
+		$ret[$row['tname']] = $row;
 	return $ret;
 }
 

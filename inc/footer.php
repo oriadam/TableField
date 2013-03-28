@@ -31,7 +31,7 @@ if (!empty($tf['html.chosen'])) {
 	?>
 	<script>
 		if (!$.browser) $.browser={};
-		$("#idForm select").chosen();
+		$("#idForm select").not('#idPaging select').chosen();
 	</script>
 	<?
 }

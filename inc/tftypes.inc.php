@@ -4,7 +4,6 @@ global $tf;
 ////////////////////////////////////////
 // the base TfType class.
 class TfType {
-
 	var $tname; // table database name
 	var $fname; // field database name
 	var $ename; // html form input element name, name that is sent to $_POST. MUST be: "$fname[$rowc]"
@@ -14,7 +13,7 @@ class TfType {
 
 	var $fetch = array(); // array of all data from the tf info table (fetch_assoc)
 	var $error = null; // validation error
-	var $params = array(); // populated array of extra 'params' field
+	var $params = array(); // populated array of extra 'params' field from meta table tbl.meta tf_meta
 	var $intags = array(); // populated values to go inside the main input tag, such as:
 						   // class style dir pattern size rows cols heigth width onchange onclick onfocus onblur onmouseover onmouseout
 
@@ -38,8 +37,11 @@ class TfType {
 		$this->tname = $fetch['tname'];   // table name
 		$this->fname = $fetch['fname'];   // field name
 		$this->value = $fetch['default']; // set the default value for this field
-		if (!empty($this->fetch['params']))
-			$this->params=paramsfromstring($this->fetch['params']); // populate extra params
+		/* no need...
+		if (is_array($this->fetch['params'])) {
+			&$this->params=$this->fetch['params'];
+			unset($this->fetch['params']);
+		}*/
 	}
 
 	// Return the sql decleration for this field type
@@ -115,9 +117,9 @@ class TfType {
 	// Return true/false. When false, validation error info is at $this->error
 	function validate($value) {
 		if ($value===null && empty($this->fetch['oknull']))
-			return $this->valerror('Null not allowed');
+			return $this->valerror(_('Null not allowed'));
 		if ($value==='' && empty($this->fetch['okempty']))
-			return $this->valerror('Cannot be empty');
+			return $this->valerror(_('Cannot be empty'));
 		$this->error = '';
 		return true;
 	}
@@ -236,7 +238,6 @@ class TfType {
 			return $default;
 	}
 
-
 	// Display value to view current field (not html) (xkey will be translated)
 	function view() {
 		return $this->value;
@@ -251,7 +252,9 @@ class TfType {
 	function populate_intag($override=array()) {
 
 		/////// get stuff from params /////////
-		foreach (TfType::$intag_tocopy as $k) if (array_key_exists($k,$this->params)) $override[$k]=$this->params[$k];
+		foreach (TfType::$intag_tocopy as $k)
+			if (array_key_exists($k,$this->params))
+				$override[$k]=$this->params[$k];
 
 		////// populate pattern /////
 		if (!array_key_exists('pattern',$override) && (!$this->fetch['okempty'])) $override['pattern']='.+';
@@ -443,7 +446,7 @@ class TfTypefictive extends TfType {
 ////////////////////////////////////////
 // enum
 // select values from a list
-// params:
+// meta params:
 //   values - comma separated available values
 class TfTypeenum extends TfType {
 	var $values=array(); // available values
@@ -456,8 +459,16 @@ class TfTypeenum extends TfType {
 
 	function populate_values()
 	{
-		$this->values=explode(',',$this->param('values'));
-		if (count($this->values)==0) addToLog('<t>values</t> '._('Value is missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+		if (empty($this->params['values'])) {
+			addToLog('<t>values</t> '._('Value is missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+		} else {
+			$this->values=explode(',',$this->params['values']);
+			if (count($this->values)==0)
+				addToLog('<t>values</t> '._('Value is missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+			else
+				foreach ($this->values as $k=>$v)
+					$this->values[$k]=urldecode($v);
+		}
 	}
 
 	function populate($fetch,&$table) {
@@ -467,7 +478,7 @@ class TfTypeenum extends TfType {
 
 	function validate($value) {
 		$ok=parent::validate($value);
-		if ($ok && !in_array($value,$this->values)) return $this->valerror('Value not in list');
+		if ($ok && !in_array($value,$this->values)) return $this->valerror(_('Value not in list'));
 		return $ok;
 	}
 
@@ -483,7 +494,7 @@ class TfTypeenum extends TfType {
 ////////////////////////////////////////
 // enums
 // select set of values from a list
-// params:
+// meta params:
 //   values - comma separated available values
 class TfTypeenums extends TfTypeenum {
 
@@ -496,19 +507,21 @@ class TfTypeenums extends TfTypeenum {
 	function validate($value) {
 		$value=explode(',',$value);
 		$cnt=count($value);
-		for ($i=0;$i<$cnt;$i++)
+		for ($i=0;$i<$cnt;$i++) {
+			$value[$i]=urldecode($value[$i]);
 			if (!in_array($value[$i],$this->values))
-				return valerror('Value not in list');
+				return $this->valerror(_('Value not in list'));
+		}
 		if ($this->fetch['okmin']) {
 			if ($cnt<$this->fetch['okmin'])
-				return valerror('Select at least '.$this->fetch['okmin'].' items');
+				return $this->valerror('Select at least '.$this->fetch['okmin'].' items');
 		}
 		if ($this->fetch['okmax']) {
 			if ($cnt>$this->fetch['okmax'])
-				return valerror('Select at most '.$this->fetch['okmax'].' items');
+				return $this->valerror('Select at most '.$this->fetch['okmax'].' items');
 		}
 		if ($cnt==0 && $this->fetch['okempty'])
-			return valerror('Select at least one item');
+			return $this->valerror(_('Select at least one item'));
 		return true;
 	}
 
@@ -529,7 +542,7 @@ class TfTypepkey extends TfTypenumber {
 
 	function validate($value) {
 		if ($value)
-			return $this->valerror('Primary key is not editable');
+			return $this->valerror(_('Primary key is not editable'));
 		return true;
 	}
 
@@ -547,7 +560,7 @@ class TfTypepkey extends TfTypenumber {
 ////////////////////////////////////////
 // Regular string type
 // A general text field (up to [okmax] chars, 255 by default)
-// params:
+// meta params:
 // for search:
 //   search-cs = yes/no. case sensitive? default no.
 //   search-wildcards = yes/no. support the * wildcard (translated to % in sql) default no.
@@ -579,9 +592,9 @@ class TfTypestring extends TfType {
 
 	function validate($value) {
 		if ((@$this->fetch['okmax'] > 0) && ($this->fetch['okmax'] < strlen($value)))
-			return $this->valerror('Text too long');
+			return $this->valerror(_('Text too long'));
 		if ((@$this->fetch['okmin'] > 0) && ($this->fetch['okmin'] > strlen($value)))
-			return $this->valerror('Text too short');
+			return $this->valerror(_('Text too short'));
 		return parent::validate($value);
 	}
 
@@ -612,9 +625,9 @@ class TfTypemd5 extends TfTypestring {
 		if ($this->ishashed($value))
 			return true;
 		if ((@$this->fetch['okmax'] > 0) && ($this->fetch['okmax'] < strlen($value)))
-			return $this->valerror('Text too long');
+			return $this->valerror(_('Text too long'));
 		if ((@$this->fetch['okmin'] > 0) && ($this->fetch['okmin'] > strlen($value)))
-			return $this->valerror('Text too short');
+			return $this->valerror(_('Text too short'));
 		return parent::validate($value);
 	}
 
@@ -637,7 +650,7 @@ class TfTypemd5 extends TfTypestring {
 ////////////////////////////////////////
 // Email address
 // Todo: anti email-fishing-robots mechanism
-// params:
+// meta params:
 //       nolink   - When set to '1' or 'true' does not display a link, only the email itself on htmlView()
 //       linktext - The html text inside the <a> tag that leads to the hyperlink.
 //                  Use "$value" to use the email address in this field.
@@ -673,11 +686,11 @@ class TfTypeemail extends TfTypestring {
 		if ($value === null)
 			$value = $this->value;
 		if ($value == '')
-			return $this->valerror('Email is empty');
+			return $this->valerror(_('Email is empty'));
 		$a = explode('@', $value);
 		$domain = $a[1];
 		if (gethostbyname($domain) == $domain)
-			return $this->valerror('Email address domain is not reachable');
+			return $this->valerror(_('Email address domain is not reachable'));
 		return true;
 	}
 
@@ -687,17 +700,17 @@ class TfTypeemail extends TfTypestring {
 			return parent::validate($value);
 		$r = $this->validcharsRE;
 		if (!preg_match("/[$r]+\\@[$r]+\\.[$r][$r]+/", $value))
-			return $this->valerror('Invalid email address');
+			return $this->valerror(_('Invalid email address'));
 		// Dont always validate domain exists because it takes some time when domain is invalid (0.5-3 seconds)
 		// and it always fail when there's no internet connection
 		if ($this->paramtrue('validatedomain') || $this->paramtrue('validate-domain')) {
 			if (!$this->validateDomain($value)) {
-				return $this->valerror('Email address domain is not reachable');
+				return $this->valerror(_('Email address domain is not reachable'));
 			}
 		}
 		if ($this->paramtrue('noexample') || $this->paramtrue('no-example')) {
 			if (preg_match('/@example\.[a-zA-Z][a-zA-Z][a-zA-Z]?\.?[a-zA-Z]?[a-zA-Z]?/', $value))
-				return $this->valerror('Email address domain is not reachable');
+				return $this->valerror(_('Email address domain is not reachable'));
 		}
 		return true;
 	}
@@ -716,7 +729,7 @@ class TfTypeemail extends TfTypestring {
 
 ////////////////////////////////////////
 // hyper Link field
-// params:
+// meta params:
 //       no-link   - when true dont display an <a> link on htmlView(), but the link as text
 //       allowed   - CSV of allowed protocols. Default: http,https. Other protocols for example: mailto,javascript
 //                   Note that if the link is missing a protocol, 'http://' will be added automatically on fix().
@@ -730,9 +743,11 @@ class TfTypelink extends TfTypestring {
 
 	function populate($fetch,&$table) {
 		parent::populate($fetch,$table);
-		if (!$this->param('target')) $this->param('target','_blank');
+		if (!isset($this->params['target']))
+			$this->params['target']='_blank';
 	}
 
+	/* disallow relative links?
 	function fix($value) {
 		if (!empty($value)) {
 			if (strpos($value, ':') === FALSE) {
@@ -740,10 +755,10 @@ class TfTypelink extends TfTypestring {
 			}
 		}
 		return $value;
-	}
+	}*/
 
 	function htmlView($override=array()) {
-		if ($this->paramtrue('nolink') || $this->paramtrue('no-link'))
+		if ($this->paramtrue('no-link'))
 			return $this->view();
 		else
 			return '<a href="'.fix4html2($this->value).'" '.$this->intag($override).'>'.$this->view().'</a>';
@@ -775,9 +790,9 @@ class TfTypenumber extends TfType {
 
 	function populate($fetch,&$table) {
 		parent::populate($fetch,$table);
-		if ($this->param('size') === null) {
+		if (!isset($this->params['size'])) {
 			$size = max(3, strlen($this->fetch['okmax']), strlen($this->fetch['okmin']), strlen($this->value));
-			$this->param('size', $size);
+			$this->params['size']=$size;
 		}
 	}
 
@@ -849,17 +864,17 @@ class TfTypenumber extends TfType {
 			if ($this->fetch['okempty'] || $this->fetch['oknull']) {
 				return true;
 			} else {
-				return $this->valerror('Cannot be left empty');
+				return $this->valerror(_('Cannot be left empty'));
 			}
 		}
 		if (!is_numeric($value))
-			return $this->valerror('Not a number');
+			return $this->valerror(_('Not a number'));
 		if (strpos($value, '.') !== false)
-			return $this->valerror('Not supporting decimal point');
+			return $this->valerror(_('Not supporting decimal point'));
 		if (($this->fetch['okmax'] !== null && $this->fetch['okmax'] !== '') && ($this->fetch['okmax'] < $value))
-			return $this->valerror('Number too big');
+			return $this->valerror(_('Number too big'));
 		if (($this->fetch['okmin'] !== null && $this->fetch['okmin'] !== '') && ($this->fetch['okmin'] > $value))
-			return $this->valerror('Number too small');
+			return $this->valerror(_('Number too small'));
 		return parent::validate($value);
 	}
 
@@ -945,20 +960,20 @@ class TfTypefloat extends TfTypenumber {
 	function validate($value) {
 		$value = $this->fix($value);
 		if ($value == '' && (!$this->fetch['okempty']) && (!$this->fetch['oknull']))
-			return $this->valerror('Cannot be left empty');
+			return $this->valerror(_('Cannot be left empty'));
 		if ($value != '' && !is_numeric($value))
-			return $this->valerror('Not a number');
+			return $this->valerror(_('Not a number'));
 		if ($value != '' && ($this->fetch['okmax'] !== null && $this->fetch['okmax'] !== '') && (floatval($this->fetch['okmax']) < $value))
-			return $this->valerror('Number too big');
+			return $this->valerror(_('Number too big'));
 		if ($value != '' && ($this->fetch['okmin'] !== null && $this->fetch['okmin'] !== '') && (floatval($this->fetch['okmin']) > $value))
-			return $this->valerror('Number too small');
+			return $this->valerror(_('Number too small'));
 		return parent::validate($value);
 	}
 
 	function htmlInput($override=array()) {
-		if ($this->param('size') == '') {
+		if (!isset($this->params['size'])) {
 			$size = max(4, strlen($this->fetch['okmax']), strlen($this->fetch['okmin']), strlen($this->value));
-			$this->param('size', $size);
+			$this->params['size']=$size;
 		}
 		return parent::htmlInput($override);
 	}
@@ -974,12 +989,12 @@ class TfTypefloat extends TfTypenumber {
 // class TfTypefloat
 ////////////////////////////////////////
 // Password field
-// params:
+// meta params:
 //    echo - Default false. When set to False/0 doesn't return saved password back to html input, for security reasons.
 class TfTypepassword extends TfTypestring {
 
 	function htmlInput($override=array()) {
-		if (chkBool($this->param('echo'),true)) {
+		if ($this->paramtrue('echo',true)) {
 			$pass = $this->value;
 		} else {
 			$pass = '';
@@ -992,7 +1007,7 @@ class TfTypepassword extends TfTypestring {
 ////////////////////////////////////////
 // Password +Validation
 // Requires validation of the password by entering it twice.
-// params:
+// meta params:
 //     echo - Default false. When set to False/0 doesn't return saved password back to html input, for security reasons.
 //     enterpass1 - label of first password. default 'Enter new password'
 //     enterpass2 - label of validation field. default 'again:'
@@ -1003,25 +1018,29 @@ class TfTypepass2 extends TfTypestring {
 
 	function validate($value) {
 		if (isset($_POST[$this->eid . ' match']) && ($_POST[$this->eid . ' match'] != $value))
-			return $this->valerror('Password validation mismatched');
+			return $this->valerror(_('Password validation mismatched'));
 		return parent::validate($value);
 	}
 
 	function htmlInput($override=array()) {
-		if (chkBool($this->param('echo'),true)) {
+		if ($this->paramtrue('echo',true)) {
 			$pass = $this->value;
 		} else {
 			$pass = '';
 		}
-		$enterpass1 = $this->param('enterpass1');
-		if ($enterpass2 === null)
-			$enterpass2 = _('Enter new password');
-		$enterpass2 = $this->param('enterpass2');
-		if ($enterpass2 === null)
-			$enterpass2 = _('again').':';
-		$mismatched = $this->param('mismatched');
-		if ($mismatched === null)
+		if (isset($this->params['enterpass1']))
+			$enterpass1 = $this->params['enterpass1'];
+		else
+			$enterpass1 = _('Enter new password');
+		if (isset($this->params['enterpass2']))
+			$enterpass2 = $this->params['enterpass2'];
+		else
+			$enterpass2 = _('...and again');
+		if (isset($this->params['mismatched']))
+			$mismatched = $this->params['mismatched'];
+		else
 			$mismatched = _('password mismatched');
+
 		$override['onblue']="matchpasswords(this,document.getElementById('$this->eid match'),this,document.getElementById('$this->eid bundle'),".(1*$this->fetch['okempty']).")";
 		return "<div id='$this->eid bundle' class='tfPassBundle ".$this->fname."'>"
 					."<label class=tfPass1><span class='add-on icon-key'></span><input value=\"".fix4html2($pass)."\" type=password placeholder=\"".fix4html2($enterpass1)."\" ".$this->intag($override)
@@ -1035,7 +1054,7 @@ class TfTypepass2 extends TfTypestring {
 // Password +Validation + Validate current password before allow changing
 // Requires validation of the password by entering it twice
 // AND enter current password (if set)
-// params:
+// meta params:
 //     echo - Default false. When set to False/0 doesn't return saved password back to html input, for security reasons.
 //     enterpass1 - label (placeholder) of first password. default 'Enter new password'
 //     enterpass2 - label (placeholder) of validation field. default '...and again'
@@ -1049,29 +1068,33 @@ class TfTypepass3 extends TfTypestring {
 		$ok=parent::validate($value);
 		if ($ok)
 			if (empty($_POST[$this->eid.' current']))
-				return $this->valerror('Please type current password');
+				return $this->valerror(_('Please type current password'));
 			elseif (($_POST[$this->eid.' current'] != $this->value) && md5($_POST[$this->eid.' current'])!=$this->value)
-				return $this->valerror('Wrong current password');
+				return $this->valerror(_('Wrong current password'));
 		return $ok;
 	}
 
 	function htmlInput($override=array()) {
-		if (chkBool($this->param('echo'),true)) {
+		if ($this->paramtrue('echo',true)) {
 			$pass = $this->value;
 		} else {
 			$pass = '';
 		}
-		$enterpass1 = $this->param('enterpass1');
-		if ($enterpass2 === null)
-			$enterpass2 = _('Enter new password');
-		$enterpass2 = $this->param('enterpass2');
-		if ($enterpass2 === null)
+		if (isset($this->params['enterpass1']))
+			$enterpass1 = $this->params['enterpass1'];
+		else
+			$enterpass1 = _('Enter new password');
+		if (isset($this->params['enterpass2']))
+			$enterpass2 = $this->params['enterpass2'];
+		else
 			$enterpass2 = _('...and again');
-		$enterpass3 = $this->param('enterpass3');
-		if ($enterpass3 === null)
-			$enterpass3 = _('Current password').':';
-		$mismatched = $this->param('mismatched');
-		if ($mismatched === null)
+		if (isset($this->params['enterpass3']))
+			$enterpass3 = $this->params['enterpass3'];
+		else
+			$enterpass3 = _('Current password');
+		if (isset($this->params['mismatched']))
+			$mismatched = $this->params['mismatched'];
+		else
 			$mismatched = _('password mismatched');
 		$override['onblue']="matchpasswords(this,document.getElementById('$this->eid match'),this,document.getElementById('$this->eid bundle'),".(1*$this->fetch['okempty']).")";
 		return "<div id='$this->eid bundle' class='tfPassBundle ".$this->fname."'>"
@@ -1106,7 +1129,6 @@ class TfTypetext extends TfTypestring {
 // class TfTypetext
 ////////////////////////////////////////
 // html text field
-// params: title - the title of the popup preview window
 class TfTypehtml extends TfTypetext {
 
 	function htmlInput($override=array()) {
@@ -1125,23 +1147,23 @@ class TfTypehtml extends TfTypetext {
 			.'<div class=popover id='.$this->eid.'>'.$this->value.'</div>';
 	}
 
-}
+}// class TfTypehtml
 
-// class TfTypehtml
+
 ////////////////////////////////////////
 // File
 // validate($_FILES[key]) - validates:
-//             //allowed mime types from param('mimes') ; separated,
-//             allowed extensions from param('exts' / extensions) ; separated,
+//             allowed mime types from meta param 'mimes' ; separated,
+//             allowed extensions from meta param 'extensions' ; separated,
 //             for file min/max size, if okmax / okmin are set
 //             for upload errors
 //
-// fix('name') - returns the filename to be used, as if the file has been saved, accoarding to param:
+// fix('name') - returns the filename to be used, as if the file has been saved, accoarding to meta param:
 //             if overwrite=auto:      the file is auto named only when already exists.
 //             if overwrite=autoname:  the file is always auto named.
 //             if overwrite=yes:       the file is never auto named, and when the file already exists it's being overwritten.
 //             if overwrite=no:        the file is never auto named. when file already exists - error is set, and null is returned.
-//             zeros: when the file is auto named, the length of the addition is param(zeros).
+//             zeros: when the file is auto named, the length of the addition is meta param 'zeros'.
 //             if autoname='' or 'zeros' or 'number' or 'numbers': the auto-name addition is numbers
 //             if autoname='chars': the auto-name addition is char based (aaa aab aac ... aba abb .. zzz)
 //             if autoname='hex': the auto-name addition counts hexa numbers
@@ -1152,8 +1174,8 @@ class TfTypehtml extends TfTypetext {
 //
 // set($_FILES[key]) -
 //             delete the current file (if current value is set and the file exists)
-//             saves the new uploaded file to the name param('path.rel').param('basename')
-//             the file name is fixed using fix(param(basename)).
+//             saves the new uploaded file to the name params['path.rel'].params['basename']
+//             the file name is fixed using fix(params['basename']).
 //             the new file name is returned and saved in the current field value.
 //
 // set(''),
@@ -1164,16 +1186,16 @@ class TfTypehtml extends TfTypetext {
 //               the new file name value is returned (null indicates an error).
 //               if you want the name to be empty, use set('.');
 //
-// [params] summary:
+// meta params:
 //   basename - the file name to be used when uploading new files.
-//   extension - the file extension, added with a .dot to the basename, after autonaming. when '' - the extension is saved from the original file name.
-// overwrite - overwrite method. default 'auto'. values: auto/autoname/yes/no.
+//  extension - the file extension, added with a .dot to the basename, after autonaming. when '' - the extension is saved from the original file name.
+//  overwrite - overwrite method. default 'auto'. values: auto/autoname/yes/no.
 //   autoname - auto name system to be used.
 //      zeros - set length of auto name addition.
-//      dir - local directory to save files. Must include / at end, or it will be added to the filename as prefix.
-//  url.rel - prefix for file link href. Must include / at end, or it will be added to the filename as prefix.
-//    mimes - allowed MIME types, ; separated. it is only set the 'accept' parameter in the file input.
-//     exts - allowed source file extensions
+//        dir - local directory to save files. Must include / at end, or it will be added to the filename as prefix.
+//    url.rel - prefix for file link href. Must include / at end, or it will be added to the filename as prefix.
+//      mimes - allowed MIME types, ; separated. it is only set the 'accept' parameter in the file input.
+// extensions - allowed source file extensions
 //
 // remember <form METHOD=POST ENCTYPE='multipart/form-data' >
 
@@ -1194,7 +1216,7 @@ class TfTypefile extends TfType {
 			if ($this->fetch['okempty']) {
 				return true;
 			} else {
-				return $this->valerror('Cannot be left empty');
+				return $this->valerror(_('Cannot be left empty'));
 			}
 		}
 
@@ -1203,66 +1225,65 @@ class TfTypefile extends TfType {
 			if ($value['error'] != UPLOAD_ERR_OK) { // php upload error
 				switch ($value['error']) {
 					case UPLOAD_ERR_INI_SIZE:
-						return $this->valerror('File exceeds upload_max_filesize');
+						return $this->valerror(_('File exceeds upload_max_filesize'));
 
 					case UPLOAD_ERR_FORM_SIZE:
-						return $this->valerror('File exceeds MAX_FILE_SIZE');
+						return $this->valerror(_('File exceeds MAX_FILE_SIZE'));
 
 					case UPLOAD_ERR_PARTIAL:
-						return $this->valerror('File was only partially uploaded');
+						return $this->valerror(_('File was only partially uploaded'));
 
 					case UPLOAD_ERR_NO_FILE:
-						return $this->valerror('No file was uploaded');
+						return $this->valerror(_('No file was uploaded'));
 
 					case UPLOAD_ERR_NO_TMP_DIR:
 						error_log("PHP Missing a temporary folder. $this->tname.$this->fname=$value[tmp_name]");
-						return $this->valerror('PHP Missing a temporary folder');
+						return $this->valerror(_('PHP Missing a temporary folder'));
 				}
 				return $this->valerror("Unknown file upload error $value[error]");
 			}
 
 			if (!file_exists($value['tmp_name']))
-				return $this->valerror('File does not exist in temp folder');
+				return $this->valerror(_('File does not exist in temp folder'));
 			$fz = filesize($value['tmp_name']);
 			if ($fz < 0)
-				return $this->valerror('Error reading file size');
+				return $this->valerror(_('Error reading file size'));
 			if (($this->fetch['okmax'] > 0) && ($this->fetch['okmax'] < $fz))
-				return $this->valerror('File too big');
+				return $this->valerror(_('File too big'));
 			if (($this->fetch['okmin'] > 0) && ($this->fetch['okmin'] > $fz))
-				return $this->valerror('File too small');
+				return $this->valerror(_('File too small'));
 			if ((!$this->fetch['okempty']) && ($fz == 0))
-				return $this->valerror('File is empty');
+				return $this->valerror(_('File is empty'));
 
-			$exts = $this->param('exts');
-			if ($exts) {
+			if (!empty($this->params['extensions'])) {
 				$ext = getExtension($value['name']);
-				if (stripos(";$exts;", ";$ext;") === false)
-					return $this->valerror('File extension not allowed');
+				if (stripos(';'.$this->params['extensions'].';', ";$ext;") === false)
+					return $this->valerror(_('File extension not allowed'));
 			}
 
 			// if we got here it means everything's ok
 			// i hope someone would this->set to move the file out of temp folder
 		}else {
-			if (file_exists($tf['path.rel'] . $this->param('path.rel') . $value)) {
-				$fz = filesize($tf['path.rel'] . $this->param('path.rel') . $value);
+			if (file_exists($tf['path.rel'] . $this->params['path.rel'] . $value)) {
+				$fz = filesize($tf['path.rel'] . $this->params['path.rel'] . $value);
 				if ($fz < 0)
-					return $this->valerror('Error reading file size');
+					return $this->valerror(_('Error reading file size'));
 				if (($this->fetch['okmax'] > 0) && ($this->fetch['okmax'] < $fz))
-					return $this->valerror('File too big');
+					return $this->valerror(_('File too big'));
 				if (($this->fetch['okmin'] > 0) && ($this->fetch['okmin'] > $fz))
-					return $this->valerror('File too small');
+					return $this->valerror(_('File too small'));
 				if ((!$this->fetch['okempty']) && ($fz == 0))
-					return $this->valerror('File is empty');
+					return $this->valerror(_('File is empty'));
 			} else {
-				return $this->valerror('File does not exist');
+				return $this->valerror(_('File does not exist'));
 			}
 
-			$exts = $this->param('exts');
-			if ($exts) {
-				$ext = getExtension($value);
-				if (stripos(";$exts;", ";$ext;") === false)
-					return $this->valerror('File extension not allowed');
+			if (!empty($this->params['extensions'])) {
+				$ext = getExtension($value['name']);
+				if (stripos(';'.$this->params['extensions'].';', ";$ext;") === false)
+					return $this->valerror(_('File extension not allowed'));
 			}
+
 		}
 		return true;
 	}
@@ -1314,24 +1335,24 @@ class TfTypefile extends TfType {
 		$fnewname = $tf['path.rel'] . $this->param('path.rel') . $newname;
 		if ($ovr == 'yes') { // overwrite, dont autoname
 			if ($newname == '')
-				return $this->valerror('No filename given');
+				return $this->valerror(_('No filename given'));
 			if (!file_exists($fnewname)) {
 				return $newname;
 			} else {
 				if (is_writable($fnewname)) {
 					return $newname;
 				} else {
-					return $this->valerror('No overwrite permission for this filename');
+					return $this->valerror(_('No overwrite permission for this filename'));
 				}
 			}
 		}
 		if ($ovr == 'no') { // dont overwrite dont autoname
 			if ($newname == '')
-				return $this->valerror('No filename given');
+				return $this->valerror(_('No filename given'));
 			if (!file_exists($fnewname)) {
 				return $newname;
 			} else {
-				return $this->valerror('filename already exists');
+				return $this->valerror(_('filename already exists'));
 			}
 		}
 		// overwrite is not yes/no
@@ -1535,7 +1556,7 @@ class TfTypefile extends TfType {
 				}
 				$this->value = $name;
 			} else {
-				return $this->valerror('Error uploading file');
+				return $this->valerror(_('Error uploading file'));
 			}
 		} else {
 			if ($newvalue === null || $newvalue == '')
@@ -1563,7 +1584,7 @@ class TfTypefile extends TfType {
 			return true;
 		} else {
 			error_log("error deleting `$this->tname.$this->fname`: " . $tf['path.rel'] . $this->param('path.rel') . $this->value);
-			$this->valerror('Delete failed');
+			$this->valerror(_('Delete failed'));
 			$this->value = '';
 			return false;
 		}
@@ -1712,7 +1733,7 @@ class TfTypeblob extends TfTypefile {
 				return true;
 			} else {
 				if (empty($this->value)) {
-					return $this->valerror('Cannot be left empty');
+					return $this->valerror(_('Cannot be left empty'));
 				} else {
 					return true;
 				}
@@ -1724,41 +1745,41 @@ class TfTypeblob extends TfTypefile {
 			if ($value['error'] != UPLOAD_ERR_OK) { // php upload error
 				switch ($value['error']) {
 					case UPLOAD_ERR_INI_SIZE:
-						return $this->valerror('File exceeds upload_max_filesize');
+						return $this->valerror(_('File exceeds upload_max_filesize'));
 
 					case UPLOAD_ERR_FORM_SIZE:
-						return $this->valerror('File exceeds MAX_FILE_SIZE');
+						return $this->valerror(_('File exceeds MAX_FILE_SIZE'));
 
 					case UPLOAD_ERR_PARTIAL:
-						return $this->valerror('File was only partially uploaded');
+						return $this->valerror(_('File was only partially uploaded'));
 
 					case UPLOAD_ERR_NO_FILE:
-						return $this->valerror('No file was uploaded');
+						return $this->valerror(_('No file was uploaded'));
 
 					case UPLOAD_ERR_NO_TMP_DIR:
 						error_log("PHP Missing a temporary folder. $this->fname;$this->fname;$value[tmp_name]");
-						return $this->valerror('PHP Missing a temporary folder');
+						return $this->valerror(_('PHP Missing a temporary folder'));
 				}
 				return $this->valerror("Unknown file upload error $value[error]");
 			}
 
 			if (!file_exists($value['tmp_name']))
-				return $this->valerror('File does not exist in temp folder');
+				return $this->valerror(_('File does not exist in temp folder'));
 			$fz = filesize($value['tmp_name']);
 			if ($fz < 0)
-				return $this->valerror('Error reading file size');
+				return $this->valerror(_('Error reading file size'));
 			if (($this->fetch['okmax'] > 0) && ($this->fetch['okmax'] < $fz))
-				return $this->valerror('File too big');
+				return $this->valerror(_('File too big'));
 			if (($this->fetch['okmin'] > 0) && ($this->fetch['okmin'] > $fz))
-				return $this->valerror('File too small');
+				return $this->valerror(_('File too small'));
 			if ((!$this->fetch['okempty']) && ($fz == 0))
-				return $this->valerror('File is empty');
+				return $this->valerror(_('File is empty'));
 
 			$exts = $this->param('exts');
 			if ($exts) {
 				$ext = getExtension($value['name']);
 				if (stripos(";$exts;", ";$ext;") === false)
-					return $this->valerror('File extension not allowed');
+					return $this->valerror(_('File extension not allowed'));
 			}
 
 			// if we got here it means everything's ok
@@ -1978,7 +1999,7 @@ class TfTypeboolean extends TfType {
 			if ($this->fetch['oknull'])
 				return true;
 
-		return $this->valerror('Must be 1/0');
+		return $this->valerror(_('Must be 1/0'));
 	}
 
 	function htmlInput($override=array()) {
@@ -2414,49 +2435,22 @@ class TfTypestars extends TfTypenumber {
 }// class TfTypestars
 
 ////////////////////////////////////////
-// eXternal Key  in another table
+// eXternal Key = Foreign Key , an id that links to another table
 //
-// params:
-//   xtable  - mandatory. The external table name which holds the data
-//   xkey    - mandatory. The external table primary key to search. default to xtable->pkey
-//   xname   - mandatory. The external table field name or sql-expression that will be used for display. example: CONCAT('[',`id`,'] ',first_name,' ',last_name)
-//   xclass  - recommended. The external table field class. trying to default to original field type
+// meta params:
+//   xtable   - mandatory. The external table name which holds the data
+//   xkey     - mandatory. The external table primary key to search. default to xtable->pkey
+//   xname    - mandatory. The external table field name or sql-expression that will be used for display. example: CONCAT('[',`id`,'] ',first_name,' ',last_name)
+//   xclass   - recommended. The external table field class. trying to default to original field type
 //   xwhere   - optional. SQL WHERE clause to add to external table query, to limit the results (including GROUP BY and HAVING when necessary)
 //   xorderby - optional. SQL ORDER BY clause
-//   nothing - optional. when okempty is on, you can select nothing. this is the text for nothing.
-//   strict - optional boolean. Default true. When true only allow values from external table. When false allows any value and only suggests from external table.
-//   type - select/radio/combo - method of input
+//   nothing  - optional. when okempty is on, you can select nothing. this is the text for nothing.
+//   strict   - optional boolean. Default true. When true only allow values from external table. When false allows any value and only suggests from external table.
+//   type     - select/radio/combo - method of input
 //
 // search: todo: clarify
 //   using the xtable xname field class when possible, or string %LIKE%
 class TfTypexkey extends TfType {
-
-	public static $paramsmap = array(
-	    'f' => 'name',
-	    'n' => 'name',
-	    'c' => 'class',
-	    't' => 'table',
-	    'k' => 'key',
-	    'w' => 'where',
-	    'o' => 'orderby',
-	    '-' => 'nothing',
-	    'fname' => 'name',
-	    'field' => 'name',
-	    'ftype' => 'class',
-	    'tftype' => 'class',
-	    'tname' => 'table',
-	    'pkey' => 'key',
-	    'id' => 'key',
-	    'sort' => 'orderby',
-	    'orderby' => 'orderby',
-	    'sortby' => 'orderby',
-	    'empty' => 'nothing',
-	    'none' => 'nothing',
-	    '--' => 'nothing',
-	    'missing' => 'nothing',
-	    'null' => 'nothing',
-		'prefix' => 'pre',
-		'postfix' => 'post');
 
 	var $xtable, $xname, $xkey, $xwhere, $xorderby, $xlimit, $xclass, $xtf, $xfetch;
 
@@ -2468,34 +2462,20 @@ class TfTypexkey extends TfType {
 		parent::populate($fetch, $table);
 		global $tf;
 
-		$this->param('strict',$this->paramtrue('strict',true));
-
-		// remove any prefix 'x' from all extra params and map them all to the correct names
-		foreach ($this->params as $k => $v) {
-			$kk = strtolower(preg_replace('/^x/', '', $k)); // remove any prefix x
-			if (array_key_exists($kk, TfTypexkey::$paramsmap))
-				$kk = TfTypexkey::$paramsmap[$kk]; // change 'tname' to 'table' etc
-			if ($kk != $k) {
-				$this->params[$kk] = $v;
-				unset($this->params[$k]);
-			}
-		}
-
 		// external table tname
-		$this->xtable = $this->param("table");
-		if (empty($this->xtable)) {
+		if (empty($this->params['xtable'])) {
 				addToLog('<t>xtable</t> '._('value missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 		}else{
+			$this->xtable = $this->params['xtable'];
 			if (!sqlvalidate($this->xtable)) {
 				addToLog('<t>xtable</t> '._('expression not balanced at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xtable),LOGDEBUG,__LINE__,true);
+				if (DEBUG) addToLog(he($this->xtable),LOGDEBUG,__LINE__,true);
 				$this->xtable = '';
 			}
 		}
 
 		// external key pkey id field name
-		$this->xkey = $this->param("key");
-		if (empty($this->xkey)) {
+		if (empty($this->params['xkey'])) {
 			// no key defined - look for pkey from xtable
 			if (!empty($this->xtable)) {
 				$res = mysql_query("SELECT `fname` FROM " . sqlf($tf['tbl.info']) . " WHERE `tname`=" . sqlv($this->xtable) . " AND `class`='pkey'");
@@ -2503,73 +2483,72 @@ class TfTypexkey extends TfType {
 					if ($row = mysql_fetch_row($res))
 						$this->xkey = $row[0];
 			}
-			if (empty($this->xkey)) { // still empty - bad news
+			if (empty($this->xkey)) // still empty - bad news
 				addToLog('<t>xkey</t> '._('value missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-			} else { // automatically filled - medium news
+			else // automatically filled - medium news
 				addToLog('<t>xkey</t> '._('value missing at').' <f>'.$this->fetch['label'].'</f>',LOGSAME,__LINE__);
-			}
 		} else {
-			if (!sqlvalidate($this->xkey)) {
+			if (!sqlvalidate($this->params['xkey'])) {
 				addToLog('<t>xkey</t> '._('expression not balanced at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xkey),LOGDEBUG,__LINE__,true);
+				if (DEBUG) addToLog(he($this->xkey),LOGDEBUG,__LINE__,true);
 				$this->xkey = '';
 			} else {
-				if (strpos("`", $this->xkey) === false)
-					$this->xkey = "`$this->xkey`";
+				if (strpos("`", $this->params['xkey']) === false)
+					$this->xkey='`'.$this->params['xkey'].'`';
+				else
+					$this->xkey=$this->params['xkey'];
 			}
 		}
 
 		// external display value field name, or expression such as "CONCAT(`firstname`,' ',`lastname`)"
-		$this->xname = str_replace('$xtable',sqlf($this->fname.'_xtable'),$this->param("name"));
-		if (empty($this->xname)) {
+		if (empty($this->params['xname'])) {
 			addToLog('<t>xname</t> '._('value missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 		} else {
+			$this->xname = str_replace('$xtable',sqlf($this->fname.'_xtable'),$this->params['xname']);
 			if (!sqlvalidate($this->xname)) {
 				addToLog('<t>xname</t> '._('expression not balanced at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xname),LOGDEBUG,__LINE__,true);
+				if (DEBUG) addToLog(he($this->xname),LOGDEBUG,__LINE__,true);
 				$this->xname = '';
 			}
 		}
 
-		/*/ external order by clause
-		$this->xorderby = trim(preg_replace('/^\\s*ORDER\\s+BY\\s*\s?/i','',$this->param('orderby')));
-		if (strtolower($this->xorderby) == 'desc') {
-			$this->xorderby = "$this->xname DESC";
-		} else if (strtolower($this->xorderby) == 'asc') {
-			$this->xorderby = "$this->xname ASC";
-		} else if (strtolower($this->xorderby) == 'none' || strtolower(trim($this->xorderby)) == 'nothing' || strtolower(trim($this->xorderby)) == '0' || strtolower(trim($this->xorderby)) == '-') {
-			$this->xorderby = '';
-		} else {
-			if (!sqlvalidate($this->xorderby)) {
+		// external order by clause
+		if (!empty($this->params['xorderby'])) {
+			$this->xorderby=$this->params['xorderby'];
+			if (strtolower($this->xorderby) == 'desc')
+				$this->xorderby = "$this->xname DESC";
+			elseif (strtolower($this->xorderby) == 'asc')
+				$this->xorderby = "$this->xname ASC";
+			elseif (!sqlvalidate($this->xorderby)) {
 				addToLog('<t>xorderby</t> '._('expression not balanced at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xorderby),LOGDEBUG,__LINE__,true);
-				$this->xorderby = '';
+				if (DEBUG) addToLog(he($this->xorderby),LOGDEBUG,__LINE__,true);
+				$this->xorderby = null;
 			}
-		}*/
+		}
 
 		// external sql where clause
-		$this->xwhere = trim(preg_replace('/^\\s*WHERE\\s*/i','',$this->param("where")));
-		if (!empty($this->xwhere)) {
-			if (!sqlvalidate($this->xwhere)) {
+		if (!empty($this->params['xwhere'])) {
+			if (!sqlvalidate($this->params['xwhere'])) {
 				addToLog('<t>xwhere</t> '._('expression not balanced at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xwhere),LOGDEBUG,__LINE__,true);
-				$this->xwhere = "'error with xwhere param at'='$this->fname'"; // same as WHERE (FALSE)
+				if (DEBUG) addToLog(he($this->params['xwhere']),LOGDEBUG,__LINE__,true);
+				$this->xwhere = "'error with xwhere param at'='$this->fname'"; // same as WHERE FALSE
+			} else {
+				$this->xwhere=$this->params['xwhere'];
 			}
 		}
 
 		// external query limit
-		$this->xlimit = trim(preg_replace('/^\\s*LIMIT\\s*/i','',$this->param("limit")));
-		if (!empty($this->xlimit)) {
-			if (!preg_match('/^[0-9]+$/',$this->xlimit)) {
+		if (!empty($this->params['xlimit'])) {
+			if (!preg_match('/^[0-9]+$/',$this->params['xlimit'])) {
 				addToLog('<t>xlimit</t> '._('not a number at').' <f>'.$this->fetch['label'].'</f> (defaults to string)',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xlimit),LOGDEBUG,__LINE__,true);
-				$this->xlimit = null;
+				if (DEBUG) addToLog(he($this->params['xlimit']),LOGDEBUG,__LINE__,true);
+			} else {
+				$this->xlimit=1*$this->params['xlimit'];
 			}
 		}
 
 		// external tftype class
-		$this->xclass = $this->param("class");
-		if (empty($this->xclass)) {
+		if (empty($this->params['xclass'])) {
 			if (sqlname($this->xname)) $this->xfetch=TftFetch($this->xtable,$this->xname);
 			if (!empty($this->xfetch) && is_array($this->xfetch)) {
 				$this->xclass=$this->xfetch['class'];
@@ -2579,9 +2558,10 @@ class TfTypexkey extends TfType {
 				addToLog('<t>xclass</t> '._('value missing at').' <f>'.$this->fetch['label'].'</f>. Unable to detect - using string.',LOGBAD,__LINE__);
 			}
 		} else {
+			$this->xclass = $this->params['xclass'];
 			if (!preg_match('/^[a-zA-Z0-9_]+$/',$this->xclass)) {
 				addToLog('<t>xclass</t> '._('expression not balanced at').' <f>'.$this->fetch['label'].'</f> (defaults to string)',LOGBAD,__LINE__);
-				if (DEBUG) addToLog(htmlentities($this->xclass),LOGDEBUG,__LINE__,true);
+				if (DEBUG) addToLog(he($this->xclass),LOGDEBUG,__LINE__,true);
 				$this->xclass = 'string';
 			}
 		}
@@ -2591,22 +2571,22 @@ class TfTypexkey extends TfType {
 			$this->xtf = new $this->xclass();
 		} else {
 			addToLog("<t>$this->xclass</t> "._('Bad class at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-			$this->xtf = new TfType();
+			$this->xtf = new TfTypestring();
 		}
 
-		if (empty($this->params['type']))
-			if ($this->param('strict')) $this->param('type','select');
+		if (empty($this->params['xtype']))
+			if ($this->params['strict'])
+				$this->param('type','select');
 			else $this->param('type','combo');
-		else $this->param('type',strtolower($this->param('type')));
 
 	}//function populate
 
 	function validate($value) {
 		global $tf;
 		if (($value === '') && (!$this->fetch['okempty']))
-			return $this->valerror('Cannot be left empty');
+			return $this->valerror(_('Cannot be left empty'));
 		if (($value === null) && (!$this->fetch['oknull']))
-			return $this->valerror('Cannot be null');
+			return $this->valerror(_('Cannot be null'));
 		$value = $this->fix($value);
 		if ($value !== '' && $value !== null) {
 			// make sure the key exists in the xtable
@@ -2614,7 +2594,7 @@ class TfTypexkey extends TfType {
 			if (!$res) {
 				addToLog(_('Error reading data at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 				if (DEBUG) addToLog('<sqlerr>'.sqlError().'</sqlerr> <sql>'.sqlLastQuery().'</sql>',LOGDEBUG,__LINE__,true);
-				return $this->valerror('Error reading xtable');
+				return $this->valerror(_('Error reading xtable'));
 			}
 			$row = mysql_fetch_row($res);
 			if ($row[0] == 0)
@@ -2659,10 +2639,10 @@ class TfTypexkey extends TfType {
 		if ($this->params['type'] == 'combo')
 			return $this->htmlInputCombo($override);
 		if ($this->params['type'] == 'chosen')
-			return $this->htmlInputChosen($override);
+			return $this->htmlInputSelect($override);
 
 		addToLog('<t>type</t> '._('value is wrong at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-		if (DEBUG) addToLog(htmlentities($this->params['type']),LOGDEBUG,__LINE__,true);
+		if (DEBUG) addToLog(he($this->params['type']),LOGDEBUG,__LINE__,true);
 		return $this->htmlInputSelect($override);
 	}
 
@@ -2714,11 +2694,6 @@ class TfTypexkey extends TfType {
 		if ($this->fetch['okempty'] && !$empty)
 			$inp='<OPTION value="" label="'.fix4html2($this->param('nothing')).'">'.$inp;
 		return '<INPUT '.$this->intag($override)." list='$this->eid list'><DATALIST id='$this->eid list' value=\"$this->value\">$inp</DATALIST>";
-	}
-
-
-	function htmlInputChosen($params = '') {
-		return $this->htmlInputSelect("$params class='Chosen'");
 	}
 
 	function sqlView($id = null) {
@@ -2830,7 +2805,7 @@ class TfTypexkey extends TfType {
 // For example if you set the `tname`,`fname` on the external table to '%','question%'
 // This will allow using the list for any field named question* in any table.
 //
-// params:
+// meta params:
 //    See TfTypexkey! Note the changed defaults!
 //   xtable  - mandatory.
 //   xname   - recommended. Defaults to `value` or `name` or `display` if they exist on the external table.
@@ -2894,8 +2869,8 @@ class TfTypexkeys extends TfTypexkey {
 
 	function view() {
 		$xkeys = explode(',', $this->value);
-		$pre=$this->param('pre');
-		$post=$this->param('post');
+		$pre=$this->params['pre'];
+		$post=$this->params['post'];
 		$inp = '';
 		foreach ($xkeys as $id) {
 			if ($id !== '') {
@@ -2923,8 +2898,8 @@ class TfTypexkeys extends TfTypexkey {
 
 	function htmlView($override=array()) {
 		$xkeys = explode(',', $this->value);
-		$pre=$this->param('pre');
-		$post=$this->param('post');
+		$pre=$this->params['pre'];
+		$post=$this->params['post'];
 		$inp='<span '.$this->intag($override).'>';
 		foreach ($xkeys as $id) {
 			if ($id !== '') {
@@ -2951,24 +2926,19 @@ class TfTypexkeys extends TfTypexkey {
 		return $inp;
 	}
 
-	function htmlInput($params = '', $type = '') {
-		if ($type == '') $type = $this->param('type');
-		if ($type == '') $type = 'manifest';
-		$type = strtolower($type);
-		if ($type == 'txt' || $type == 'text')
-			return $this->htmlInputTxt($params);
-		if ($type == 'select')
-			return $this->htmlInputSelect($params);
-		if ($type == 'radio')
-			return $this->htmlInputRadio($params);
-		if ($type == 'cb' || $type == 'checkbox' || $type == 'checkboxes' || $type == 'chkbox' || $type == 'chkboxes' )
-			return $this->htmlInputCheckbox($params);
-		if ($type == 'chosen')
-			return $this->htmlInputChosen($params);
+	function htmlInput($override=array()) {
+		if (empty($this->params['type']) || $this->params['type']=='txt' || $this->params['type']=='text')
+			return $this->htmlInputTxt($override);
+		if ($this->params['type']=='select' || $this->params['type']=='chosen')
+			return $this->htmlInputSelect($override);
+		if ($this->params['type']=='radio')
+			return $this->htmlInputRadio($override);
+		if ($this->params['type']=='cb' || $this->params['type']=='checkbox' || $this->params['type']=='checkboxes' || $this->params['type']=='chkbox' || $this->params['type']=='chkboxes')
+			return $this->htmlInputCheckbox($override);
 
 		addToLog('<t>type</t> '._('value is wrong at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-		if (DEBUG) addToLog(htmlentities($type),LOGDEBUG,__LINE__,true);
-		return $this->htmlInputTxt($params);
+		if (DEBUG) addToLog(he($type),LOGDEBUG,__LINE__,true);
+		return $this->htmlInputTxt($override);
 	}
 
 	// used for debug and fall back
@@ -2980,12 +2950,6 @@ class TfTypexkeys extends TfTypexkey {
 	function htmlInputSelect($override) {
 		$override['multiple']='multiple';
 		return parent::htmlInputSelect($override);
-	}
-
-	function htmlInputChosen($params = '') {
-		$override['multiple']='multiple';
-		$override['class']='Chosen';
-		return $this->htmlInputSelect($override);
 	}
 
 	// list of checkboxes - suitable for short lists
@@ -3034,45 +2998,51 @@ class TfTypephone extends TfTypestring {
 } // class TfTypephone
 
 
-//////////////////////////////////////////////
-// Associative array of values in query format
-class TfTypequery extends TfTypestring {
-
-}
-
 ////////////////////////////////////////
-// Associative array of values
-// Such as the extra parameters field 'params'.
-// Values are saved in a url-variables format.
-// params:
-//      htmlhead,htmlpre,htmlequal,htmlpost,htmltail - Same as above, for HTML display (method htmlView())
-//
-//      mandatory - CSV of parameters that must be included in the parameters list when editing.
-//      mandatory - CSV of parameters that must be included in the parameters list when editing.
-//      paramclass - Optional. The TfType of the parameter X. default string. identical to 'class' (currently not implemented)
-//      paramparams - Optional. The 'params' value for the parameters class. (currently not implemented)
-
-class TfTypeparameters extends TfTypestring {
-	var $array=null; // An associative array representing current value. This is updated by set() method.
+// Associative array of values in url query format
+// meta params:
+//      mandatory - CSV (or simple array) of parameters that must be included in the parameters list when editing.
+//      X-class   - Optional. The TfType of the parameter X. default string. (currently not implemented)
+//      X-params  - Optional. The 'params' value for the meta parameters, but in associative array format (not in meta table). (currently not implemented)
+class TfTypequery extends TfTypestring {
+	var $fields=array(); // An associative array representing current fields with their values and other parameters
 
 	function sqlType() {
-		return 'VARCHAR(1024)';
+		return 'VARCHAR(1000)';
+	}
+
+	function populate_values() {
+		$this->fields=paramsfromstring($this->value);
+		if (!empty($this->params['mandatory'])) {
+			if (!is_array($this->params['mandatory']))
+				$this->params['mandatory']=explode(',',$this->params['mandatory']);
+			foreach ($this->params['mandatory'] as $v)
+				if (!array_key_exists($v,$this->fields))
+					$this->fields[$v]=null;
+		}
+		foreach ($this->fields as $k=>$v) {
+			if (isset($this->params["$k-class"]))
+				$class='TfType'.$this->params["$k-class"];
+			else
+				$class='TfTypestring';
+			$fetch=array('fname'=>$k,'tname'=>$this->tname.'.'.$this->fname);
+			if (isset($this->params["$k-params"]))
+				$fetch['params']=paramsfromstring($this->params["$k-params"]);
+			if (class_exists($class)) {
+				$f=new $class();
+			} else {
+				addToLog("<t>$class</t> "._('Bad class at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+				$f=new TfTypestring();
+			}
+			$f->populate($fetch,$this->table);
+			$f->value=$this->fields[$k];
+			$this->fields[$k]=$f;
+		}//foreach fields
 	}
 
 	function populate($fetch,&$table) {
 		parent::populate($fetch, $table);
-
-		// local values separated
-		$this->paramtype = $this->param('paramclass');
-		if (empty($this->paramtype))
-			$this->paramtype = 'string';
-		$class='TfType'.$this->paramtype;
-		if (class_exists($class)) {
-			$this->param = new $class();
-		} else {
-			addToLog("<t>$class</t> "._('Bad class at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-			$this->param = new TfTypestring();
-		}
+		$this->populate_values();
 	}
 
 	// Return false if current value is considered an empty or unset value; otherwise return true
@@ -3108,13 +3078,13 @@ class TfTypeparameters extends TfTypestring {
 		$value = $this->fix($value);
 		if (is_array($value)) {
 			if (count($value)==0 && !$this->fetch['okempty'])
-				return $this->valerror('Null not allowed');
+				return $this->valerror(_('Null not allowed'));
 			return true;
 		}
 		if (!$this->fetch['oknull'] && ( ($value === null)))
-			return $this->valerror('Null not allowed');
+			return $this->valerror(_('Null not allowed'));
 		if ($value == '' && (!$this->fetch['okempty']) && (!$this->fetch['oknull']))
-			return $this->valerror('Cannot be left empty');
+			return $this->valerror(_('Cannot be left empty'));
 
 		$this->error = '';
 		return true;
@@ -3156,6 +3126,7 @@ class TfTypeparameters extends TfTypestring {
 
 	// Display value to view current field (not html) (xkey will be translated)
 	function view() {
+		////////// TODO - rewrite this whole function //////////////
 		$head=$this->param('head');
 		$pre=$this->param('pre');
 		$equal=$this->param('equal') || '=';
@@ -3201,6 +3172,7 @@ class TfTypeparameters extends TfTypestring {
 	// $params is a string to add in the <input> tag, if any.
 	// This method may use $this->table->htmlform (<form> name) and $this->fname (form element name, <input> or another)
 	function htmlView($override=array()) {
+		////////// TODO - rewrite this whole function //////////////
 		$head=$this->param('htmlhead');
 		$pre=$this->param('htmlpre');
 		$equal=$this->param('htmlequal');
@@ -3327,25 +3299,6 @@ class TfTypeparameters extends TfTypestring {
 } // class TfTypeparameters
 
 ////////////////////////////////////////
-// TF users groups selection
-// TBD
-class TfTypetfgroups extends TfTypexkeys
-{
-	function populate($fetch,&$table) {
-		global $tf;
-		$this->fetch=$fetch;
-		$this->params=paramsfromstring($this->fetch['params']);
-		$this->param('xtable',$tf['tbl.users']);
-		$this->param('xname','group');
-		$this->param('xkey','group');
-		$this->param('xclass','string');
-		$this->fetch['params']=stringfromparams($this->params);
-		parent::populate($this->fetch, $table);
-	}
-} // class TfTypetfgroups
-
-
-////////////////////////////////////////
 // TF field class selection
 class TfTypeTFclass extends TfType
 {
@@ -3403,7 +3356,10 @@ class TfTypecalculated extends TfTypefictive {
 
 	function populate($fetch,&$table) {
 		parent::populate($fetch,$table);
-		$this->q=$this->params['q'];
+		if (empty($this->params['q']))
+			addToLog('<t>q</t> '._('Value is missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+		else
+			$this->q=$this->params['q'];
 	}
 
 	function get_query() {
@@ -3486,7 +3442,7 @@ class TfTable {
 	var $fetch = array();  // array of all data fetch_assoc from the tf info table
 	var $params = array(); // populated array of extra 'params' field
 	var $fields = array(); // array of all table fields
-	var $subtables = array();   // array of all sub tables names
+	var $subtables = array(); // array of all sub tables names
 	var $pkey = '';	   // primary key field
 	var $htmlform = ''; // html form name ('frm' is tfadmin default)
 	var $row;   // current row in database. good for computed types
@@ -3494,27 +3450,18 @@ class TfTable {
 	var $curid; // database current row id (TODO move it to TfTable object)
 
 	function TfTable($fetch_row_or_tname = null, $skip_fields_and_subtables = false) {
-		$this->init();
 		if ($fetch_row_or_tname!==null) {
 			$this->populate($fetch_row_or_tname, $skip_fields_and_subtables);
 		}
 	}
 
-	function init() {
-
-	}
-
 	function populate($fetch_row_or_tname, $skip_fields_and_subtables = false) { // populate class vars from the tf info row
+		global $tf;
 		if (!is_array($fetch_row_or_tname)) {
 			$fetch_row_or_tname = TftFetchTable($fetch_row_or_tname);
 		}
 		$this->tname = $fetch_row_or_tname['tname'];
 		$this->fetch = $fetch_row_or_tname;
-		$this->params=paramsfromstring($this->fetch['params']);
-		if (!$skip_fields_and_subtables) {
-			$this->subtables = TftGetSubtables($this->tname);
-			$this->fields = TftTableFields($this);
-		}
 
 		$this->fetch['engine'] = ''; //'MyISAM';
 		$this->fetch['charset'] = 'utf8';
@@ -3525,12 +3472,51 @@ class TfTable {
 			$this->fetch['charset'] = $this->params['charset'];
 		if (!empty($this->params['engine']))
 			$this->fetch['engine'] = $this->params['engine'];
-		if (!empty($this->params['pkey'])) {
+
+		if (!$skip_fields_and_subtables) {
+			if (empty($this->params)) {
+				$res = mysql_query('SELeCT `key`,`value` FROM '.sqlf($tf['tbl.meta']).' WHERE (`tname`='.sqlv($this->tname).') AND (`fname`=\'\')');
+				while($row=mysql_fetch_array($res))
+					$this->params[$row[0]]=$row[1];
+			}
+
+			$res = mysql_query('SELeCT * FROM '.sqlf($tf['tbl.info']).' WHERE (`tname`='.sqlv($this->tname).') AND (`fname`<>\'\') ORDER BY `order` DESC');
+			while ($row = mysql_fetch_assoc($res)) {
+				$class = "TfType".$row['class'];
+				if (class_exists($class)) {
+					$this->fields[$row['fname']] = new $class();
+				} else {
+					addToLog("<t>$class</t> "._('Bad class at')." <f>$this->tname.$row[fname]</f>=<f>".$this->fetch['label'].".$row[label]</f>",'bad',__LINE__);
+					$this->fields[$row['fname']] = new TfType();
+				}
+				$resmeta = mysql_query('SELecT * FROM '.sqlf($tf['tbl.meta']).' WHERE (`tname`='.sqlv($row['tname']).' AND `fname`='.sqlv($row['fname']).')');
+				if ($resmeta) {
+					while ($rowmeta=mysql_fetch_assoc($resmeta))
+						$this->fields[$row['fname']]->params[$rowmeta['key']]=$rowmeta['value'];
+
+					// subtables connected FROM this table
+					if (!empty($this->fields[$row['fname']]->params['xtable']) && !empty($this->fields[$row['fname']]->params['xkey'])) {
+						$this->subtables[]=array('tname'=>$this->fields[$row['fname']]->params['xtable'],'fname'=>$this->fields[$row['fname']]->params['xkey'],'xkey'=>$row['fname']);
+					}
+				}
+
+				$this->fields[$row['fname']]->populate($row,$this);
+
+				if ($row['class']=='pkey')
+					$this->pkey=$row['fname'];
+			}// while $row
+
+			// subtables connected TO this table
+			$resmeta = mysql_query('SELEcT `tname`,`fname` FROM '.sqlf($tf['tbl.meta'])." WHERE (`tname`<>".sqlv($this->tname)." AND `key`='xtable' AND `value`=".sqlv($this->tname).')');
+			while ($rowmeta = mysql_fetch_assoc($resmeta)) {
+				$res = mysql_query('SELEcT `value` FROM '.sqlf($tf['tbl.meta']).' WHERE (`tname`='.sqlv($rowmeta['tname']).' AND `fname`='.sqlv($rowmeta['fname'])." AND `key`='xkey' AND `value`=".sqlv($this->pkey).")");
+				if ($res) if ($row=mysql_fetch_array($res))
+					$this->subtables["$rowmeta[tname]..$row[0]"]=array('tname'=>$rowmeta['tname'],'fname'=>$rowmeta['fname'],'xkey'=>$row[0]);
+			}
+		}//if !$skip_fields_and_subtables
+
+		if (!empty($this->params['pkey']))
 			$this->pkey = $this->params['pkey'];
-		} else {
-			$this->pkey = TftTablePkey($this->tname);
-		}
-		$this->fetch['pkey'] = $this->pkey;
 	}
 
 	function userCan($user, $action) {   // This user can make this action? (like TftUserCan)
