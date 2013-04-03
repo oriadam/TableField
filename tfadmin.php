@@ -519,7 +519,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	else $perpage=0;
 	if ($perpage==0) @$perpage=1*$t->params['perpage'];
 	if ($perpage==0) @$perpage=1*$t->params['pp'];
-	if ($perpage==0) $perpage = 20;
+	if ($perpage==0) $perpage = 50;
 
 	$titleevery=20; // default
 	if (isset($GET['te']) && is_numeric($GET['te'])) $titleevery=1*$GET['te'];
@@ -944,10 +944,14 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		$keycount=0;
 		foreach ($t->subtables as $sub) {
 			$keycount++;
-			if (!isset($sub['label'])) $sub['label']="$sub[tname].$sub[fname]";
+			if (!isset($sub['label'])) 
+				if ($sub['xkey']==$t->pkey)
+					$sub['label']="$sub[tname] $sub[fname]";
+				else
+					$sub['label']=$t->fields[$sub['xkey']]->fetch['label']."&rarr; $sub[tname] $sub[fname] ";
 			$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub['label']).'" onclick="'
 				."tfopensub('?t=$sub[tname]&a=".$tf['act']{0}."&d=l&i=1&nn=0&n=1&sc=0&no=1&xkey1=$sub[fname]&xid1=\$\$$sub[xkey]',\$curid,this,$keycount)".'">'."\n"
-				.(($tf['d']=='b')? fix4html2($sub->fetch['label']):'').'</i>';
+				.(($tf['d']=='b')? fix4html2($sub['label']):'').'</i>';
 		}//foreach subtables
 
 		if ($tf['nooptions'] && ($tf['act'] == 'edit' || $tf['act'] == 'new')) // send form - save changes
@@ -995,12 +999,13 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			if ($rowc==0 && !array_key_exists($t->pkey,$row))
 				addToLog('<t>pkey='.$t->pkey.'</t> '._('Wrong value at').' <f>'.$t->fetch['label'].'</f>',LOGBAD,__LINE__);
 
-			$rowc++;
 			$curid = @$row[$t->pkey];
 			if (!array_key_exists($t->pkey,$row) || $row[$t->pkey]===null) {
 				addToLog(_('Primary key value is missing or null at').' <f>'.$t->fetch['label'].'</f> <t>rowc='.$rowc.' pkey='.$t->pkey.'</t> <t>curid='.var_export($curid,1).'</t>',LOGBAD,__LINE__);
 				if (DEBUG) addToLog('<t>'.var_export($row,1).'</t>',LOGDEBUG,__LINE__,true);
+				//continue;
 			}
+			$rowc++;
 			$t->curid=$curid;
 			$t->rowc=$rowc;
 			$t->row=&$row;

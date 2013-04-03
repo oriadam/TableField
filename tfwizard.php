@@ -12,7 +12,7 @@ if (!function_exists('fatal')) {
 		die($msg);
 	}
 }
-require_once(__DIR.'/inc/header.php');
+require_once(__DIR__.'/inc/header.php');
 
 // check db connection
 if (!$tf['db.ok']) {
@@ -62,10 +62,9 @@ if (count($_POST)) {
 					$cols[$f]=array();
 					$cols[$f]['tname']=$t;
 					$cols[$f]['fname']=$f;
-					$cols[$f]['ename']=preg_replace('/[^a-zA-Z0-9_]/','_',$f);
 					$cols[$f]['label']=ucwords(str_replace('_',' ',$f));
 					$cols[$f]['indexed']=!empty($row['Key']);
-					$cols[$f]['oknull']=1*chkBoolDef($row['Null'],0);
+					$cols[$f]['oknull']=1*chkBool($row['Null'],0);
 					$cols[$f]['okempty']=1;
 					if ($row['Default']!==null) $cols[$f]['default']=$row['Default'];
 					$cols[$f]['usersview']=$cols[$f]['usersedit']=$cols[$f]['usersnew']=$cols[$f]['usersdel']='root';
@@ -244,4 +243,4 @@ foreach ($tftables as $t) {
 </form></div>
 <?
 
-include(__DIR.'/inc/footer.php');
+include(__DIR__.'/inc/footer.php');

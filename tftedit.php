@@ -26,6 +26,12 @@ if (!TftUserCan($user, 'edit', '', '')) {
 	exit;
 }
 
+echo "<div></div>
+<style>
+td,th {vertical-align:top; }
+</style>
+";
+
 $tname = strtolower(Get('tname'));
 if ($tname == '')
 	$tname = strtolower(Get('table'));
@@ -187,16 +193,23 @@ if ($mode == 'sort') {
 }
 
 if ($mode == 'class') {
+	$tblmeta=sqlf($tf['tbl.meta']);
 	if (!empty($_POST['datasent'])) {
 		foreach ($_POST['fields'] as $k => $fname) {
-			sqlRun("UPDATE $tblinfo SET `class`=". sqlv($_POST['classs'][$k]) . ',`params`=' . sqlv($_POST['paramss'][$k]) . " WHERE `tname`=$tnamev AND `fname`=" . sqlv($fname));
+			sqlRun("UPDATE $tblinfo SET `class`=". sqlv($_POST['classs'][$k]) . " WHERE `tname`=$tnamev AND `fname`=" . sqlv($fname));
+			foreach ($_POST["metakey$k"] as $kk => $meta)
+				if (!empty($meta))
+					if (empty($_POST["metadelete$k"][$kk]))
+						sqlRun("REPLACE INTO $tblmeta (`tname`,`fname`,`key`,`value`) VALUES ($tnamev,".sqlv($fname).",".sqlv($meta).",".sqlv($_POST["metavalue$k"][$kk]).")");
+					else
+						sqlRun("DELETE FROM $tblmeta WHERE `tname`=$tnamev AND `fname`=".sqlv($fname)." AND `key`=".sqlv($meta));
 		}
 	}
 
 	echo "
   <form accept-charset='iso-8859-1,utf-8' enctype='multipart/form-data' name=frm method=post action='" . reGet() . "'>
   <input type=hidden name=datasent value='yeah baby' />
-  <table class=tftedit border=0><th class=none></th><th class=th align=center>Class</th><th class=th align=center>params <small>url format<code>name=some value&name2=equal%3Dsign&name3=amp%26sign</code></small></th><tr>";
+  <table class=tftedit border=0><th class=none></th><th class=th align=center>Class</th><th class=th align=center>Meta Params</th><tr>";
 	/*
 	$known = array();
 	$res = sqlRun("SELECT DISTINCT `class` FROM $tblinfo ORDER BY `class` ASC");
@@ -213,20 +226,42 @@ if ($mode == 'class') {
 		if (strpos($v,'TfType')===0)
 			$known[]=substr($v,strlen('TfType'));
 
-	$res = sqlRun("SELECT `fname`,`class`,`params` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
+	$res = sqlRun("SELECT `fname`,`class` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
 	$cnt = 0;
 	while ($row = mysql_fetch_row($res)) {
 		$tr = 'class=tr' . ((($cnt % 2) == 0) ? '1' : '2');
-		echo "<tr $tr><th class=th align=left>" . ($row[0] == '' ? '<i>Table</i>' : $row[0]) . "</th><td class=td align=right>
-    <input type=hidden name='fields[$cnt]' value='" . fix4html1($row[0]) . "'>
-    <select name='classs_select[$cnt]' onChange=\"document.frm['classs[$cnt]'].value=this.value;\">";
-		echo "<option value='" . fix4html1($row[1]) . "'>$row[1]</option>";
-		foreach ($known as $cl) {
-			echo "<option>$cl";
+		echo
+		"<tr $tr><th class=th align=left>" . ($row[0] == '' ? '<i>Table</i>' : $row[0]) . "</th><td class=td align=right>"
+			."<input type=hidden name='fields[$cnt]' value='" . fix4html1($row[0]) . "'>"
+			."<select name='classs[$cnt]'>"
+				."<option selected>$row[1]";
+				foreach ($known as $cl)
+					echo "<option>$cl";
+		echo "</select> </td><td class=td>";
+		// params
+		$res2 = sqlRun("SELECT * FROM $tblmeta WHERE `tname`=$tnamev AND `fname`=".sqlv($row[0]));
+		$cnt2=0;
+		while ($row2 = mysql_fetch_assoc($res2)) {
+			echo "<div class=metarow>"
+					."<input name='metakey$cnt"."[$cnt2]' value='".fix4html1($row2['key'])."'> = "
+					."<input name='metavalue$cnt"."[$cnt2]' value='".fix4html1($row2['value'])."'> "
+					."<label><input name='metadelete$cnt"."[$cnt2]' type='checkbox'>"._('Delete')."</label>"
+				."</div>";
+			$cnt2++;
 		}
-		echo "</select> <input name='classs[$cnt]' type=text value='" . fix4html1($row[1]) . "' />
-    </td><td class=td><input name='paramss[$cnt]' type=text style='width:900px;' value='" . fix4html1($row[2]) . "' />
-    </td></tr>";
+		echo "<div class=metarow>"
+				."<input name='metakey$cnt"."[$cnt2]' value='".fix4html1($row2['key'])."'> = "
+				."<input name='metavalue$cnt"."[$cnt2]' value='".fix4html1($row2['value'])."'> "
+				."<label>"._('Add')."</label>"
+			."</div>";
+		$cnt2++;
+		echo "<div class=metarow>"
+				."<input name='metakey$cnt"."[$cnt2]' value='".fix4html1($row2['key'])."'> = "
+				."<input name='metavalue$cnt"."[$cnt2]' value='".fix4html1($row2['value'])."'> "
+				."<label>"._('Add')."</label>"
+			."</div>";
+
+		echo "</td></tr>";
 		$cnt++;
 	}
 	echo "

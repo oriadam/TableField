@@ -2575,7 +2575,7 @@ class TfTypexkey extends TfType {
 		}
 
 		if (empty($this->params['xtype']))
-			if ($this->params['strict'])
+			if ($this->paramtrue('strict'))
 				$this->param('type','select');
 			else $this->param('type','combo');
 
@@ -2764,7 +2764,8 @@ class TfTypexkey extends TfType {
 
 	function to_select_from() {
 		if (empty($this->xname)) return null;
-		return ' left join '.sqlf($this->xtable).' as '.sqlf($this->fname.'_xtable').' on ('.sqlf($this->tname).'.'.sqlf($this->fname).'='.sqlf($this->fname.'_xtable').'.'.sqlf($this->xkey).')';
+		//return '(seLECT '.sqlf($this->xtable).'.'.sqlf($this->fname).' frOM '.sqlf($this->xtable).' whERE '.sqlf($this->tname).'.'.sqlf($this->fname).'='.sqlf($this->fname.'_xtable').'.'.sqlf($this->xkey).') as '.sqlf($this->fname.'_xtable');
+		return ' inner join '.sqlf($this->xtable).' as '.sqlf($this->fname.'_xtable').' on ('.sqlf($this->tname).'.'.sqlf($this->fname).'='.sqlf($this->fname.'_xtable').'.'.sqlf($this->xkey).')';
 	}
 
 	function to_select_where($method,$query,$not=false) {
@@ -2775,7 +2776,8 @@ class TfTypexkey extends TfType {
 		$this->fname=$fname.'_xdisplayname';
 		$tname=$this->tname;
 		$this->tname='';
-		$return = 'HAVING '.parent::to_select_where($method,$query,$not);
+		$return = parent::to_select_where($method,$query,$not);
+		$return = "HAVING $return";
 		$this->tname=$tname;
 		$this->fname=$fname;
 		return $return;
@@ -2898,8 +2900,8 @@ class TfTypexkeys extends TfTypexkey {
 
 	function htmlView($override=array()) {
 		$xkeys = explode(',', $this->value);
-		$pre=$this->params['pre'];
-		$post=$this->params['post'];
+		$pre=$this->param('pre');
+		$post=$this->param('post');
 		$inp='<span '.$this->intag($override).'>';
 		foreach ($xkeys as $id) {
 			if ($id !== '') {
@@ -2983,6 +2985,19 @@ class TfTypexkeys extends TfTypexkey {
 		return $inp;
 	}//htmlInputCheckbox
 
+	
+	function to_select_select() {
+		return '';
+	}
+
+	function to_select_from() {
+		return '';
+	}
+
+	function to_select_where($method,$query,$not=false) {
+		return '';
+	}
+	
 } // class TfTypexkeys
 
 
@@ -3004,7 +3019,7 @@ class TfTypephone extends TfTypestring {
 //      mandatory - CSV (or simple array) of parameters that must be included in the parameters list when editing.
 //      X-class   - Optional. The TfType of the parameter X. default string. (currently not implemented)
 //      X-params  - Optional. The 'params' value for the meta parameters, but in associative array format (not in meta table). (currently not implemented)
-class TfTypequery extends TfTypestring {
+class TfTypequery_need_rewrite extends TfTypestring {
 	var $fields=array(); // An associative array representing current fields with their values and other parameters
 
 	function sqlType() {
@@ -3151,7 +3166,7 @@ class TfTypequery extends TfTypestring {
 						$params[substr($pk,strlen($k))]=$pv;
 					}
 				}
-				$fetch['params']=stringfromparams($params);
+				$f->params=$params;
 				$f->populate($fetch,$tbl);
 				$f->populate_intag();
 				$f->set($v);
@@ -3501,6 +3516,7 @@ class TfTable {
 				}
 
 				$this->fields[$row['fname']]->populate($row,$this);
+				$this->fields[$row['fname']]->populate_intag();
 
 				if ($row['class']=='pkey')
 					$this->pkey=$row['fname'];

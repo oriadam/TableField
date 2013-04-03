@@ -492,6 +492,7 @@ function tfopenedit(href,curid,obj,layout,dialogTitle) {
 				iframejq.thewrapper.css({padding:0,margin:0});
 				var h=iframejq.thewrapper.height()+2;
 				var w=iframejq.thewrapper.width()+4;
+				if (w>2000) w=1200;
 				iframejq.css({width:w,height:h});
 			});
 			var parent=$(obj).parents('.tfRow');
@@ -541,7 +542,11 @@ function tfsubfixsize(divid) {
 	var divj=$('#'+divid);
 	var iframej=divj.find('iframe');
 	divj.height(iframej.contents().find('body').height()+5);
-	divj.width(iframej.contents().width()+5);
+	var w=iframej.contents().width()+5;
+	if (w>2000 || w<60) w=iframej.contents().find('#idForm').width()+5;
+	if (w>2000 || w<60) w=iframej.contents().find('#idForm').width()+5;
+	if (w>2000 || w<60) w=1200;
+	divj.width(w);
 	if (window.parent && window.parent!==window) {
 		if (window.document.divid) {
 			window.parent.tfsubfixsize(window.document.divid);
