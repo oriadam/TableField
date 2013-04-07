@@ -220,7 +220,7 @@ table.actNew       { border:1px solid #609060; }
 tr.actNew       td { background-color:#e0fee0; }
 table.actNew    td { background-color:#e0fee0; }
 
-.csEChagned,input.csEChagned,select.csEChagned { border:1px solid #00fe00; background-color:#daffda; }
+.tfChg,input.tfChg,select.tfChg { border:1px solid #00fe00; background-color:#daffda; }
 
 .tftedit .icon-chevron-up,
 .tftedit .icon-chevron-down { cursor:pointer; }
@@ -260,6 +260,12 @@ table.actNew    td { background-color:#e0fee0; }
 sql { font-size: 10px; font-family: monospace; color: #009; }
 sqlerr { }
 
+#tfStats             { box-shadow: 5px 5px 8px #888; border:1px solid #888; width:96%; margin:1%; }
+.tfStatsField        { display:inline-block; padding:4px; margin:2px; font-size:8pt; }
+.tfStatsField h5     { display:block; margin:0; }
+.tfStatsField span   { display:inline-block; margin:2px; }
+.tfStatsField output:before { content:'='; }
+.tfStatsField lbl  { }
 
 .idOrderUpImg      { margin-left:1px; }
 .idOrderDnImg      { margin-left:1px; }

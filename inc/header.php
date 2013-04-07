@@ -30,11 +30,12 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 
 	<link href="inc/tf.css" rel="stylesheet" type="text/css">
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+	<script src="//cdn.jsdelivr.net/ckeditor/4.0.2/ckeditor.js"></script>
 	<!--
+	<script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.2/ckeditor.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/tinymce/3.5.8/tiny_mce.js"></script>
 	<script src="//raw.github.com/SamWM/jQuery-Plugins/master/selectboxes/jquery.selectboxes.min.js"></script>
 	<script type='text/javascript' src="//raw.github.com/kvz/phpjs/master/functions/strings/parse_str.js"></script>
@@ -47,8 +48,7 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 	if (!empty($tf['html.chosen'])) {
 		//<link href="//raw.github.com/harvesthq/chosen/master/chosen/chosen.css" rel="stylesheet" type="text/css">
 		?><link href="inc/chosen.css" rel="stylesheet" type="text/css">
-		<script src="//cdnjs.cloudflare.com/ajax/libs/chosen/0.9.11/chosen.jquery.min.js"></script>
-		<!--script src="inc/chosen.jquery.min.js"></script-->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/chosen/0.9.12/chosen.jquery.min.js"></script>
 		<?
 	}
 	?>
@@ -74,7 +74,7 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 	}
 	?>
 </head>
-<body class="<?=empty($tf['mini'])?'':'mini'?> layout-<?=@$tf['d']?> act-<?=@$tf['act']?>">
+<body class="<?=empty($tf['mini'])?'':'mini'?> layout-<?=@$tf['d']?> act-<?=@$tf['act']?> <?=$tf['t']? 'table-'.@$tf['t']->tname:''?>">
 <?php
 if (file_exists(__DIR__.'/../custom/header.body.php'))
 	include(__DIR__.'/../custom/header.body.php');

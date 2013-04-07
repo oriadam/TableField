@@ -23,8 +23,9 @@
   o:  Order by this field name. For descending order add '-' to the end of the field name, for example "&o=name-". $order
   n:  Number of New rows to be displayed for optional adding. Defaults to perpage
 
-  sc: Show Const xkey=xid fields given from above? 1/0. $tf['showconst']
-  sv: Show View-only fields on Edit mode? 1/0. Use this to hide fields without edit permission, on Edit mode. $tf['showview']
+  nc: No Const xkey=xid fields given from above. 1/0. $tf['noconst']
+  nv: No View-only fields on Edit mode. 1/0. Use this to hide fields without edit permission, on Edit mode. $tf['noview']
+  nst: No STatistics at the bottom. 1/0
   nn: No add New rows option
   ne: No 'Edit this record' link on view mode? 1/0. $tf['noedit']
   no: No Options of changing mode and other options. 1/0. $tf['nooptions']
@@ -97,7 +98,7 @@ if (!$t) {
 		}
 	} else {
 		$tf['d'] = $_GET['d'];
-		if (!in_array($tf['d'], array('mm','b','l','s','q','1'))) {
+		if (!in_array($tf['d'], array('mm','b','l','s','q'))) {
 			fatal("Unknown Layout (".he($tf['d']).")");
 		}
 	}
@@ -145,9 +146,11 @@ elseif ($tf['act']!=='view' && $tf['act']!=='edit' && $tf['act']!=='new') {
 
 // hide stuff mini mode etc
 $tf['mini'] = chkBool(Get('i'), 0);
-$tf['showconst'] = chkBool(Get('sc'), chkBool(@$t->params['showconst'], chkBool(@$t->params['sc'], 1)));
-$tf['showview'] = chkBool(Get('sv'), chkBool(@$t->params['showview'], chkBool(@$t->params['sv'], 1)));
-$tf['nooptions'] = chkBool(Get('no'), chkBool(@$t->params['nooptions'], chkBool(@$t->params['no'], 0)));
+if ($tf['mini']) $tf['html.chosen']=false;
+$tf['noconst'] = chkBool(Get('nc'), chkBool(@$t->params['nc'], $tf['mini']));
+$tf['noview'] = chkBool(Get('nv'), chkBool(@$t->params['nv'], $tf['mini']));
+$tf['nostats'] = chkBool(Get('nst'), $tf['mini'] || chkBool(@$t->params['nst'],true));
+$tf['nooptions'] = chkBool(Get('no'), chkBool(@$t->params['no'], 0));
 $tf['nopage'] = chkBool(Get('np'), chkBool(@$t->params['nopaging'], chkBool(@$t->params['np'], 0)));
 $tf['nosearch'] = chkBool(Get('ns'), chkBool(@$t->params['nosearch'], chkBool(@$t->params['ns'], 0)));
 $tf['notopbar'] = chkBool(Get('nt'), !empty($tf['mini']));
@@ -519,7 +522,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	else $perpage=0;
 	if ($perpage==0) @$perpage=1*$t->params['perpage'];
 	if ($perpage==0) @$perpage=1*$t->params['pp'];
-	if ($perpage==0) $perpage = 50;
+	if ($perpage==0) $perpage = 50; // default
 
 	$titleevery=20; // default
 	if (isset($GET['te']) && is_numeric($GET['te'])) $titleevery=1*$GET['te'];
@@ -686,7 +689,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			.'<a id=idCtrlBox  href="'.reGet(array('d'=>'b')).'" title="'._('Boxes Layout')      .'"><i class="act icon-th'       .($tf['d']=='b'?' icon-white':'').'"></i></a>'
 			.'<a id=idCtrlList href="'.reGet(array('d'=>'l')).'" title="'._('List Layout')       .'"><i class="act icon-list'     .($tf['d']=='l'?' icon-white':'').'"></i></a>'
 			//.'<a id=idCtrlSS   href="'.reGet(array('d'=>'s')).'" title="'._('Spreadsheet Layout').'"><i class="act icon-table'    .($tf['d']=='s'?' icon-white':'').'"></i></a>'
-			.'<a id=idCtrlStat href="'.reGet(array('d'=>'1')).'" title="'._('See Statistics')    .'"><i class="act icon-bar-chart'.($tf['d']=='1'?' icon-white':'').'"></i></a>';
+			.'<a id=idCtrlStat href="'.reGet(array('nst'=>1*(!$tf['nostats']))).'" title="'._('See Statistics')    .'"><i class="act icon-bar-chart'.($tf['nostats']?'':' icon-white').'"></i></a>';
 			if ($tf['mini'])
 				echo '<a id=idCtrlMini href="'.reGet(array('i'=>0)).'" title="'._('Full Mode').'"><i class="act icon-resize-full"></i></a>';
 			else
@@ -917,7 +920,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		// Actions action buttons
 		if ($tf['act'] == 'view' && !$tf['noedit'] && $t->userCan($tf['user'], 'edit') )
 			$htmlActions.='<i class="act icon-pencil csEditThisLink" title="'.fix4html2(_('Edit this record?')).'" onclick="'
-							.'tfopenedit(\'?t=$tname&i=1&a=e&pp=1&d=b&ddd=$layout&te=0&id=$curid&no=1&sc=0&n=0&nn=1\',$curid,this,\'$layout\''.($tf['d']=='b'?'':",'".fix4js1(_('Edit item id').' $curid')."'").')"></i>';
+							.'tfopenedit(\'?t=$tname&i=1&a=e&pp=1&d=b&ddd=$layout&te=0&id=$curid&no=1&nst=1&nc=1&n=0&nn=1\',$curid,this,\'$layout\''.($tf['d']=='b'?'':",'".fix4js1(_('Edit item id').' $curid')."'").')"></i>';
 
 
 		if ($tf['act'] == 'edit' && $t->userCan($tf['user'], 'edit'))
@@ -944,29 +947,29 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		$keycount=0;
 		foreach ($t->subtables as $sub) {
 			$keycount++;
-			if (!isset($sub['label'])) 
+			if (!isset($sub['label']))
 				if ($sub['xkey']==$t->pkey)
 					$sub['label']="$sub[tname] $sub[fname]";
 				else
 					$sub['label']=$t->fields[$sub['xkey']]->fetch['label']."&rarr; $sub[tname] $sub[fname] ";
 			$htmlSubs.='<i class="act icon-folder-open subtablelink" title="'.fix4html2($sub['label']).'" onclick="'
-				."tfopensub('?t=$sub[tname]&a=".$tf['act']{0}."&d=l&i=1&nn=0&n=1&sc=0&no=1&xkey1=$sub[fname]&xid1=\$\$$sub[xkey]',\$curid,this,$keycount)".'">'."\n"
-				.(($tf['d']=='b')? fix4html2($sub['label']):'').'</i>';
+				."tfopensub('?t=$sub[tname]&a=".$tf['act']{0}."&d=l&i=1&nn=0&n=".(isset($sub['to'])?'1':'0')."&nc=1&no=1&xkey1=$sub[fname]&xid1=\$\$$sub[xkey]',\$curid,this,$keycount)".'">'
+				.(($tf['d']=='b')? fix4html2($sub['label']):'')."</i>\n";
 		}//foreach subtables
 
 		if ($tf['nooptions'] && ($tf['act'] == 'edit' || $tf['act'] == 'new')) // send form - save changes
-			$htmlActions.='<button class="btn btn-mini btn-primary" type="submit" form="idForm"><i class="act icon-thumbs-up icon-white"></i> '._('Save').'</button> ';
+			$htmlActions.='<button class="btn btn-mini btn-primary" type="submit" form="idForm"><i class="act icon-thumbs-up icon-white"></i> '._('Save')."</button>\n";
 
 		$title = "\n<TR class=trTitle>";
 		//focus $title.="<td class=tdForFocus desc=for_focus width=1 height=1></td>";
-		if (!empty($htmlActions))
+		if (!empty($htmlActions) || !empty($htmlSubs))
 			$title.="<td class='th thActions' desc=for_actions>$actionsTitle</td>";
 		$countcols = 2;
 		foreach ($t->fields as $f) {
 			if (($tf['act'] == 'edit' && $f->userCan($tf['user'], 'edit'))
-				   || ($tf['act'] == 'edit' && $tf['showview'] && $f->userCan($tf['user'], 'view'))
+				   || ($tf['act'] == 'edit' && !$tf['noview'] && $f->userCan($tf['user'], 'view'))
 				   || ($tf['act'] == 'view' && $f->userCan($tf['user'], 'view'))) {
-				if ($tf['showconst'] || $f->fetch['const'] === false) {
+				if (!$tf['noconst'] || $f->fetch['const'] === false) {
 					$order = $f->fname;
 					$cs = '';
 					$cstd = '';
@@ -1017,20 +1020,27 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$f->eid = $f->fname.'_'.$curid;
 			}
 
+			if ($tf['nostats']) $tf['stats']=false;
+			else $tf['stats']=array();
 			$search=array('$curid','$rowc','$pkey','$tname','$layout');
 			$replace=array(1*$curid,$rowc,$t->pkey,$t->tname,$tf['d']);
-			foreach($t->fields as $f) {
-				$search[]='$$'.$f->fname;
+			foreach($t->fields as $k=>$f) {
+				if ($tf['stats']!==false) $tf['stats'][$k]=array();
+				$search[]='$$'.$k;
 				$replace[]=$f->value;
 			}
 			$htmlActionsCur = str_replace($search,$replace,$htmlActions);
 			$htmlSubsCur = str_replace($search,$replace,$htmlSubs);
 
-			if ($tf['d']!='1' && ($tf['act']=='edit' || $tf['act']=='new'))
+			if ($rowc==1 && !$tf['mini'] && $tf['act']=='edit')
+				$htmlActionsCur.='<i class="act" onclick="tfCopyChangedFromFirst()" title='._('Copy changed values from first line to all').'><i class="icon-copy"></i><i class="icon-double-angle-down"></i>'._('Copy down').'</i>';
+
+			if ($tf['act']=='edit' || $tf['act']=='new')
 				echo "<input type=hidden name='___id[$rowc]'  value='$curid'>";
 
 			////////////////////////////////// LAYOUT: LIST ///////////////////////////////////////
 			if ($tf['d']=='l') {
+
 				// repeat title in list mode
 				if ($titleevery && (($rowc-1) % $titleevery == 0))
 					echo $title;
@@ -1048,20 +1058,23 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					// put fields - edit
 					if ($tf['act'] == 'edit') {
 						if ((!array_key_exists('const',$f->fetch) || $f->fetch['const'] === false) && $f->userCan($tf['user'], 'edit')) {
-							echo $istr.'<td class="edit '.get_class($f).' '.$f->fname.'">'.$f->htmlInput().$commentedit.'</td>';
-						} else if (($f->userCan($tf['user'], 'view') && $tf['showview'])
-							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
-							echo $istr.'<td class="const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentedit.'</td>';
+							echo $istr.'<td class="'.get_class($f).' field-'.$f->fname.'">'.$f->htmlInput().$commentedit."</td>\n";
+						} else if (($f->userCan($tf['user'], 'view') && !$tf['noview'])
+							   && (!$tf['noconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="tfConst '.get_class($f).' field-'.$f->fname.'">'.$f->htmlView().$commentedit."</td>\n";
 						}
 					}
 
 					// put fields - view
 					if ($tf['act'] == 'view') {
 						if (($f->userCan($tf['user'], 'view'))
-							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
-							echo $istr.'<td class="view '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentview.'</td>';
+							   && (!$tf['noconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="'.get_class($f).' field-'.$f->fname.'">'.$f->htmlView().$commentview."</td>\n";
 						}
 					}
+
+					// statistics
+					if ($tf['stats']!==false) $f->to_statistics($tf['stats'][$k]);
 				}//foreach $t->fields
 
 				if ($htmlSubs!='')
@@ -1096,18 +1109,18 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					// put fields - edit
 					if ($tf['act'] == 'edit') {
 						if ((!array_key_exists('const',$f->fetch) || $f->fetch['const'] === false) && $f->userCan($tf['user'], 'edit')) {
-							echo $istr.'<td class="edit '.get_class($f).' '.$f->fname.'">'.$f->htmlInput().$commentedit.'</td>';
-						} else if (($f->userCan($tf['user'], 'view') && $tf['showview'])
-							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
-							echo $istr.'<td class="const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentedit.'</td>';
+							echo $istr.'<td class="'.get_class($f).' field-'.$f->fname.'">'.$f->htmlInput().$commentedit.'</td>';
+						} else if (($f->userCan($tf['user'], 'view') && !$tf['noview'])
+							   && (!$tf['noconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="tfConst '.get_class($f).' field-'.$f->fname.'">'.$f->htmlView().$commentedit.'</td>';
 						}
 					}
 
 					// put fields - view
 					if ($tf['act'] == 'view') {
 						if (($f->userCan($tf['user'], 'view'))
-							   && ($tf['showconst'] || $f->fetch['const'] === false)) {
-							echo $istr.'<td class="view '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentview.'</td>';
+							   && (!$tf['noconst'] || $f->fetch['const'] === false)) {
+							echo $istr.'<td class="'.get_class($f).' field-'.$f->fname.'">'.$f->htmlView().$commentview.'</td>';
 						}
 					}
 				}//foreach $t->fields
@@ -1118,12 +1131,8 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				echo '</table desc=tableBox>';
 
 			///////////////////////////////// LAYOUT: Statistics //////////////////////////////////
-			} elseif ($tf['d']=='1') {
-
-
-
-
 			}// layouts
+
 		}//while
 	} // end list layout if ($tf['act']!='new')
 
@@ -1157,7 +1166,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$countcols = 2;
 				foreach ($t->fields as $f) {
 					if ($f->userCan($tf['user'], 'new')) {
-						//if ($f->fetch['const']===false || ($tf['showconst'] && $f->userCan($tf['user'],'view'))) {
+						//if ($f->fetch['const']===false || (!$tf['noconst'] && $f->userCan($tf['user'],'view'))) {
 						$title.="<td class=th>" . $f->fetch['label'] . "</td>";
 						//}
 						$countcols++;
@@ -1209,12 +1218,12 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					if ($f->userCan($tf['user'], 'new')) {
 						if ($f->fetch['const'] !== false) {
 							$f->value = $f->fetch['const'];
-							if ($tf['showconst'] && $f->userCan($tf['user'], 'view')) {
-								echo $istr.'<td class="new const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
+							if (!$tf['noconst'] && $f->userCan($tf['user'], 'view')) {
+								echo $istr.'<td class="tfNew tfConst '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
 							}
 							echo $f->htmlQuietNew();
 						} else {
-							echo $istr.'<td class="new '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
+							echo $istr.'<td class="tfNew '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
 						}
 					} elseif (($f->userCan($tf['user'], 'view') || ($f->userCan($tf['user'], 'edit') && $tf['act'] == 'edit')) && $tf['d']=='l' && $tf['act'] != 'new') {
 						echo "<td></td>";
@@ -1278,12 +1287,12 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					if ($f->userCan($tf['user'], 'new')) {
 						if ($f->fetch['const'] !== false) {
 							$f->value = $f->fetch['const'];
-							if ($tf['showconst'] && $f->userCan($tf['user'], 'view')) {
-								echo $istr.'<td class="new const '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
+							if (!$tf['noconst'] && $f->userCan($tf['user'], 'view')) {
+								echo $istr.'<td class="tfNew tfConst '.get_class($f).' '.$f->fname.'">'.$f->htmlView().$commentnew.'</td>';
 							}
 							echo $f->htmlQuietNew();
 						} else {
-							echo $istr.'<td class="new '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
+							echo $istr.'<td class="tfNew '.get_class($f).' '.$f->fname.' ">'.$f->htmlNew().$commentnew.'</td>';
 						}
 					}
 				}
@@ -1294,8 +1303,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				echo "</table>";
 			}//for news
 		}//if news
-	}
-
+	}//if mode new || edit and news>0
 
 	// process htmlFormEnd()
 	foreach ($t->fields as $f) // per every field in this table
@@ -1303,39 +1311,45 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 	echo '</form>';
 
-	if (!$tf['nopage']) {
+	// statistics
+	if ( $tf['stats']!==false) {
+		echo '<div id="tfStats">';
+		foreach($tf['stats'] as $fname=>$stats) {
+			$t->fields[$fname]->to_statistics_end($stats);
+			if (count($stats)) {
+				echo '<div class="tfStatsField"><h5>'.$tf['t']->fields[$fname]->fetch['label'].'</h5>';
+				foreach($stats as $k=>$v)
+					echo '<span><lbl>'._($k)."</lbl><output>$v</output></span>";
+				echo '</div>';
+			}
+		}
+		echo '</div>';
+	}
+
+	if (!$tf['nopage'] && $pages>1) {
 
 		echo '<div id=idPaging class="nav nav-pills navbar-fixed-bottom n1avbar-inner">';
 
-		if ($pages == 1 && $page == 1) {
+		if (!$tf['mini'])
+			if ($page > 1)
+				echo "<div class='btn btn-mini disabled' id=idPgPrevTd><a id=idPgPrevLink    class=csPgLink href=\"" . reGet(array('p' => ($page - 1))) . "\"><i class='act icon-backward'></i></a></div>";
+			else
+				echo "<div class='btn btn-mini disabled' id=idPgPrevTd><a id=idPgPrevLinkDis class='csPgLink disabled' $emptyhref><i class='act disabled icon-backward icon-white'></i></a></div>";
 
-			//echo "<button id=idPgPage1 disabled>" . _('Page') . " 1 " . _('of') . " 1" . "</button>";
+		echo "<div class='btn btn-mini disabled' id=idPgPage><select id=idPgPageSelect name=page onChange=\"reget({p:this.options[this.selectedIndex].value})\">";
+		if ($page > $pages)
+			echo "<option></option>";
+		for ($i = 1; $i <= $pages; $i++) {
+			echo "<option value='$i' " . ($page == $i ? 'selected' : '') . ">$i</option>";
+		}
+		echo "</select>/$pages";
+		echo "</div>";
 
-		} else {
-
-			if (!$tf['mini']) {
-				if ($page > 1) {
-					echo "<div class='btn btn-mini disabled' id=idPgPrevTd><a id=idPgPrevLink    class=csPgLink href=\"" . reGet(array('p' => ($page - 1))) . "\"><i class='act icon-backward'></i></a></div>";
-				} else {
-					echo "<div class='btn btn-mini disabled' id=idPgPrevTd><a id=idPgPrevLinkDis class='csPgLink disabled' $emptyhref><i class='act disabled icon-backward icon-white'></i></a></div>";
-				}
-			}
-
-			echo "<div class='btn btn-mini disabled' id=idPgPage><select id=idPgPageSelect name=page onChange=\"reget({p:this.options[this.selectedIndex].value})\">";
-			if ($page > $pages)
-				echo "<option></option>";
-			for ($i = 1; $i <= $pages; $i++) {
-				echo "<option value='$i' " . ($page == $i ? 'selected' : '') . ">$i</option>";
-			}
-			echo "</select>/$pages";
-			echo "</div>";
-
-			if (!$tf['mini']) {
-				if ($page < $pages) {
-					echo "<div class='btn btn-mini disabled' id=idPgNextTd><a id=idPgNextLink class=csPgLink href=\"" . reGet(array('p' => ($page + 1))) . "\"><i class='act icon-forward'></i></a></div> ";
-				} else {
-					echo "<div class='btn btn-mini disabled' id=idPgNextTd><a id=idPgNextLinkDis class='csPgLink disabled' $emptyhref'><i class='act disabled icon-forward icon-white'></i></a></div> ";
-				}
+		if (!$tf['mini']) {
+			if ($page < $pages) {
+				echo "<div class='btn btn-mini disabled' id=idPgNextTd><a id=idPgNextLink class=csPgLink href=\"" . reGet(array('p' => ($page + 1))) . "\"><i class='act icon-forward'></i></a></div> ";
+			} else {
+				echo "<div class='btn btn-mini disabled' id=idPgNextTd><a id=idPgNextLinkDis class='csPgLink disabled' $emptyhref'><i class='act disabled icon-forward icon-white'></i></a></div> ";
 			}
 		}
 

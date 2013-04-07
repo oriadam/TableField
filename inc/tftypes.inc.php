@@ -10,6 +10,7 @@ class TfType {
 	var $eid;   // html form input element id
 	var $table; // TfTable object
 	var $value=null; // the field value
+	var $isnum=true; // treat this field as use numeric in statistics
 
 	var $fetch = array(); // array of all data from the tf info table (fetch_assoc)
 	var $error = null; // validation error
@@ -122,6 +123,66 @@ class TfType {
 			return $this->valerror(_('Cannot be empty'));
 		$this->error = '';
 		return true;
+	}
+
+	// handle statistics
+	// anything stars with _ will not be displayed
+	function to_statistics(&$array) {
+		$v=$this->view();
+		@$array['_count']+=1;
+		if (empty($v) || $v==='0000-00-00' || $v==='0000-00-00 00:00:00')
+			@$array['Total Empty']+=1;
+
+		if ($this->isnum) { // is_numeric($v)) {
+			if ($array['_count']==1)
+				$array['_all']=array($v);
+			else
+				array_push($array['_all'],$v);
+
+			@$array['Sum']+=$v;
+			if ($v>0) {
+				@$array['Positive Count']+=1;
+				@$array['Positive Sum']+=$v;
+			} elseif ($v<0) {
+				@$array['Negative Count']+=1;
+				@$array['Negative Sum']+=$v;
+			}
+		}
+		return;
+		// For translation...
+		if (false) {
+			//_('Count');
+			_('Min');
+			_('Max');
+			_('Positive Count');
+			_('Negative Count');
+			_('Sum');
+			_('Positive Sum');
+			_('Negative Sum');
+			_('Average');
+			_('Positive Average');
+			_('Negative Average');
+			_('Total Empty');
+		}
+	}
+
+	// finish up statistics at the end
+	function to_statistics_end(&$array) {
+		if (array_key_exists('Sum',$array) && @$array['_count']>3) {
+			sort($array['_all'],SORT_NUMERIC);
+			$array['Min']=$array['_all'][0];
+			$array['Max']=$array['_all'][$array['_count']-1];
+			if ($array['Min']!=$array['Max']) {
+				$array['Median']=$array['_all'][floor($array['_count'] / 2)];
+				$array['Average']=$array['Sum']/$array['_count'];
+				if (@$array['Positive Count']>0 && array_key_exists('Positive Sum',$array))
+					$array['Positive Average']=$array['Positive Sum']/$array['Positive Count'];
+				if (@$array['Negative Count']>0 && array_key_exists('Negative Sum',$array))
+					$array['Negative Average']=$array['Negative Sum']/$array['Negative Count'];
+			}
+		}
+		unset($array['_all']);
+		unset($array['_count']);
 	}
 
 	// Additional expressions added after SELECT *
@@ -440,7 +501,11 @@ class TfTypefictive extends TfType {
 		return '';
 	}
 
-} //class TfType
+	function htmlNew($override=array()) {
+		return '';
+	}
+
+} //class TfTypefictive
 
 
 ////////////////////////////////////////
@@ -448,6 +513,7 @@ class TfTypefictive extends TfType {
 // select values from a list
 // meta params:
 //   values - comma separated available values
+//   label-X - optional visible label for the value X
 class TfTypeenum extends TfType {
 	var $values=array(); // available values
 
@@ -472,6 +538,7 @@ class TfTypeenum extends TfType {
 	}
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch, $table);
 		$this->populate_values();
 	}
@@ -482,12 +549,31 @@ class TfTypeenum extends TfType {
 		return $ok;
 	}
 
+	function view() {
+		if (empty($this->params['label-'.$this->value]))
+			return $this->value;
+		else
+			return $this->params['label-'.$this->value];
+	}
+
 	function htmlInput($override=array()) {
 		$inp='<SELECT '.$this->intag($override).'>';
 		for ($i=0;$i<count($this->values);$i++)
-			$inp.='<OPTION'.($this->value==$this->values[$i]?' selected':'').'>'.$this->values[$i];
+			if (empty($this->params['label-'.$this->values[$i]]))
+				$inp.='<OPTION'.($this->value==$this->values[$i]?' selected':'').'>'.fix4html3($this->values[$i]);
+			else
+				$inp.='<OPTION'.($this->value==$this->values[$i]?' selected':'').' value="'.fix4html2($this->values[$i]).'">'.fix4html3($this->params['label-'.$this->values[$i]]);
 		$inp.='</SELECT>';
 		return $inp;
+	}
+
+	function to_statistics(&$array) {
+		$v=$this->view();
+		@$array['_count']+=1;
+		if ($this->value==='' || $this->value===null)
+			@$array['Total Empty']+=1;
+		else
+			@$array[_('Total ').$v]+=1;
 	}
 } // class TfTypeenum
 
@@ -525,8 +611,33 @@ class TfTypeenums extends TfTypeenum {
 		return true;
 	}
 
+	function view() {
+		$vals=explode(',',$this->value);
+		$inp='';
+		foreach($vals as $v)
+			if (empty($this->params["label-$v"]))
+				$inp.=$this->value.',';
+			else
+				$inp.=$this->params["label-$v"].',';
+		return substr($inp,0,strlen($inp)-1);
+	}
+
 	function htmlInput($override=array()) {
 		return parent::htmlInput(array_merge($override,array('multiple'=>true)));
+	}
+
+	function to_statistics(&$array) {
+		@$array['_count']+=1;
+		if ($this->value==='' || $this->value===null)
+			@$array['Total Empty']+=1;
+		else {
+			$vals=explode(',',$this->value);
+			foreach($vals as $v)
+				if (empty($this->params["label-$v"]))
+					@$array[_('Total ').$v]+=1;
+				else
+					@$array[_('Total ').$this->params["label-$v"]]+=1;
+		}
 	}
 } // class TfTypeenums
 
@@ -538,6 +649,11 @@ class TfTypepkey extends TfTypenumber {
 
 	function sqlType() {
 		return "BIGINT UNSIGNED NOT NULL AUTO_INCREMENT";
+	}
+
+	function populate($fetch,&$table) {
+		$this->isnum=false;
+		parent::populate($fetch, $table);
 	}
 
 	function validate($value) {
@@ -575,6 +691,11 @@ class TfTypestring extends TfType {
 				return "VARCHAR(" . $this->fetch['okmax'] . ")";
 		else
 			return "VARCHAR(255)";
+	}
+
+	function populate($fetch,&$table) {
+		$this->isnum=false;
+		parent::populate($fetch, $table);
 	}
 
 	function search_methods() {
@@ -1205,6 +1326,11 @@ class TfTypefile extends TfType {
 		return "VARCHAR(255)";
 	}
 
+	function populate($fetch,&$table) {
+		$this->isnum=false;
+		parent::populate($fetch, $table);
+	}
+
 	function validate($value) {
 		global $tf;
 		if (is_array($value)) {
@@ -1591,9 +1717,8 @@ class TfTypefile extends TfType {
 	}
 
 
-}
+}// class TfTypefile
 
-// class TfTypefile
 ////////////////////////////////////////
 // picture file upload
 // params: noimg - optional. src of 'no image' image.
@@ -1699,9 +1824,8 @@ class TfTypepicture extends TfTypefile {
 			return "<img border=0 src=\"$img\" ".$this->intag($override)." />";
 	}
 
-}
+}// class TfTypepicture
 
-// class TfTypepicture
 ////////////////////////////////////////
 // Blob File
 // TODO: allow a way to download the file
@@ -1847,9 +1971,8 @@ class TfTypeblob extends TfTypefile {
 
 	}
 
-}
+}// class TfTypeblob
 
-// class TfTypeblob
 ////////////////////////////////////////
 // picture file blob
 // params: noimg - src of 'no image' image.
@@ -1962,9 +2085,8 @@ class TfTypepictureblob extends TfTypeblob {
 	function del() {
 	}
 
-}
+}// class TfTypepictureblob
 
-// class TfTypepictureblob
 ////////////////////////////////////////
 // Boolean value
 // displayed as checkbox
@@ -1972,17 +2094,21 @@ class TfTypepictureblob extends TfTypeblob {
 //    yes,no,null - Text to be written on view mode. Default 'True','False','-'
 class TfTypeboolean extends TfType {
 
-	var $yes='True',$no='False',$null='-';
+	var $yes=null,$no=null,$null=null;
 
 	function sqlType() {
 		return "BOOL";
 	}
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch,$table);
-		if ($this->param('yes')!==null)  $this->yes=$this->param('yes');
-		if ($this->param('no')!==null)   $this->no=$this->param('no');
-		if ($this->param('null')!==null) $this->null=$this->param('null');
+		if (isset($this->params['yes']))  $this->yes=$this->params['yes'];
+		else $this->yes=_('True');
+		if (isset($this->params['no']))   $this->no=$this->params['no'];
+		else $this->no=_('False');
+		if (isset($this->params['null'])) $this->null=$this->params['null'];
+		else $this->null=_('-');
 	}
 
 	function fix($value) {
@@ -2008,7 +2134,7 @@ class TfTypeboolean extends TfType {
 		} else $override['class']=array();
 		$override['class'][]='checkbox';
 		if ($this->value) $override['class'][]='checked';
-		$override['onchange']="this.value=1*this.checked;if (this.value) \$(this.addClass('checked'); else \$(this).removeClass('checked');".(@$override['onchange']);
+		$override['onchange']=@$override['onchange']."this.value=1*this.checked;if (this.value) \$(this).addClass('checked'); else \$(this).removeClass('checked');".(@$override['onchange']);
 		return '<input type=CHECKBOX '.$this->intag($override).' value='.($this->value?'1 checked':'0').' />';
 	}
 
@@ -2026,17 +2152,26 @@ class TfTypeboolean extends TfType {
 	function search_methods() {
 		if ($this->fetch['oknull'])
 			return array(
-				'n'=>'is null',
-				'b'=>'is true');
+				'n'=>_('Is Null'),
+				'b'=>_('Is True'));
 		else
 			return array(
-				'b'=>'is true');
+				'b'=>_('Is True'));
 	}
 
+	function to_statistics(&$array) {
+		@$array['_count']+=1;
+		if ($this->value==='' || $this->value===null)
+			@$array['Total Empty']+=1;
+		else
+			if ($this->value)
+				@$array[_('Total Yes')]+=1;
+			else
+				@$array[_('Total No')]+=1;
+	}
 
-}
+}// class TfTypeboolean
 
-// class TfTypeboolean
 ////////////////////////////////////////
 // Boolean value displayed as yes and no
 // params:
@@ -2083,6 +2218,7 @@ class TfTypedate extends TfType {
 	}
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch, $table);
 		if (empty($this->params['format'])) {
 			$this->format='Y-M-d';
@@ -2129,6 +2265,7 @@ class TfTypedatetime extends TfType {
 	}
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch, $table);
 		if (empty($this->params['format'])) {
 			$this->format='Y-M-d';
@@ -2306,6 +2443,7 @@ class TfTypetimestamp extends TfType {
 	var $format;
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch, $table);
 		if (empty($this->params['format'])) {
 			$this->format='Y-M-d H:i:s';
@@ -2459,6 +2597,7 @@ class TfTypexkey extends TfType {
 	}
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch, $table);
 		global $tf;
 
@@ -2631,21 +2770,6 @@ class TfTypexkey extends TfType {
 		return $sql;
 	}
 
-	function htmlInput($override=array()) {
-		if ($this->params['type'] == 'select')
-			return $this->htmlInputSelect($override);
-		if ($this->params['type'] == 'radio')
-			return $this->htmlInputRadio($override);
-		if ($this->params['type'] == 'combo')
-			return $this->htmlInputCombo($override);
-		if ($this->params['type'] == 'chosen')
-			return $this->htmlInputSelect($override);
-
-		addToLog('<t>type</t> '._('value is wrong at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-		if (DEBUG) addToLog(he($this->params['type']),LOGDEBUG,__LINE__,true);
-		return $this->htmlInputSelect($override);
-	}
-
 	function htmlInputRadio($override) {
 		$res = sqlRun($this->sqlList());
 		if (!$res) {
@@ -2660,7 +2784,7 @@ class TfTypexkey extends TfType {
 		return '<div class='.get_called_class().'>'.$inp.'</div>';
 	}
 
-	function htmlInputSelect($override) {
+	function htmlInput($override=array()) {
 		$res = sqlRun($this->sqlList());
 		if (!$res) {
 			addToLog(_('Error reading data at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
@@ -2670,30 +2794,15 @@ class TfTypexkey extends TfType {
 		$inp='';
 		$empty=false;
 		while ($row = mysql_fetch_row($res)) {
-			$inp.='<OPTION value="'.$row[0].'" '.($this->value==$row[0]?'selected':'').'>'.fix4html3($row[1]);
+			$inp.='<OPTION value="'.fix4html2($row[0]).'"'.($this->value==$row[0]?' selected':'').'>'.fix4html3($row[1]);
 			if ($row[0]==='') $empty=true;
 		}
 		if ($this->fetch['okempty'] && !$empty)
-			$inp='<OPTION value="">'.$this->param('nothing').$inp;
+			if (empty($this->params['nothing']))
+				$inp='<OPTION value="">'._('nothing').$inp;
+			else
+				$inp='<OPTION value="">'.$this->param('nothing').$inp;
 		return '<SELECT '.$this->intag($override).">$inp</SELECT>";
-	}
-
-	function htmlInputCombo($override) {
-		$res = sqlRun($this->sqlList());
-		if (!$res) {
-			addToLog(_('Error reading data at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-			if (DEBUG) addToLog('<sqlerr>'.sqlError().'</sqlerr> <sql>'.sqlLastQuery().'</sql>',LOGDEBUG,__LINE__,true);
-			return false;
-		}
-		$inp='';
-		$empty=false;
-		while ($row = mysql_fetch_row($res)) {
-			$inp.='<OPTION value="'.$row[0].'" '.($this->value==$row[0]?'selected':'').' label="'.fix4html2($row[1]).'">';
-			if ($row[0]==='') $empty=true;
-		}
-		if ($this->fetch['okempty'] && !$empty)
-			$inp='<OPTION value="" label="'.fix4html2($this->param('nothing')).'">'.$inp;
-		return '<INPUT '.$this->intag($override)." list='$this->eid list'><DATALIST id='$this->eid list' value=\"$this->value\">$inp</DATALIST>";
 	}
 
 	function sqlView($id = null) {
@@ -2951,7 +3060,7 @@ class TfTypexkeys extends TfTypexkey {
 	// multiple select box
 	function htmlInputSelect($override) {
 		$override['multiple']='multiple';
-		return parent::htmlInputSelect($override);
+		return parent::htmlInput($override);
 	}
 
 	// list of checkboxes - suitable for short lists
@@ -2985,7 +3094,7 @@ class TfTypexkeys extends TfTypexkey {
 		return $inp;
 	}//htmlInputCheckbox
 
-	
+
 	function to_select_select() {
 		return '';
 	}
@@ -2997,7 +3106,7 @@ class TfTypexkeys extends TfTypexkey {
 	function to_select_where($method,$query,$not=false) {
 		return '';
 	}
-	
+
 } // class TfTypexkeys
 
 
@@ -3324,6 +3433,7 @@ class TfTypeTFclass extends TfType
 	}
 
 	function populate($fetch,&$table) {
+		$this->isnum=false;
 		parent::populate($fetch,$table);
 		$ar=get_declared_classes();
 		foreach ($ar as $v) {
@@ -3413,7 +3523,7 @@ class TfTypecalculated extends TfTypefictive {
 
 		addToLog(_('Error with calculated query at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 		if (DEBUG) addToLog('<sqlerr>'.mysql_error().'</sqlerr> <sql>'.he($q).'</sql>',LOGBAD,__LINE__,true);
-		return 'ERROR WITH QUERY';
+		return 'QUERY ERROR';
 	}
 
 	function to_select_orderby($direction) {
@@ -3511,7 +3621,7 @@ class TfTable {
 
 					// subtables connected FROM this table
 					if (!empty($this->fields[$row['fname']]->params['xtable']) && !empty($this->fields[$row['fname']]->params['xkey'])) {
-						$this->subtables[]=array('tname'=>$this->fields[$row['fname']]->params['xtable'],'fname'=>$this->fields[$row['fname']]->params['xkey'],'xkey'=>$row['fname']);
+						$this->subtables[]=array('tname'=>$this->fields[$row['fname']]->params['xtable'],'fname'=>$this->fields[$row['fname']]->params['xkey'],'xkey'=>$row['fname'],'from');
 					}
 				}
 
@@ -3527,7 +3637,8 @@ class TfTable {
 			while ($rowmeta = mysql_fetch_assoc($resmeta)) {
 				$res = mysql_query('SELEcT `value` FROM '.sqlf($tf['tbl.meta']).' WHERE (`tname`='.sqlv($rowmeta['tname']).' AND `fname`='.sqlv($rowmeta['fname'])." AND `key`='xkey' AND `value`=".sqlv($this->pkey).")");
 				if ($res) if ($row=mysql_fetch_array($res))
-					$this->subtables["$rowmeta[tname]..$row[0]"]=array('tname'=>$rowmeta['tname'],'fname'=>$rowmeta['fname'],'xkey'=>$row[0]);
+					$this->subtables[]=array('tname'=>$rowmeta['tname'],'fname'=>$rowmeta['fname'],'xkey'=>$row[0],'to');
+					//$this->subtables["$rowmeta[tname]..$row[0]"]=array('tname'=>$rowmeta['tname'],'fname'=>$rowmeta['fname'],'xkey'=>$row[0]);
 			}
 		}//if !$skip_fields_and_subtables
 

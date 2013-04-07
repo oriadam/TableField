@@ -162,44 +162,33 @@ function updateClass(id,frm) {
 function tfFormSubmit(frm,confirmSend) {
 	$(window).unbind('beforeunload'); // cancel 'leave page' warning
 	addToLog('Preparing the form for submit...');
-	var i,e,id,act,del,ide,keep;
+	var i,e,id;
 	var ar=frm.elements;
 	for (i=0;i<ar.length;i++) {
-		keep=false;
 		e=ar[i];
 		if (e.name) { // no name - no gain
-			if (DEBUG) if (e.type=='hidden') e.type='text';
-
+			//if (DEBUG) if (e.type=='hidden') e.type='text';
 			id=1*e.name.replace(/^[^\[]+\[([0-9]+)\].*$/,'$1');
-			if (isNaN(id)) {
+			if (isNaN(id))
 				addToLog('TF Submit Error: could not find id inside "'+e.name,logBad);
-			} else {
-				if (e.name.indexOf('___up')===0 || e.name.indexOf('___del')===0) { // special
-					keep=1*e.value; // keep only when true
-				} else {
-					del=ar['___del['+id+']'];
-					if (typeof(del)=='object') del=1*del.value;
-					else del=0;
-					if (del) {
-						keep=e.name.indexOf('___id')===0; // keep only the id special field
-					} else {
-						act=ar['___up['+id+']'];
-						if (typeof(act)!='object') {
-							addToLog('TF Submit Error: could not find action for '+id+' ('+e.name+')',logBad);
-							keep=0;
-						} else {
-							keep=1*act.value; // keep only when true
-						}
-					}
-				}
-			}
+			else
+				if (e.name.indexOf('___')===0) // special - keep ___up[] ___del[] ___id[]
+					e.tf_remove_me=!e.value; // keep only when true/not empty
+				else
+					if (!ar['___up['+id+']'] || !ar['___up['+id+']'].value) // remove when not updating current id
+						e.name=e.value=null;
+		} else {
+			e.name=e.value=null;
 		}
-		if (!keep) $(e).addClass('remove_me');
+		// do not remove here, so that ___up and ___del won't be missing
 	}//for elements
 	// remove unnecessary elements from form
-	$(".remove_me").remove();
-	addToLog('Finished. Sending Form...');
 
+	//for (i=0;i<ar.length;i++)
+	//	if (ar[i].tf_remove_me)
+	//		ar[i].name=ar[i].value=ar[i].type='';
+	//$('.tf_remove_me').remove();
+	addToLog('Finished. Sending Form...');
 
 	if (confirmSend || (document.getElementById('idCtrlSaveConfirm') && document.getElementById('idCtrlSaveConfirm').checked)) {
 		if (!confirm("Form prepare complete. Submit?\nHit cancel to review form in place")) {
@@ -228,26 +217,23 @@ function tfFormLoad(frm) {
 
 // tf form element - set 'update' on every change of
 function tffechg(event) {
-	if (window.event && !event) event=window.event;
+	if (!event && window.event) event=window.event;
 	var e=false; // source element
 	if (event.srcElement) e=event.srcElement;
-	if (event.target) e=event.target;
-	if (DEBUG) console.log(e,event);
+	else if (event.target) e=event.target;
+	//if (DEBUG) console.log(event,e);
 	if (e) {
-		if (e.type && e.type=='checkbox') {
+		if (e.type && e.type=='checkbox')
 			e.value=1*e.checked;
-		}
 		var id=1*e.name.replace(/^[^\[]+\[([0-9]+)\].*/,'$1');
-		if (e.name.indexOf('___')!==0) { // dont update actions when changed value is  ___del/___up
-			if (id) {
-				var act=e.form.elements['___up['+id+']'];
-				if (act) {
-					$(e).addClass('csEChagned');
-					act.checked=true;
-					act.value=1;
-				}
+		if (id && e.name.indexOf('___')!==0) { // dont update actions when changed value is  ___del/___up
+			var act=e.form.elements['___up['+id+']'];
+			if (act) {
+				$(e).addClass('tfChg'); // used to be csEChanged
+				act.checked=true;
+				act.value=1;
 			}
-		}//e.name not ___
+		}//e.name not ___ special and id exist
 		if (!isNaN(id)) updateClass(id,e.form);
 	}//e
 }
@@ -565,6 +551,29 @@ function tfFd(delinput,eid) {
 		$('#'+eid+' del').removeClass('true');
 	}
 }
+
+// copy changed values from first line
+function tfCopyChangedFromFirst() {
+	var objs=$('[name$=\\[1\\]]');
+	for (var i=0;i<objs.length;i++) {
+		var objj=$(objs[i]);
+		if (objj.hasClass('tfChg')) {
+			var f=objs[i].name.toString().replace(/\[[0-9]+\]$/,'');
+			var tochange = $('[name^='+f+'\\[]').not(objj).not('.tfNew *')
+				.val(objj.val());
+			if (objj.hasClass('chzn-done'))
+				tochange.trigger('liszt:updated');
+			if (objs[i].checked===true)
+				for (var k=0;k<tochange.length;k++)
+					tochange[k].checked=true;
+			if (objs[i].checked===false)
+				for (var k=0;k<tochange.length;k++)
+					tochange[k].checked=false;
+			tochange.trigger('change');
+		}
+	};
+}
+
 
 // 'discard changes' confirmation
 $(window).bind('beforeunload', function() {

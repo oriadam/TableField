@@ -3,6 +3,7 @@ global $tf;
 require_once(__DIR__.'/inc/include.php');
 
 $tblinfo = sqlf($tf['tbl.info']);
+$tblmeta=sqlf($tf['tbl.meta']);
 
 include(__DIR__.'/inc/header.php');
 
@@ -193,7 +194,6 @@ if ($mode == 'sort') {
 }
 
 if ($mode == 'class') {
-	$tblmeta=sqlf($tf['tbl.meta']);
 	if (!empty($_POST['datasent'])) {
 		foreach ($_POST['fields'] as $k => $fname) {
 			sqlRun("UPDATE $tblinfo SET `class`=". sqlv($_POST['classs'][$k]) . " WHERE `tname`=$tnamev AND `fname`=" . sqlv($fname));
@@ -225,7 +225,7 @@ if ($mode == 'class') {
 	foreach (get_declared_classes() as $k=>$v)
 		if (strpos($v,'TfType')===0)
 			$known[]=substr($v,strlen('TfType'));
-
+	sort($known);
 	$res = sqlRun("SELECT `fname`,`class` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
 	$cnt = 0;
 	while ($row = mysql_fetch_row($res)) {
@@ -244,20 +244,20 @@ if ($mode == 'class') {
 		while ($row2 = mysql_fetch_assoc($res2)) {
 			echo "<div class=metarow>"
 					."<input name='metakey$cnt"."[$cnt2]' value='".fix4html1($row2['key'])."'> = "
-					."<input name='metavalue$cnt"."[$cnt2]' value='".fix4html1($row2['value'])."'> "
+					."<input name='metavalue$cnt"."[$cnt2]' size=100 value='".fix4html1($row2['value'])."'> "
 					."<label><input name='metadelete$cnt"."[$cnt2]' type='checkbox'>"._('Delete')."</label>"
 				."</div>";
 			$cnt2++;
 		}
 		echo "<div class=metarow>"
 				."<input name='metakey$cnt"."[$cnt2]' value='".fix4html1($row2['key'])."'> = "
-				."<input name='metavalue$cnt"."[$cnt2]' value='".fix4html1($row2['value'])."'> "
+				."<input name='metavalue$cnt"."[$cnt2]' size=100 value='".fix4html1($row2['value'])."'> "
 				."<label>"._('Add')."</label>"
 			."</div>";
 		$cnt2++;
 		echo "<div class=metarow>"
 				."<input name='metakey$cnt"."[$cnt2]' value='".fix4html1($row2['key'])."'> = "
-				."<input name='metavalue$cnt"."[$cnt2]' value='".fix4html1($row2['value'])."'> "
+				."<input name='metavalue$cnt"."[$cnt2]' size=100 value='".fix4html1($row2['value'])."'> "
 				."<label>"._('Add')."</label>"
 			."</div>";
 
@@ -550,6 +550,7 @@ if ($mode == 'edit') {
 		if (Post('delthistable') == 'DelTable') {
 			$ok = sqlRun("DELETE FROM $tblinfo WHERE `tname`=$tnamev");
 			if ($ok) {
+				sqlRun("DELETE FROM $tblmeta WHERE `tname`=$tnamev");
 				echo "<div style='color:green'>Table removed completely $tname ** reload page to see changes</div>";
 			} else {
 				echo "<div style='color:red'>Failed to remove Table $tname</div>";
@@ -621,8 +622,9 @@ if ($mode == 'edit') {
 					} else {
 						// remove fields
 						if ($_POST['delete'][$k] == "D") {
-							$ok = sqlRun("DELETE FROM $tblinfo WHERE `tname`=$tnamev AND `fname`=".sqlv($fname)." LIMIT 1");
+							$ok = sqlRun("DELETE FROM $tblinfo WHERE `tname`=$tnamev AND `fname`=".sqlv($fname));
 							if ($ok) {
+								sqlRun("DELETE FROM $tblmeta WHERE `tname`=$tnamev AND `fname`=".sqlv($fname));
 								echo "<div style='color:green'>Deleted $fname</div>";
 							} else {
 								echo "<div style='color:red'>Failed to Delete $fname</div>";

@@ -31,7 +31,11 @@ if (!empty($tf['html.chosen'])) {
 	?>
 	<script>
 		if (!$.browser) $.browser={};
-		$("#idForm select").not('#idPaging select').chosen();
+		$('#idForm').find('select').not('#idPaging select')
+			//.off('change')
+			//.on('change',function(e){$(this).trigger('liszt:updated')})
+			.chosen({allow_single_deselect:true})
+			//.on('change',tffechg);
 	</script>
 	<?
 }
