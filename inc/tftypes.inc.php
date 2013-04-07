@@ -129,23 +129,35 @@ class TfType {
 	// anything stars with _ will not be displayed
 	function to_statistics(&$array) {
 		$v=$this->view();
-		@$array['_count']+=1;
+		if (empty($array['Count'])) {
+			$array['Count']=1;
+			if ($this->isnum) { // is_numeric($v)) {
+				$array['Sum']=0;
+				$array['Total Positives']=0;
+				$array['Total Negatives']=0;
+				$array['Sum Positives']=0;
+				$array['Sum Negatives']=0;
+				$array['Total Empty']=0;
+			}
+		} else
+			$array['Count']+=1;
+
 		if (empty($v) || $v==='0000-00-00' || $v==='0000-00-00 00:00:00')
 			@$array['Total Empty']+=1;
 
 		if ($this->isnum) { // is_numeric($v)) {
-			if ($array['_count']==1)
+			if ($array['Count']==1)
 				$array['_all']=array($v);
 			else
 				array_push($array['_all'],$v);
 
-			@$array['Sum']+=$v;
+			$array['Sum']+=$v;
 			if ($v>0) {
-				@$array['Positive Count']+=1;
-				@$array['Positive Sum']+=$v;
+				$array['Total Positives']+=1;
+				$array['Sum Positives']+=$v;
 			} elseif ($v<0) {
-				@$array['Negative Count']+=1;
-				@$array['Negative Sum']+=$v;
+				$array['Total Negatives']+=1;
+				$array['Sum Negatives']+=$v;
 			}
 		}
 		return;
@@ -154,35 +166,50 @@ class TfType {
 			//_('Count');
 			_('Min');
 			_('Max');
-			_('Positive Count');
-			_('Negative Count');
+			_('Total Positives');
+			_('Total Negatives');
 			_('Sum');
-			_('Positive Sum');
-			_('Negative Sum');
+			_('Sum Positives');
+			_('Sum Negatives');
 			_('Average');
-			_('Positive Average');
-			_('Negative Average');
+			_('Mean Positives');
+			_('Mean Negatives');
 			_('Total Empty');
+			_('Median');
 		}
 	}
 
 	// finish up statistics at the end
 	function to_statistics_end(&$array) {
-		if (array_key_exists('Sum',$array) && @$array['_count']>3) {
+		if (array_key_exists('Total Positives',$array) && ($array['Total Positives']===0 || $array['Total Positives']===$array['Count'])) {
+			unset($array['Total Positives']);
+			unset($array['Sum Positives']);
+		}
+		if (array_key_exists('Total Negatives',$array) && ($array['Total Negatives']===0 || $array['Total Negatives']===$array['Count'])) {
+			unset($array['Total Negatives']);
+			unset($array['Sum Negatives']);
+		}
+		if (array_key_exists('Total Empty',$array) && $array['Total Empty']===0) unset($array['Total Empty']);
+
+		if ($this->isnum && array_key_exists('Count',$array) && $array['Count']>3) {
 			sort($array['_all'],SORT_NUMERIC);
 			$array['Min']=$array['_all'][0];
-			$array['Max']=$array['_all'][$array['_count']-1];
-			if ($array['Min']!=$array['Max']) {
-				$array['Median']=$array['_all'][floor($array['_count'] / 2)];
-				$array['Average']=$array['Sum']/$array['_count'];
-				if (@$array['Positive Count']>0 && array_key_exists('Positive Sum',$array))
-					$array['Positive Average']=$array['Positive Sum']/$array['Positive Count'];
-				if (@$array['Negative Count']>0 && array_key_exists('Negative Sum',$array))
-					$array['Negative Average']=$array['Negative Sum']/$array['Negative Count'];
+			$array['Max']=$array['_all'][$array['Count']-1];
+			if ($array['Min']==$array['Max']) {
+				unset($array['Min']);
+				unset($array['Max']);
+			} else {
+				$array['Median']=$array['_all'][floor($array['Count'] / 2)];
+				$array['Average']=$array['Sum']/$array['Count'];
+				if (array_key_exists('Total Positives',$array))
+					$array['Mean Positives']=$array['Sum Positives']/$array['Total Positives'];
+				if (array_key_exists('Total Negatives',$array))
+					$array['Mean Negatives']=$array['Sum Negatives']/$array['Total Negatives'];
 			}
 		}
+
 		unset($array['_all']);
-		unset($array['_count']);
+		unset($array['Count']);
 	}
 
 	// Additional expressions added after SELECT *
@@ -569,7 +596,7 @@ class TfTypeenum extends TfType {
 
 	function to_statistics(&$array) {
 		$v=$this->view();
-		@$array['_count']+=1;
+		@$array['Count']+=1;
 		if ($this->value==='' || $this->value===null)
 			@$array['Total Empty']+=1;
 		else
@@ -627,7 +654,7 @@ class TfTypeenums extends TfTypeenum {
 	}
 
 	function to_statistics(&$array) {
-		@$array['_count']+=1;
+		@$array['Count']+=1;
 		if ($this->value==='' || $this->value===null)
 			@$array['Total Empty']+=1;
 		else {
@@ -2160,14 +2187,24 @@ class TfTypeboolean extends TfType {
 	}
 
 	function to_statistics(&$array) {
-		@$array['_count']+=1;
+		@$array['Count']+=1;
 		if ($this->value==='' || $this->value===null)
 			@$array['Total Empty']+=1;
 		else
 			if ($this->value)
-				@$array[_('Total Yes')]+=1;
+				@$array['Total Yes']+=1;
 			else
-				@$array[_('Total No')]+=1;
+				@$array['Total No']+=1;
+
+		// for translations...
+		return;
+		_('Total Yes');
+		_('Total No');
+		_('Total Empty');
+	}
+
+	function to_statistics_end(&$array) {
+		unset($array['Count']);
 	}
 
 }// class TfTypeboolean

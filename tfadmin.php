@@ -995,6 +995,12 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		if ($tf['d']=='l') { // list
 			echo '<table id="idListTable" class="listTable">';
 		}
+		if ($tf['nostats']) $tf['stats']=false;
+		else {
+			$tf['stats']=array();
+			foreach($t->fields as $k=>$f)
+				$tf['stats'][$k]=array();
+		}
 
 		// list main loop
 		$rowc=0;
@@ -1020,12 +1026,9 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$f->eid = $f->fname.'_'.$curid;
 			}
 
-			if ($tf['nostats']) $tf['stats']=false;
-			else $tf['stats']=array();
 			$search=array('$curid','$rowc','$pkey','$tname','$layout');
 			$replace=array(1*$curid,$rowc,$t->pkey,$t->tname,$tf['d']);
 			foreach($t->fields as $k=>$f) {
-				if ($tf['stats']!==false) $tf['stats'][$k]=array();
 				$search[]='$$'.$k;
 				$replace[]=$f->value;
 			}
@@ -1074,7 +1077,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					}
 
 					// statistics
-					if ($tf['stats']!==false) $f->to_statistics($tf['stats'][$k]);
+					if ($tf['stats']!==false) $f->to_statistics($tf['stats'][$f->fname]);
 				}//foreach $t->fields
 
 				if ($htmlSubs!='')

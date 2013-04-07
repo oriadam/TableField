@@ -264,6 +264,7 @@ sqlerr { }
 .tfStatsField        { display:inline-block; padding:4px; margin:2px; font-size:8pt; }
 .tfStatsField h5     { display:block; margin:0; }
 .tfStatsField span   { display:inline-block; margin:2px; }
+.tfStatsField output { }
 .tfStatsField output:before { content:'='; }
 .tfStatsField lbl  { }
 
