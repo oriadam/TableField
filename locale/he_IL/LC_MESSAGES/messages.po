@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: TableField\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-07 06:42+0200\n"
-"PO-Revision-Date: 2013-04-07 06:51+0200\n"
+"PO-Revision-Date: 2013-04-07 16:47+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -224,7 +224,6 @@ msgid "primary-key, string, text, number, date/time/timestamp, enum, set <small>
 msgstr "מפתח ראשי, טקסט, טקסט ארוך, מספר, תאריך/שעה/timestamp, enum, set (=רשימת enums)."
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfwizard.php:202
-#, fuzzy
 msgid "When done here go to <a href=tftedit.php>TF Tables manager</a> for fine tuning of the Fields classes and meta parameters."
 msgstr "כשסיימתם כאן, אנא עברו <a href=tftedit.php>למנהל הטבלאות </a>TableField כדי להגדיר טוב יותר את השדות והפרמטרים שלהם."
 
@@ -667,9 +666,8 @@ msgstr "סוף עיבוד הנתונים שהתקבלו."
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:563
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:567
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:576
-#, fuzzy
 msgid "Bad search"
-msgstr "שדה-חיפוש לא תקין"
+msgstr "חיפוש לא תקין"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:612
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1277
@@ -961,7 +959,7 @@ msgstr "סיסמה"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/auth.php:296
 msgid "Login"
-msgstr "שם משתמש"
+msgstr "כניסה"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/oria.inc.php:1151
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/oria.inc.php:1177
@@ -1028,7 +1026,6 @@ msgid "Total Empty"
 msgstr "סה\"כ ריקים"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:178
-#, fuzzy
 msgid "Median"
 msgstr "חציוני"
 
@@ -1046,7 +1043,6 @@ msgstr "הערך אינו ברשימה"
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:603
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:664
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:666
-#, fuzzy
 msgid "Total "
 msgstr "סה\"כ"
 
@@ -1111,7 +1107,6 @@ msgid "Number too small"
 msgstr "מספר קטן מידי"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1169
-#, fuzzy
 msgid "Password validation mismatched"
 msgstr "אימות הסיסמה אינו תואם"
 
@@ -1153,15 +1148,13 @@ msgstr "הקובץ גדול מהמותר"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1384
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1902
-#, fuzzy
 msgid "File exceeds MAX_FILE_SIZE"
-msgstr "גודל קובץ מרבי"
+msgstr "הקובץ גדול מידי"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1387
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1905
-#, fuzzy
 msgid "File was only partially uploaded"
-msgstr "הקובץ לא נשלח עד הסוף."
+msgstr "הקובץ לא נשלח עד הסוף"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1390
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1908
@@ -1205,9 +1198,8 @@ msgstr "הקובץ ריק"
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1414
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1437
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1933
-#, fuzzy
 msgid "File extension not allowed"
-msgstr "סיומת הקובץ שגויה, הקובץ לא נשמר"
+msgstr "סיומת הקובץ אינה מותרת, הקובץ לא נשמר"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1431
 msgid "File does not exist"
@@ -1247,7 +1239,6 @@ msgid "False"
 msgstr "שלילי"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2138
-#, fuzzy
 msgid "-"
 msgstr "-"
 
@@ -1256,15 +1247,13 @@ msgid "Must be 1/0"
 msgstr "חייב להיות 1 או 0"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2182
-#, fuzzy
 msgid "Is Null"
-msgstr "null"
+msgstr "לא הוקלד"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2183
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2186
-#, fuzzy
 msgid "Is True"
-msgstr "'כן'"
+msgstr "חיובי"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2201
 msgid "Total Yes"
