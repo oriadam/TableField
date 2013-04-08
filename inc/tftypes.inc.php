@@ -3503,10 +3503,10 @@ class TfTypeTFclass extends TfType
 
 /////////////////////////////////////////////
 // For calculated values
-// params:
+// meta params:
 //     q = SQL SELECT query that returns a single value
-//     in 'q' you can use the following vars:
-//        $tname, $pkey, $curid, $rowc and any table->row[something] as $$something
+//     Use the following vars:
+//        $tname, $pkey, $curid, $rowc and any $$fieldname (real ones, not calculated) from the table
 // examples for table orders and items:
 //    items --- q=SELECT COUNT(*) FROM items WHERE order_id=$curid
 //    sum   --- q=SELECT SUM(price) FROM items WHERE order_id=$curid
@@ -3514,7 +3514,8 @@ class TfTypeTFclass extends TfType
 
 class TfTypecalculated extends TfTypefictive {
 
-	var $q;
+	var $lastrowc; // last cached at this row in table
+	var $sql; // cache the query
 
 	function populate($fetch,&$table) {
 		parent::populate($fetch,$table);
@@ -3540,7 +3541,7 @@ class TfTypecalculated extends TfTypefictive {
 			}
 		}
 
-		$q=str_replace($search,$replace,$this->q);
+		$q=str_replace($search,$replace,$this->params['q']);
 		if (!preg_match('/^[\\s\\(]*SELECT /i',$q)) {
 			addToLog(_('Only SELECT queries allowed at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 			if (DEBUG) addToLog('<sql>'.he($q).'</sql>',LOGBAD,__LINE__,true);
@@ -3551,28 +3552,39 @@ class TfTypecalculated extends TfTypefictive {
 	}
 
 	function view() {
-		$q=$this->get_query();
-		if ($q)
-			if ($res=mysql_query($q))
-				if ($row=mysql_fetch_row($res))
-					if (array_key_exists(0,$row))
-						return $row[0];
+		// cache value and query
+		if ($this->lastrowc!==$this->table->rowc) {
+			$this->lastrowc=$this->table->rowc;
+			$this->q=$this->get_query();
+			print "<!----- ".$this->fname." last=".$this->lastrowc." rowc=".$this->table->rowc.": ".$this->q." ---->";
+			if ($this->q)
+				if ($res=mysql_query($this->q))
+					if ($row=mysql_fetch_row($res))
+						if (array_key_exists(0,$row))
+							return $this->value=$row[0];
 
-		addToLog(_('Error with calculated query at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-		if (DEBUG) addToLog('<sqlerr>'.mysql_error().'</sqlerr> <sql>'.he($q).'</sql>',LOGBAD,__LINE__,true);
-		return 'QUERY ERROR';
+			addToLog(_('Error with calculated query at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+			if (DEBUG) addToLog('<sqlerr>'.mysql_error().'</sqlerr> <sql>'.he($this->q).'</sql>',LOGBAD,__LINE__,true);
+			return _('QUERY ERROR');
+		} else {
+			return $this->value;
+		}
 	}
 
 	function to_select_orderby($direction) {
-		$q=$this->get_query();
-		return "($q) $direction";
+		// query is cached?
+		if (empty($this->table) || empty($this->table->rowc) || $this->lastrowc!==$this->table->rowc)
+			$this->q=$this->get_query();
+		return "($this->q) $direction";
 	}
 
 	function to_select_where($method,$query,$not=false) {
-		$q=$this->get_query();
-		if (empty($q)) return '';
+		// query is cached?
+		if (empty($this->table) || empty($this->table->rowc) || $this->lastrowc!==$this->table->rowc)
+			$this->q=$this->get_query();
+		if (empty($this->q)) return '';
 
-		$where=($not?'NOT ':'')."($q)";
+		$where=($not?'NOT ':'')."($this->q)";
 			if ($method=='has') $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='a' )  $where.=" LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='z' )  $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";

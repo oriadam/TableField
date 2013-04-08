@@ -219,6 +219,7 @@ function processPost(&$t,&$tf,&$POST) { // pass by reference because there's no 
 				addToLog('<code>___up='.he(var_export($POST['___up'],1)).'</code>',LOGBAD,__LINE__,true);
 			} else {
 				foreach ($POST['___up'] as $rowc => $up) {  // for each row -- $rowc=row counter, $up=row action update
+					$t->rowc=$rowc;
 					if (!empty($up) && (empty($POST['___del']) || empty($POST['___del'][$rowc]))) {  // should update this row, and not deleting this same row
 
 						///////////////// Prepare $updaterow[] array of values to updated
@@ -445,6 +446,7 @@ function processPost(&$t,&$tf,&$POST) { // pass by reference because there's no 
 					addToLog(_('You are not allowed to delete from').' <t>'.he($t->fetch['label']).'</t>',LOGBAD,__LINE__);
 				} else {
 					foreach ($POST['___del'] as $rowc => $act) {  // row counter and row action
+						$t->rowc=$rowc;
 						if (empty($POST['___id'][$rowc])) {
 							addToLog(_("Invalid Post Data!").' '._('Please copy the following data and paste to site admin'),LOGBAD,__LINE__);
 							addToLog("<code>___del is empty at $rowc=".he(var_export($POST['___del'],1)).'</code>',LOGBAD,__LINE__,true);

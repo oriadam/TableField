@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: TableField\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-07 06:42+0200\n"
-"PO-Revision-Date: 2013-04-07 16:47+0200\n"
+"PO-Revision-Date: 2013-04-07 16:50+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -982,11 +982,11 @@ msgstr "יש להקליד ערך אמיתי"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:167
 msgid "Min"
-msgstr "מינימלי"
+msgstr "מינ'"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:168
 msgid "Max"
-msgstr "מירבי"
+msgstr "מקס'"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:169
 msgid "Total Positives"
@@ -1044,7 +1044,7 @@ msgstr "הערך אינו ברשימה"
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:664
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:666
 msgid "Total "
-msgstr "סה\"כ"
+msgstr "סה\"כ "
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:637
 msgid "Select at least one item"
