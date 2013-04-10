@@ -3556,7 +3556,6 @@ class TfTypecalculated extends TfTypefictive {
 		if ($this->lastrowc!==$this->table->rowc) {
 			$this->lastrowc=$this->table->rowc;
 			$this->q=$this->get_query();
-			print "<!----- ".$this->fname." last=".$this->lastrowc." rowc=".$this->table->rowc.": ".$this->q." ---->";
 			if ($this->q)
 				if ($res=mysql_query($this->q))
 					if ($row=mysql_fetch_row($res))

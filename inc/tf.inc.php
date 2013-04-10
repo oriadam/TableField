@@ -81,6 +81,10 @@ function he($str) {
 	global $tf;
 	return htmlentities($str,ENT_QUOTES,$tf['html.charset']);
 }
+function eh($str) {
+	global $tf;
+	return html_entity_decode($str,ENT_QUOTES,$tf['html.charset']);
+}
 
 // create the tf info table
 function TftCreateTft() {

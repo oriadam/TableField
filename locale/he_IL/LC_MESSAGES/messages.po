@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TableField\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-07 06:42+0200\n"
-"PO-Revision-Date: 2013-04-07 16:50+0200\n"
+"POT-Creation-Date: 2013-04-10 16:23+0200\n"
+"PO-Revision-Date: 2013-04-10 16:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -104,7 +104,7 @@ msgstr "מחיקה"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:255
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tftedit.php:261
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:644
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:662
 msgid "Add"
 msgstr "הוספה"
 
@@ -530,374 +530,378 @@ msgstr "גיבוי מסד הנתונים (קובץ zip בלבד)"
 msgid "Delete this file?"
 msgstr "האם באמת למחוק את הקובץ?"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:194
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:210
 msgid "Processing Request..."
 msgstr "מעבד את הנתונים שהתקבלו..."
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:218
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:441
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:449
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:234
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:458
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:467
 msgid "Invalid Post Data!"
 msgstr "תקלה בנתוני POST"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:218
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:334
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:394
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:423
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:441
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:449
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:472
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:234
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:351
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:411
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:440
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:458
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:467
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:490
 msgid "Please copy the following data and paste to site admin"
 msgstr "אנא העתק את הטקסט הבא והדבק בהודעה למנהל האתר"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:231
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:248
 msgid "You are not allowed to change"
 msgstr "אין באפשרותך לשנות את"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:238
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:255
 msgid "Update item failed - item not found"
 msgstr "עדכון הפריט נכשל - הפריט לא נמצא"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:245
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:262
 msgid "Field not found in existing table. Please notify admin"
 msgstr "השדה לא נמצא בטבלה קיימת. אנא דווח מנהל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:255
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:272
 msgid "Skipping unchanged value at"
 msgstr "מדלג על שדה שלא השתנה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:258
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:275
 msgid "User not allowed to edit"
 msgstr "המשתמש אינו רשאי לערוך"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:261
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:290
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:355
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:278
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:307
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:372
 msgid "Invalid value at"
 msgstr "הערך לא חוקי בשדה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:266
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:283
 msgid "Skipping unchanged set value at"
 msgstr "מדלג על ערך מוכנס שלא השתנה בשדה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:275
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:299
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:292
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:316
 msgid "Skipping Array value received in POST for"
 msgstr "מדלג על ערך מסוג Array שהתקבל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:287
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:304
 msgid "User is not allowed to edit"
 msgstr "המשתמש אינו רשאי לערוך"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:309
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:326
 msgid "Update item cancelled - nothing to update"
 msgstr "עדכון הפריט בוטל כיוון שלא השתנה אף ערך"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:324
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:341
 msgid "Item Partially Updated"
 msgstr "הפריט עודכן באופן חלקי"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:326
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:343
 msgid "Item Updated"
 msgstr "הפריט עודכן"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:334
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:351
 msgid "Update item failed"
 msgstr "עדכון הפריט נכשל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:346
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:363
 msgid "You are not allowed to add to"
 msgstr "אין באפשרותך להוסיף פריטים חדשים אל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:364
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:381
 msgid "You cannot set this const value at"
 msgstr "אין באפשרותך להגדיר ערך קבוע-מראש לשדה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:366
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:383
 msgid "Invalid const value at"
 msgstr "ערך קבוע-מראש לא תקין"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:383
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:423
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:400
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:440
 msgid "Add item failed"
 msgstr "הוספת הפריט נכשלה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:392
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:409
 msgid "New blank item added"
 msgstr "פריט ריק חדש נוסף"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:394
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:411
 msgid "Add blank item failed."
 msgstr "הוספת פריט ריק נכשלה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:413
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:430
 msgid "New item added with problems"
 msgstr "נוסף פריט חדש אבל עם תקלות"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:415
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:432
 msgid "New item added"
 msgstr "נוסף פריט חדש"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:445
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:462
 msgid "You are not allowed to delete from"
 msgstr "אין באפשרותך למחוק מהטבלה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:456
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:474
 msgid "Nothing to remove, item not found"
 msgstr "אין מה למחוק, הפריט לא נמצא"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:468
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:486
 msgid "Item removed"
 msgstr "הפריט נמחק"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:470
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:488
 msgid "Nothing to delete"
 msgstr "אין מה למחוק"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:472
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:490
 msgid "Error delete item"
 msgstr "תקלה בנסיון למחוק את הפריט"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:482
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:500
 msgid "Finished processing request."
 msgstr "סוף עיבוד הנתונים שהתקבלו."
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:561
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:563
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:567
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:576
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:579
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:581
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:585
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:594
 msgid "Bad search"
 msgstr "חיפוש לא תקין"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:612
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1277
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1304
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:630
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1331
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1358
 msgid "Add?"
 msgstr "הוסף"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:613
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:631
 msgid "Update?"
 msgstr "עדכן?"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:640
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:658
 msgid "View"
 msgstr "צפייה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:642
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:660
 msgid "Edit"
 msgstr "עריכה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:670
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:688
 msgid "Save changes"
 msgstr "שמירת שינויים"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:675
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:704
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:693
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:724
 msgid "Search"
 msgstr "חיפוש"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:682
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:700
 msgid "Log"
 msgstr "דוח פעולות"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:685
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:703
 msgid "Main Menu"
 msgstr "תפריט ראשי"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:688
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:706
 msgid "Layout"
 msgstr "מבנה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:689
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:707
 msgid "Boxes Layout"
 msgstr "קופסאות"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:690
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:708
 msgid "List Layout"
 msgstr "רשימה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:692
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:710
 msgid "See Statistics"
 msgstr "סטטיסטיקה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:694
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:711
+msgid "Save to CSV comma separated file"
+msgstr "שמירה לקובץ CSV (מופרד פסיקים)"
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:712
+msgid "Save to TSV tab separated file"
+msgstr "שמירה לקובץ TSV (מופרד טאבים)"
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:714
 msgid "Full Mode"
 msgstr "מצב רגיל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:696
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:716
 msgid "Mini Mode"
 msgstr "מצב מוקטן"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:713
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:733
 msgid "not"
 msgstr "אינו"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:720
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:740
 msgid "has"
 msgstr "מכיל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:721
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:741
 msgid "begins"
 msgstr "בתחילת"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:722
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:742
 msgid "ends"
 msgstr "בסוף"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:723
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:743
 msgid "in"
 msgstr "ב-"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:724
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:744
 msgid "is"
 msgstr "שווה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:725
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:745
 msgid "≡"
 msgstr "≡"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:726
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:746
 msgid ">"
 msgstr ">"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:727
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:747
 msgid "<"
 msgstr "<"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:728
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:748
 msgid "≥"
 msgstr "≥"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:729
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:749
 msgid "≤"
 msgstr "≤"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:730
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:750
 msgid "regexp"
 msgstr "regexp"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:731
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:751
 msgid "is empty"
 msgstr "ריק"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:732
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:752
 msgid "is true"
 msgstr "'כן'"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:733
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:753
 msgid "is null"
 msgstr "null"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:737
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:757
 msgid "and"
 msgstr "וגם"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:737
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:757
 msgid "or"
 msgstr "או"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:742
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:762
 msgid "Quickly go to id"
 msgstr "עבור ישירות לקוד פריט"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:746
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:766
 msgid "Clear Search"
 msgstr "נקה חיפוש"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:747
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:767
 msgid "Search!"
 msgstr "חפש!"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:829
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:850
 msgid "Bad search method at"
 msgstr "אפשרות החיפוש לא תקינה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:922
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:943
 msgid "Edit this record?"
 msgstr "עריכת רשומה זו?"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:923
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:944
 msgid "Edit item id"
 msgstr "עריכת פריט"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:927
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:948
 msgid "Update this record"
 msgstr "עדכון רשומה זו"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:929
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:950
 msgid "Delete this record"
 msgstr "למחוק רשומה זו"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:961
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1159
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:982
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1213
 msgid "Save"
 msgstr "שמור"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1009
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1054
 msgid "Wrong value at"
 msgstr "ערך שגוי ב"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1013
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1058
 msgid "Primary key value is missing or null at"
 msgstr "ערך המפתח הראשי חסר או ריק ב"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1039
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1084
 msgid "Copy changed values from first line to all"
-msgstr "העתקת הערכים שהשתנו מהשורה הראשונה לכל שאר השורות"
+msgstr "שכפול הערכים שהשתנו לכל השדות במסך"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1039
-msgid "Copy down"
-msgstr "העתק לכל"
-
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1146
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1200
 msgid "Add this record"
 msgstr "הוספת רשומה זו"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1168
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1178
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1222
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1232
 msgid "Add it?"
 msgstr "להוסיף?"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1180
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1234
 msgid "Add new items"
 msgstr "הוסף פריטים חדשים"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1216
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1285
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1270
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1339
 msgid "Array as value at"
 msgstr "התקבל Array כערך בשדה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1276
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1330
 msgid "Add new"
 msgstr "הוספת פריטים חדשים"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1360
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1416
 msgid "Total"
 msgstr "סה''כ"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1360
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1416
 msgid "records"
 msgstr "פריטים"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1365
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1421
 msgid "Show"
 msgstr "הצג"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1373
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1429
 msgid "per page"
 msgstr "בעמוד"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1382
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1438
 msgid "Titles every"
 msgstr "כותרת כל"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1403
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/tfadmin.php:1460
 msgid "Discard Changes?"
 msgstr "להתעלם מהשינויים שבוצעו?"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:191
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:457
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:476
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:195
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:461
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tf.inc.php:480
 msgid "Bad class at"
 msgstr "סוג-שדה לא תקין הוגדר בשדה"
 
@@ -1031,7 +1035,7 @@ msgstr "חציוני"
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:556
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:560
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3522
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3523
 msgid "Value is missing at"
 msgstr "ערך חסר ב"
 
@@ -1355,13 +1359,20 @@ msgstr "בוצע. שמור את השינויים כדי לערוך את הפרמ
 msgid "Add param"
 msgstr "הוספת פרמטר"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3545
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3546
 msgid "Only SELECT queries allowed at"
 msgstr "שאילתת שדה חישוב חייבת להיות מסוג SELECT בשדה"
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3561
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3565
 msgid "Error with calculated query at"
 msgstr "תקלה בהרצת שאילתת חישוב בשדה"
+
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3567
+msgid "QUERY ERROR"
+msgstr "תקלה בשאילתה"
+
+#~ msgid "Copy down"
+#~ msgstr "העתק לכל"
 
 #~ msgid "Spreadsheet Layout"
 #~ msgstr "גיליון אלקטרוני"

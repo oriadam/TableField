@@ -11,6 +11,7 @@
   d=b/box    = table for each row
   d=l/list   = tr for each row
   d=q/quiet  = TODO: show clean update results, for ajax
+  q=1        = quiet mode
 
   a:  Action to be taken. $tf['act']
   a=v/view       = just view the data (*default)
@@ -57,6 +58,13 @@ global $tf; // tfadmin vars that are shared among the functions
 
 ////////////////////////////////////////////// PREPARE VARS //////////////////////////////////
 
+$tf['quiet']=!empty($_GET['q']);
+if ($tf['quiet']) {
+	global $sql_print_every_query;
+	$sql_print_every_query=false;
+	$tf['sql.printall']=false;
+}
+
 $tf['user'] = tfGetUserGroup();
 if (empty($tf['user']))
 	fatal('Error with login - no user. If you changed custom/auth.php please fix it.');
@@ -98,10 +106,11 @@ if (!$t) {
 		}
 	} else {
 		$tf['d'] = $_GET['d'];
-		if (!in_array($tf['d'], array('mm','b','l','s','q'))) {
+		if (!in_array($tf['d'], array('mm','b','l','s','q','csv','-csv','tsv','-tsv'))) {
 			fatal("Unknown Layout (".he($tf['d']).")");
 		}
 	}
+	$tf['quiet'] = $tf['quiet'] || $tf['d']=='q' || $tf['d']=='csv' || $tf['d']=='tsv'; // quiet mode
 }
 
 if ($tf['d']=='s'){
@@ -111,8 +120,6 @@ if ($tf['d']=='s'){
 }
 
 /////// MODES and ACTIONS
-// quiet mode
-$tf['quiet'] = $tf['d']=='q'; // quiet
 
 // GET id to display first from the query string
 $tf['id'] = @$_GET['id'];
@@ -132,8 +139,6 @@ else {
 // GET Action
 $tf['act'] = @$_GET['a'];
 if (empty($tf['act'])) $tf['act'] = @$t->params['a'];
-if (empty($tf['act'])) $tf['act'] = @$t->params['action'];
-if (empty($tf['act'])) $tf['act'] = @$t->params['act'];
 if (empty($tf['act'])) $tf['act'] = 'v'; // default
 if ($tf['act'] == 'e') $tf['act'] = 'edit';
 elseif ($tf['act'] == 'n') $tf['act'] = 'new';
@@ -151,10 +156,10 @@ $tf['noconst'] = chkBool(Get('nc'), chkBool(@$t->params['nc'], $tf['mini']));
 $tf['noview'] = chkBool(Get('nv'), chkBool(@$t->params['nv'], $tf['mini']));
 $tf['nostats'] = chkBool(Get('nst'), $tf['mini'] || chkBool(@$t->params['nst'],true));
 $tf['nooptions'] = chkBool(Get('no'), chkBool(@$t->params['no'], 0));
-$tf['nopage'] = chkBool(Get('np'), chkBool(@$t->params['nopaging'], chkBool(@$t->params['np'], 0)));
-$tf['nosearch'] = chkBool(Get('ns'), chkBool(@$t->params['nosearch'], chkBool(@$t->params['ns'], 0)));
+$tf['nopage'] = chkBool(Get('np'), chkBool(@$t->params['np'], chkBool(@$t->params['np'], 0)));
+$tf['nosearch'] = chkBool(Get('ns'), chkBool(@$t->params['ns'], chkBool(@$t->params['ns'], 0)));
 $tf['notopbar'] = chkBool(Get('nt'), !empty($tf['mini']));
-$tf['nonew'] = chkBool(Get('nn'), chkBool(@$t->params['nonew'], chkBool(@$t->params['nn'], 0)));
+$tf['nonew'] = chkBool(Get('nn'), chkBool(@$t->params['nn'], chkBool(@$t->params['nn'], 0)));
 if ($tf['nonew']) $tf['news'] = 0;
 elseif (array_key_exists('news',$_GET)) $tf['news']=1*$_GET['news'];
 elseif ($t && $t->params && array_key_exists('news',$t->params)) $tf['news']=1*$t->params['news'];
@@ -165,6 +170,17 @@ $tf['noedit'] = chkBool(Get('ne'), chkBool(@$t->params['noedit'], chkBool(@$t->p
 if ($tf['act'] == 'new') $tf['nopage'] = 1;  // no paging on 'add mode'
 if ($t && !$t->userCan($tf['user'], 'new')) $tf['nonew'] = 1; // no 'add mode' when no permission
 
+if ($tf['quiet']) {
+	$tf['nonew']=$tf['noview']=$tf['nosearch']=$tf['noconst']=$tf['nostat']=$tf['nooptions']=$tf['nopage']=$tf['noedit']=$tf['notopbar']=true;
+	$tf['news']=0;
+}
+if ($tf['d']=='csv' || $tf['d']=='tsv') {
+	$tf['pp']=false;
+	$tf['p']=false;
+	$tf['id']=array();
+	$tf['act']='view';
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (!$tf['quiet'])
@@ -173,7 +189,7 @@ if (!$tf['quiet'])
 if ($t) {
 	if (DEBUG && count($_POST) && !$tf['quiet']) echo "<!-- ".var_export($_POST,1)." -->";
 	if (count($_POST)) processPost($t,$tf,$_POST,$_GET);
-	if (!$tf['quiet']) displayTable($t,$tf,$_GET);
+	if ($tf['d']!=='q') displayTable($t,$tf,$_GET);
 } else {
 	if (!$tf['quiet']) {
 		displayMainMenu();
@@ -691,7 +707,9 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			.'<a id=idCtrlBox  href="'.reGet(array('d'=>'b')).'" title="'._('Boxes Layout')      .'"><i class="act icon-th'       .($tf['d']=='b'?' icon-white':'').'"></i></a>'
 			.'<a id=idCtrlList href="'.reGet(array('d'=>'l')).'" title="'._('List Layout')       .'"><i class="act icon-list'     .($tf['d']=='l'?' icon-white':'').'"></i></a>'
 			//.'<a id=idCtrlSS   href="'.reGet(array('d'=>'s')).'" title="'._('Spreadsheet Layout').'"><i class="act icon-table'    .($tf['d']=='s'?' icon-white':'').'"></i></a>'
-			.'<a id=idCtrlStat href="'.reGet(array('nst'=>1*(!$tf['nostats']))).'" title="'._('See Statistics')    .'"><i class="act icon-bar-chart'.($tf['nostats']?'':' icon-white').'"></i></a>';
+			.'<a id=idCtrlStat href="'.reGet(array('nst'=>1*(!$tf['nostats']))).'" title="'._('See Statistics').'"><i class="act icon-bar-chart'.($tf['nostats']?'':' icon-white').'"></i></a>'
+			.'<a id=idCtrlCSV href="'.reGet(array('d'=>'csv','q'=>1)).'" title="'._('Save to CSV comma separated file').'"><i class="act icon-save"></i></a>'
+			.'<a id=idCtrlTSV href="'.reGet(array('d'=>'tsv','q'=>1)).'" title="'._('Save to TSV tab separated file').'"><i class="act icon-save"></i></a>';
 			if ($tf['mini'])
 				echo '<a id=idCtrlMini href="'.reGet(array('i'=>0)).'" title="'._('Full Mode').'"><i class="act icon-resize-full"></i></a>';
 			else
@@ -765,12 +783,13 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 	$tf['log'] = ''; // empty the log after displaying it.
 
-	echo '<form id=idForm class="container-fluid" name="frm" method="post" enctype="multipart/form-data" onsubmit="return tfFormSubmit(this)"  '.($tf['nooptions']?'style="margin-top:0px"':'').' cancel_action="'.reGet().'">';
+	if ($tf['d']=='l' || $tf['d']=='b') {
+		echo '<form id=idForm class="container-fluid" name="frm" method="post" enctype="multipart/form-data" onsubmit="return tfFormSubmit(this)"  '.($tf['nooptions']?'style="margin-top:0px"':'').' cancel_action="'.reGet().'">';
 
-	////////////////////// process htmlFormStart() ////////////////////////
-	foreach ($t->fields as $f) // per every field in this table
-		echo $f->htmlFormStart();
-
+		////////////////////// process htmlFormStart() ////////////////////////
+		foreach ($t->fields as $f) // per every field in this table
+			echo $f->htmlFormStart();
+	}
 	// on NEW mode there's no need to select, unless new were added
 	if ($tf['act'] && ($tf['act'] != 'new' || count($tf['id']))) {
 		// default sql
@@ -896,7 +915,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 		///////////////////////////// main select: GO GO GO //////////////////////
 
-		if (true || DEBUG || $tf['debug'] || $tf['sql.printall']) print("<!-- ".he($sql)." -->");
+		if ($tf['sql.printall']) print("<!-- ".he($sql)." -->");
 
 		if (!$masterq = sqlRun($sql))
 			fatal(sqlError().' <sql>'.he(sqlLastQuery()).'</sql> (at '.__LINE__.')');
@@ -1004,6 +1023,30 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$tf['stats'][$k]=array();
 		}
 
+		if ($tf['d']=='csv') {
+			$sep=',';
+			$br="\n";
+			if (!empty($_GET['fn']) && preg_match('/^[a-zA-Z0-9_]+\.?[a-zA-Z0-9_]*$/',$_GET['fn']))
+				$fn=$_GET['fn'];
+			else
+				$fn='results.csv';
+		}
+		if ($tf['d']=='tsv') {
+			$sep="\t";
+			$br="\n";
+			if (!empty($_GET['fn']) && preg_match('/^[a-zA-Z0-9_]+\.?[a-zA-Z0-9_]*$/',$_GET['fn']))
+				$fn=$_GET['fn'];
+			else
+				$fn='results.tsv';
+		}
+		if ($tf['d']=='csv' || $tf['d']=='tsv') {
+			header('Content-Disposition: attachment; filename="'.$fn.'"');
+			foreach ($t->fields as $f)
+				if ($f->userCan($tf['user'], 'view'))
+					echo str_replace(array($sep,$br),array(' ',' '),eh($f->fetch['label'])).$sep;
+			echo $br;
+		}
+
 		// list main loop
 		$rowc=0;
 		while ($row = mysql_fetch_assoc($masterq)) {
@@ -1038,13 +1081,14 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 			$htmlSubsCur = str_replace($search,$replace,$htmlSubs);
 
 			if ($rowc==1 && !$tf['mini'] && $tf['act']=='edit')
-				$htmlActionsCur.='<i class="act" onclick="tfCopyChangedFromFirst()" title='._('Copy changed values from first line to all').'><i class="icon-copy"></i><i class="icon-double-angle-down"></i>'._('Copy down').'</i>';
+				$htmlActionsCur.='<i class="act" onclick="tfCopyChangedFromFirst()" title="'._('Copy changed values from first line to all').'"><i class="icon-copy"></i><i class="icon-double-angle-down"></i></i>';
 
-			if ($tf['act']=='edit' || $tf['act']=='new')
-				echo "<input type=hidden name='___id[$rowc]'  value='$curid'>";
 
 			////////////////////////////////// LAYOUT: LIST ///////////////////////////////////////
 			if ($tf['d']=='l') {
+
+				if ($tf['act']=='edit' || $tf['act']=='new')
+					echo "<input type=hidden name='___id[$rowc]'  value='$curid'>";
 
 				// repeat title in list mode
 				if ($titleevery && (($rowc-1) % $titleevery == 0))
@@ -1087,6 +1131,9 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 		///////////////////////////////// LAYOUT: BOXES ///////////////////////////////////////
 			} elseif ($tf['d']=='b') {
+				if ($tf['act']=='edit' || $tf['act']=='new')
+					echo "<input type=hidden name='___id[$rowc]'  value='$curid'>";
+
 				echo "<table id='cont_$rowc' class='tableBox tfRow'>";
 				//focus echo "<td class=tdForFocus desc=for_focus colspan=2><input class=inputForFocus type=text name='small_thing_for_focus[$rowc]' tabindex=-1 value='' /></td>";
 
@@ -1135,7 +1182,12 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 
 				echo '</table desc=tableBox>';
 
-			///////////////////////////////// LAYOUT: Statistics //////////////////////////////////
+			///////////////////////////////// LAYOUT: CSV/TSV //////////////////////////////////
+			} elseif ($tf['d']=='csv' || $tf['d']='tsv') {
+				foreach ($t->fields as $f)
+					if ($f->userCan($tf['user'], 'view'))
+						echo str_replace(array($sep,$br,"\r","\n"),' ',$f->view()).$sep;
+				echo $br;
 			}// layouts
 
 		}//while
@@ -1310,14 +1362,16 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		}//if news
 	}//if mode new || edit and news>0
 
-	// process htmlFormEnd()
-	foreach ($t->fields as $f) // per every field in this table
-		echo $f->htmlFormEnd();
+	if ($tf['d']=='l' || $tf['d']=='b') {
+		// process htmlFormEnd()
+		foreach ($t->fields as $f) // per every field in this table
+			echo $f->htmlFormEnd();
 
-	echo '</form>';
+		echo '</form>';
+	}
 
 	// statistics
-	if ( $tf['stats']!==false) {
+	if (!$tf['quiet'] && $tf['stats']!==false) {
 		echo '<div id="tfStats">';
 		foreach($tf['stats'] as $fname=>$stats) {
 			$t->fields[$fname]->to_statistics_end($stats);
@@ -1396,6 +1450,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		echo '</div>';
 	}//if $tf['nopage']
 
+	if ($tf['d']=='l' || $tf['d']=='b') {
 ?>
 <div id=idLaterLog style='display:none'><?=$tf['log']?></div>
 
@@ -1415,4 +1470,5 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	}
 </script>
 <?
+	}
 }//function DisplayTable
