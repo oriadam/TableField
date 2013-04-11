@@ -89,14 +89,12 @@ function AnyChanges(frm) {
 //               gte = Greater Then or Equal to: (f<=Q)
 //               lt = Little Than: (f>Q)
 //               lte = Little Then or Equal to: (f>=Q)
-search={p:'1',id:null,s1:null,s2:null,s3:null,s4:null,s5:null,s6:null,s7:null,s8:null,s9:null,s10:null,s11:null,s12:null};
+search={p:null,pp:null,ppp:null,id:null,s0:null,s1:null,s2:null,s3:null,s4:null,s5:null,s6:null,s7:null,s8:null,s9:null,s10:null,s11:null,s12:null};
 function searchSubmit(clearSearch) {
 
 	if (clearSearch) {
-		if (getQueryParam('pp')=='1') {
-			search.pp=getQueryParam('ppp') || '20';
-			search.ppp=null; // Previous Per-Page
-		}
+		if (getQueryParam('ppp'))
+			search.pp=getQueryParam('ppp');
 	} else {
 		var id=document.getElementById('idSearchID').value;
 		if (id) {
@@ -104,7 +102,6 @@ function searchSubmit(clearSearch) {
 			search.ppp=getQueryParam('ppp') || getQueryParam('pp');  // save Previous Per-Page value
 			search.pp='1';
 		}
-		var count=1;
 		$('.search-line:not(.hidden)').each(function(index,e) {
 			e=$(e);
 			var f=e.find('.search-field').get(0).value;
@@ -118,8 +115,7 @@ function searchSubmit(clearSearch) {
 					var chain='';
 					var c=e.find('.search-chain').get(0);
 					if (c.options[c.selectedIndex].value=='or') chain='or';
-					search['s'+count]=encodeURI(f.replace(/\./,'%2E') +'.'+not+how+'.'+q.replace(/\./,'%2E')+'.'+chain); // double encode dots
-					count++;
+					search['s'+index]=encodeURI(f.replace(/\./,'%2E') +'.'+not+how+'.'+q.replace(/\./,'%2E')+'.'+chain); // double encode dots
 				}
 			}
 		});
@@ -127,7 +123,21 @@ function searchSubmit(clearSearch) {
 	reget(search);
 }
 
-// update the appearance of a given container id, according to predicted action - update,new,del
+function tfPopulateSearch(count) {
+	var fname=$("#search-field-"+count).val();
+	var sel=document.getElementById("search-method-"+count);
+	var vals=search_methods[fname];
+	var opt;
+	sel.options.length=0; // empty current options
+	for (var i in vals) {
+		opt=document.createElement('OPTION');
+		opt.text=vals[i];
+		opt.value=i;
+		sel.add(opt);
+	}
+}
+
+// update the appearance of a given container id, according to predicted action - update,del
 function updateClass(id,frm) {
 	var act=frm.elements['___up['+id+']'];
 	var del=frm.elements['___del['+id+']'];
@@ -137,7 +147,7 @@ function updateClass(id,frm) {
 
 	if (typeof(del)=='object' && 1*del.value) { // del
 		o.addClass('actDel')
-		.removeClass('actNew')
+		.removeClass('actAdd')
 		.removeClass('actUpdate');
 	} else {
 		if (typeof(ide)=='object') { // update
@@ -147,11 +157,11 @@ function updateClass(id,frm) {
 			} else {
 				o.removeClass('actUpdate');
 			}
-		} else { // new
+		} else { // add
 			if (typeof(act)=='object' && 1*act.value) {
-				o.addClass('actNew');
+				o.addClass('actAdd');
 			} else {
-				o.removeClass('actNew');
+				o.removeClass('actAdd');
 			}
 		}
 	}
@@ -169,25 +179,23 @@ function tfFormSubmit(frm,confirmSend) {
 		if (e.name) { // no name - no gain
 			//if (DEBUG) if (e.type=='hidden') e.type='text';
 			id=1*e.name.replace(/^[^\[]+\[([0-9]+)\].*$/,'$1');
-			if (isNaN(id))
+			if (isNaN(id)) {
 				addToLog('TF Submit Error: could not find id inside "'+e.name,logBad);
-			else
-				if (e.name.indexOf('___')===0) // special - keep ___up[] ___del[] ___id[]
-					e.tf_remove_me=!e.value; // keep only when true/not empty
-				else
-					if (!ar['___up['+id+']'] || !ar['___up['+id+']'].value) // remove when not updating current id
-						e.name=e.value=null;
+				e.className='tf_remove_me';
+			} else {
+				if ((e.name.indexOf('___')===0 && !e.value) || !ar['___up['+id+']'] || !ar['___up['+id+']'].value) // special ___up[] ___del[] ___id[] but false, or
+					e.className='tf_remove_me'; // keep only when true/not empty
+			}
 		} else {
-			e.name=e.value=null;
+			e.className='tf_remove_me';
 		}
-		// do not remove here, so that ___up and ___del won't be missing
+		// do not remove here, so that ___up and ___del won't be missing + not to mess with the for-loop
 	}//for elements
 	// remove unnecessary elements from form
-
-	//for (i=0;i<ar.length;i++)
-	//	if (ar[i].tf_remove_me)
-	//		ar[i].name=ar[i].value=ar[i].type='';
-	//$('.tf_remove_me').remove();
+	var tf_to_remove=$('.tf_remove_me');
+	var size=tf_to_remove.length;
+//	tf_to_remove.remove();
+	addToLog('Removed '+size+' elements');
 	addToLog('Finished. Sending Form...');
 
 	if (confirmSend || (document.getElementById('idCtrlSaveConfirm') && document.getElementById('idCtrlSaveConfirm').checked)) {
@@ -478,7 +486,7 @@ function tfopenedit(href,curid,obj,layout,dialogTitle) {
 				iframejq.thewrapper.css({padding:0,margin:0});
 				var h=iframejq.thewrapper.height()+2;
 				var w=iframejq.thewrapper.width()+4;
-				if (w>2000) w=1200;
+				if (w>2000) w=1000; // Chosen plugin causes width to be 9000 :(
 				iframejq.css({width:w,height:h});
 			});
 			var parent=$(obj).parents('.tfRow');
@@ -531,7 +539,7 @@ function tfsubfixsize(divid) {
 	var w=iframej.contents().width()+5;
 	if (w>2000 || w<60) w=iframej.contents().find('#idForm').width()+5;
 	if (w>2000 || w<60) w=iframej.contents().find('#idForm').width()+5;
-	if (w>2000 || w<60) w=1200;
+	if (w>2000 || w<60) w=1000; // Chosen plugin causes width to be 9000 :(
 	divj.width(w);
 	if (window.parent && window.parent!==window) {
 		if (window.document.divid) {
@@ -559,7 +567,7 @@ function tfCopyChangedFromFirst() {
 		var objj=$(objs[i]);
 		if (objj.hasClass('tfChg')) {
 			var f=objs[i].name.toString().replace(/\[[0-9]+\]$/,'');
-			var tochange = $('[name^='+f+'\\[]').not(objj).not('.tfNew *')
+			var tochange = $('[name^='+f+'\\[]').not(objj).not('.tfAdd *')
 				.val(objj.val());
 			if (objj.hasClass('chzn-done'))
 				tochange.trigger('liszt:updated');

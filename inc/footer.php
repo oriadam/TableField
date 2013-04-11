@@ -34,8 +34,10 @@ if (!empty($tf['html.chosen'])) {
 		$('#idForm').find('select').not('#idPaging select')
 			//.off('change')
 			//.on('change',function(e){$(this).trigger('liszt:updated')})
-			.chosen({allow_single_deselect:true})
-			//.on('change',tffechg);
+			<?if ($tf['html.rtl']) echo ".addClass('chzn-rtl')";?>
+			.chosen({allow_single_deselect:true,disable_search_threshold: 20,no_results_text: "<?=fix4js2(_("No results matched"))?>"})
+			//.on('change',tffechg)
+			;
 	</script>
 	<?
 }
@@ -45,8 +47,8 @@ if (!empty($tf['db.autobackup']) && !defined('OUTDIR')) {
 	define('NEXTBACKUP',__DIR__.'/../custom/nextbackup');
 	if (!file_exists(NEXTBACKUP) || (1*file_get_contents(NEXTBACKUP))<time()) {
 		$_GET=array('silent'=>'1','act'=>'dump','zip'=>'2');
-		$tf['tf.tfout-no-user-check']=true;
-		include(__DIR__.'/../tfout.php');
+		$tf['tf.tfbackup-no-user-check']=true;
+		include(__DIR__.'/../tfbackup.php');
 		if (file_exists(__DIR__.'/../'.LASTBACKUP)) {
 			file_put_contents(NEXTBACKUP,time()-3600+($tf['db.autobackup']*86400)); // schedule next backup in X days
 		} else {

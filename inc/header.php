@@ -15,8 +15,9 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 		echo '<title>' . htmlentities($tf['html.title'],ENT_QUOTES,'UTF-8') . '</title>';
 	}
 	?>
-	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+	<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.2/css/font-awesome.min.css" rel="stylesheet">
+
 	<?
 	if (false && !empty($tf['html.theme'])) { // todo: when jQueryUI css is included, the theme option stop working. oh well.
 		//JQueryUI Theme:
@@ -32,23 +33,20 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-	<script src="//cdn.jsdelivr.net/ckeditor/4.0.2/ckeditor.js"></script>
-	<!--
-	<script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.2/ckeditor.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/tinymce/3.5.8/tiny_mce.js"></script>
-	<script src="//raw.github.com/SamWM/jQuery-Plugins/master/selectboxes/jquery.selectboxes.min.js"></script>
-	<script type='text/javascript' src="//raw.github.com/kvz/phpjs/master/functions/strings/parse_str.js"></script>
-	<script type='text/javascript' src="//raw.github.com/kvz/phpjs/master/functions/url/http_build_query.js"></script>
-	<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js"></script>
-	<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-	-->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 	<?
 	if (!empty($tf['html.chosen'])) {
-		//<link href="//raw.github.com/harvesthq/chosen/master/chosen/chosen.css" rel="stylesheet" type="text/css">
-		?><link href="inc/chosen.css" rel="stylesheet" type="text/css">
+		// Chosen plugin uses position of -9000 to hide elemnts, for efficiency issues.
+		// it causes subtables iframes to have enourmous auto width.
+		// local chosen version edited to use display:none instead - but it was significantly slower.
+		/*
+		<link href="//cdnjs.cloudflare.com/ajax/libs/chosen/0.9.12/chosen.css" rel="stylesheet" type="text/css">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/chosen/0.9.12/chosen.jquery.min.js"></script>
+		*/
+		?>
+		<script src="inc/chosen.jquery.js"></script>
+		<link href="inc/chosen.css" rel="stylesheet" type="text/css">
 		<?
 	}
 	?>
@@ -74,7 +72,7 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 	}
 	?>
 </head>
-<body class="<?=empty($tf['mini'])?'':'mini'?> layout-<?=@$tf['d']?> act-<?=@$tf['act']?> <?=$tf['t']? 'table-'.@$tf['t']->tname:''?>">
+<body class="<?=empty($tf['mini'])?'':'mini'?> layout-<?=@$tf['d']?> mode-<?=@$tf['mode']?> <?=$tf['t']? 'table-'.@$tf['t']->tname:''?>">
 <?php
 if (file_exists(__DIR__.'/../custom/header.body.php'))
 	include(__DIR__.'/../custom/header.body.php');
@@ -105,21 +103,21 @@ function displayNavBar() {
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img class="brandicon" src='tflogo2.png'> <?=_('Settings')?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<? if (!empty($tf['user'])) {
-							if (TftUserCan($tf['user'],'edit','','')) {
+							if (TftUserCan($tf['user'],TFEDIT,'','')) {
 								?><li><a href="tfconfigure.php"><?=_('TF Configuration')?></a></li><?
 							}
-							if (TftUserCan($tf['user'],'edit',$tf['tbl.info'],'')) {
+							if (TftUserCan($tf['user'],TFEDIT,$tf['tbl.info'],'')) {
 								?><li><a href="./?t=<?=$tf['tbl.info']?>"><?=_('Tables&amp;Fields screen')?></a></li>
 								<li><a href="./tftedit.php"><?=_('TF Tables Manager')?></a></li><?
 							}
-							if (TftUserCan($tf['user'],'edit',$tf['tbl.users'],'')) {
+							if (TftUserCan($tf['user'],TFEDIT,$tf['tbl.users'],'')) {
 								?><li><a href="./?t=<?=$tf['tbl.users']?>"><?=_('TF Users screen')?></a></li><?
 							}
-							if (TftUserCan($tf['user'],'view',$tf['tbl.log'],'')) {
+							if (TftUserCan($tf['user'],TFVIEW,$tf['tbl.log'],'')) {
 								?><li><a href="./?t=<?=$tf['tbl.log']?>"><?=_('TF Log')?></a></li><?
 							}
-							if (TftUserCan($tf['user'],'view','','')) {
-								?><li><a href="tfout.php"><?=_('Backups')?></a></li><?
+							if (TftUserCan($tf['user'],TFVIEW,'','')) {
+								?><li><a href="tfbackup.php"><?=_('Backups')?></a></li><?
 							}
 						}?>
 						<li class="divider"></li>

@@ -19,7 +19,7 @@ class TfType {
 						   // class style dir pattern size rows cols heigth width onchange onclick onfocus onblur onmouseover onmouseout
 
 	static $intag_replacek=array('$ename','$eid','$tname','$fname','$rowc','$curid','$form','$value','$pkey');
-	static $intag_tocopy=array('rows','cols','width','height','dir','size','target','multiple','readonly','checked','selected','required');
+	static $intag_tocopy=array('rows','cols','width','height','dir','size','target','multiple','readonly','checked','selected','required','pattern','autocomplete','min','max','step','placeholder');
 	static $intag_boolean=array('multiple','readonly','checked','selected','required');
 
 	function TfType() {
@@ -52,20 +52,11 @@ class TfType {
 	}
 
 	// Return true if the $user has permission to do the $action.
-	// $action can be 'view','edit','delete','new'.
-	// Not using TftUserCan()
+	// $action can be TFVIEW TFEDIT TFADD TFDEL
 	// If $user is empty, using tfGetUserGroup()
 	function userCan($user, $action) {
-		global $tf;
-		if (empty($user))
-			$user = tfGetUserGroup();
-		$action = strtolower($action);
-		if (array_key_exists($action, $tf['permissionMap']))
-			$action = $tf['permissionMap'][$action];
-		$user = strtolower($user);
-		if (!array_key_exists('users' . $action, $this->fetch))
-			return null;
-		return strpos(',' . strtolower($this->fetch['users' . $action]) . ',', ',' . $user . ',') !== false;
+		if (empty($user)) $user = tfGetUserGroup();
+		return strpos(','.$this->fetch["allowed$action"].',',",$user,") !== false;
 	}
 
 	// Set $this->error and return false
@@ -163,7 +154,7 @@ class TfType {
 		return;
 		// For translation...
 		if (false) {
-			//_('Count');
+			_('Count');
 			_('Min');
 			_('Max');
 			_('Total Positives');
@@ -223,21 +214,57 @@ class TfType {
 	}
 
 	function search_methods() {
-		return array(
-			'has'=>'has',
-			'a' =>'begins with',
-			'z' =>'ends with',
-			'ci'=>'is',
-			'rx'=>'RegEx',
-			'eq'=>'≡',
-			'lt'=>'<',
-			'gt'=>'>',
-			'lte'=>'≤',
-			'gte'=>'≥',
-			'n'=>'is null',
-			'b'=>'is true',
-			'e'=>'is empty',
-			'in'=>'in');
+		if ($this->fetch['oknull'])
+			return array(
+				'has'=>'has',
+				'a' =>'begins with',
+				'z' =>'ends with',
+				'ci'=>'is',
+				'in'=>'in',
+				'rx'=>'RegEx',
+				'eq'=>'=',
+				'lt'=>'<',
+				'gt'=>'>',
+				'lte'=>'≤',
+				'gte'=>'≥',
+				'n'=>'is Null',
+				'b'=>'is True',
+				'e'=>'is Empty');
+		else
+			return array(
+				'has'=>'has',
+				'a' =>'begins with',
+				'z' =>'ends with',
+				'ci'=>'is',
+				'in'=>'in',
+				'rx'=>'RegEx',
+				'eq'=>'=',
+				'lt'=>'<',
+				'gt'=>'>',
+				'lte'=>'≤',
+				'gte'=>'≥',
+				'b'=>'is True',
+				'e'=>'is Empty');
+		// For translation...
+		if (false) {
+			_('has');
+			_('begins with');
+			_('ends with');
+			_('is');
+			_('is (cs)');
+			_('is (ci)');
+			_('RegEx');
+			_('=');
+			_('<');
+			_('>');
+			_('≤');
+			_('≥');
+			_('is Null');
+			_('is True');
+			_('Is On');
+			_('is Empty');
+			_('in');
+		}
 	}
 
 	// Return sql expression to compare to something
@@ -440,7 +467,7 @@ class TfType {
 	}
 
 	// Return html string for inputing this field as new
-	function htmlNew($override=array()) {
+	function htmlAdd($override=array()) {
 		if ($this->value === null)
 			$this->set($this->fetch['default']);
 		return $this->htmlInput($override);
@@ -528,7 +555,7 @@ class TfTypefictive extends TfType {
 		return '';
 	}
 
-	function htmlNew($override=array()) {
+	function htmlAdd($override=array()) {
 		return '';
 	}
 
@@ -602,6 +629,24 @@ class TfTypeenum extends TfType {
 		else
 			@$array[_('Total ').$v]+=1;
 	}
+
+	function search_methods() {
+		$return=array();
+		foreach ($this->values as $v)
+			if (empty($this->params["label-$v"]))
+				$return[$v]=$v;
+			else
+				$return[$v]=eh($this->params["label-$v"]);
+		return $return;
+	}
+
+	function to_select_where($method,$query,$not=false) {
+		if ($not)
+			return sqlf($this->fname).'<>'.sqlv($method);
+		else
+			return sqlf($this->fname).'='.sqlv($method);
+	}
+
 } // class TfTypeenum
 
 ////////////////////////////////////////
@@ -666,6 +711,29 @@ class TfTypeenums extends TfTypeenum {
 					@$array[_('Total ').$this->params["label-$v"]]+=1;
 		}
 	}
+
+	function search_methods() {
+		$return=array();
+		foreach ($this->values as $v)
+			if (empty($this->params["label-$v"])) {
+				$return[$v]=$v;
+				$return["~$v"]=_('Has ').$v;
+			} else {
+				$return[$v]=$this->params["label-$v"];
+				$return["~$v"]=_('Has ').eh($this->params["label-$v"]);
+			}
+		return $return;
+	}
+
+	function to_select_where($method,$query,$not=false) {
+		if ($method{0}=='~')
+			return ($not?'0=':'0<').'FIND_IN_SET('.sqlv(substr($method,1)).','.sqlf($this->fname).')';
+		else
+			if ($not)
+				return sqlf($this->fname).'<>'.sqlv($method);
+			else
+				return sqlf($this->fname).'='.sqlv($method);
+	}
 } // class TfTypeenums
 
 
@@ -726,16 +794,27 @@ class TfTypestring extends TfType {
 	}
 
 	function search_methods() {
-		return array(
-			'has'=>'has',
-			'a' =>'begins with',
-			'z' =>'ends with',
-			'ci'=>'is (ci)',
-			'rx'=>'RegEx',
-			'eq'=>'is (cs)',
-			'n'=>'is null',
-			'e'=>'is empty',
-			'in'=>'in');
+		if ($this->fetch['oknull'])
+			return array(
+				'has'=>'has',
+				'a' =>'begins with',
+				'z' =>'ends with',
+				'ci'=>'is (ci)',
+				'eq'=>'is (cs)',
+				'in'=>'in',
+				'n'=>'is Null',
+				'e'=>'is Empty',
+				'rx'=>'RegEx');
+		else
+			return array(
+				'has'=>'has',
+				'a' =>'begins with',
+				'z' =>'ends with',
+				'ci'=>'is (ci)',
+				'eq'=>'is (cs)',
+				'in'=>'in',
+				'e'=>'is Empty',
+				'rx'=>'RegEx');
 	}
 
 	function validate($value) {
@@ -746,9 +825,8 @@ class TfTypestring extends TfType {
 		return parent::validate($value);
 	}
 
-}
+}//class TfTypestring
 
-//class TfTypestring
 ////////////////////////////////////////
 // MD5 Hash Type
 // A text field which is going to be hashed on update.
@@ -1032,14 +1110,23 @@ class TfTypenumber extends TfType {
 	}
 
 	function search_methods() {
-		return array(
-			'eq'=>'≡',
-			'lt'=>'<',
-			'gt'=>'>',
-			'lte'=>'≤',
-			'gte'=>'≥',
-			'n'=>'never entered',
-			'in'=>'in');
+		if ($this->fetch['oknull'])
+			return array(
+				'eq'=>'=',
+				'lt'=>'<',
+				'gt'=>'>',
+				'lte'=>'≤',
+				'gte'=>'≥',
+				'n'=>'is Null',
+				'in'=>'in');
+		else
+			return array(
+				'eq'=>'=',
+				'lt'=>'<',
+				'gt'=>'>',
+				'lte'=>'≤',
+				'gte'=>'≥',
+				'in'=>'in');
 	}
 
 	function to_select_where($method,$query,$not=false) {
@@ -1444,7 +1531,7 @@ class TfTypefile extends TfType {
 	function htmlInput($override=array()) {
 		// new upload?
 		if ($this->value == '' || $this->value == $this->fetch['default'])
-			return $this->htmlNew($override);
+			return $this->htmlAdd($override);
 
 		if ($this->fetch['okempty'])
 			return $this->htmlView($override) // delete option
@@ -1462,7 +1549,7 @@ class TfTypefile extends TfType {
 		}
 	}
 
-	function htmlNew($override=array()) {
+	function htmlAdd($override=array()) {
 		if ($this->fetch['okmax'] > 0)
 			$inp.="<input type=hidden name='MAX_FILE_SIZE' value='" . fix4html1($this->fetch['okmax']) . "' />";
 		$accept = $this->param('mimes');
@@ -1943,7 +2030,7 @@ class TfTypeblob extends TfTypefile {
 	function htmlInput($override=array()) {
 		// new upload?
 		if (true || $this->value == '' || $this->value == $this->fetch['default'])
-			return $this->htmlNew($override);
+			return $this->htmlAdd($override);
 
 		// update - first put a link to the file
 		$inp = $this->htmlView($override);
@@ -1969,7 +2056,7 @@ class TfTypeblob extends TfTypefile {
 		}
 	}
 
-	function htmlNew($override=array()) {
+	function htmlAdd($override=array()) {
 		$inp = '<input type=file '.$override.' />';
 		if ($this->fetch['okmax'] > 0) return '<input type=hidden name="MAX_FILE_SIZE" value='.$this->fetch['okmax'].'">'.$inp;
 		return $inp;
@@ -2179,11 +2266,11 @@ class TfTypeboolean extends TfType {
 	function search_methods() {
 		if ($this->fetch['oknull'])
 			return array(
-				'n'=>_('Is Null'),
-				'b'=>_('Is True'));
+				'n'=>_('is Null'),
+				'b'=>_('is On'));
 		else
 			return array(
-				'b'=>_('Is True'));
+				'b'=>_('is On'));
 	}
 
 	function to_statistics(&$array) {
@@ -2284,7 +2371,7 @@ class TfTypedate extends TfType {
 		$datepickeroptions='';
 		if (!empty($this->fetch['okmin'])) $datepickeroptions.=",minDate:'".$this->fetch['okmin']."-01-01'";
 		if (!empty($this->fetch['okmax'])) $datepickeroptions.=",maxDate:'".$this->fetch['okmax']."-12-31'";
-		return "<script>$('.".get_called_class().".$this->fname input').datepicker({dateFormat:'yy-mm-dd',changeMonth: true,changeYear: true $datepickeroptions});</script>";
+		return "<script>$('.".get_called_class().".field-$this->fname input').datepicker({dateFormat:'yy-mm-dd',changeMonth: true,changeYear: true $datepickeroptions});</script>";
 	}
 }
 
@@ -2749,12 +2836,6 @@ class TfTypexkey extends TfType {
 			addToLog("<t>$this->xclass</t> "._('Bad class at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 			$this->xtf = new TfTypestring();
 		}
-
-		if (empty($this->params['xtype']))
-			if ($this->paramtrue('strict'))
-				$this->param('type','select');
-			else $this->param('type','combo');
-
 	}//function populate
 
 	function validate($value) {
@@ -3007,7 +3088,7 @@ class TfTypexkeys extends TfTypexkey {
 	}
 
 	function set($value) {
-		$this->value = $this->fix($value);
+		$this->value = $value;
 	}
 
 	// id exists
@@ -3075,13 +3156,15 @@ class TfTypexkeys extends TfTypexkey {
 	}
 
 	function htmlInput($override=array()) {
-		if (empty($this->params['type']) || $this->params['type']=='txt' || $this->params['type']=='text')
+		if (empty($this->params['type']))
+			return $this->htmlInputSelect($override); // default
+		elseif ($this->params['type']=='txt' || $this->params['type']=='text')
 			return $this->htmlInputTxt($override);
-		if ($this->params['type']=='select' || $this->params['type']=='chosen')
+		elseif ($this->params['type']=='select' || $this->params['type']=='chosen')
 			return $this->htmlInputSelect($override);
-		if ($this->params['type']=='radio')
+		elseif ($this->params['type']=='radio')
 			return $this->htmlInputRadio($override);
-		if ($this->params['type']=='cb' || $this->params['type']=='checkbox' || $this->params['type']=='checkboxes' || $this->params['type']=='chkbox' || $this->params['type']=='chkboxes')
+		elseif ($this->params['type']=='cb' || $this->params['type']=='checkbox' || $this->params['type']=='checkboxes' || $this->params['type']=='chkbox' || $this->params['type']=='chkboxes')
 			return $this->htmlInputCheckbox($override);
 
 		addToLog('<t>type</t> '._('value is wrong at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
@@ -3097,7 +3180,25 @@ class TfTypexkeys extends TfTypexkey {
 	// multiple select box
 	function htmlInputSelect($override) {
 		$override['multiple']='multiple';
-		return parent::htmlInput($override);
+		//return parent::htmlInput($override);
+		$res = sqlRun($this->sqlList());
+		if (!$res) {
+			addToLog(_('Error reading data at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+			if (DEBUG) addToLog('<sqlerr>'.sqlError().'</sqlerr> <sql>'.sqlLastQuery().'</sql>',LOGDEBUG,__LINE__,true);
+			return false;
+		}
+		$inp='';
+		$empty=false;
+		while ($row = mysql_fetch_row($res)) {
+			$inp.='<OPTION value="'.fix4html2($row[0]).(strpos(",$this->value,",",$row[0],")!==false?'" selected>':'">').fix4html3($row[1]);
+			if ($row[0]==='') $empty=true;
+		}
+		if ($this->fetch['okempty'] && !$empty)
+			if (empty($this->params['nothing']))
+				$inp='<OPTION value="">'._('nothing').$inp;
+			else
+				$inp='<OPTION value="">'.$this->param('nothing').$inp;
+		return '<output style="display:none">'.$this->value.'</output><SELECT '.$this->intag($override).">$inp</SELECT>";
 	}
 
 	// list of checkboxes - suitable for short lists
@@ -3504,7 +3605,7 @@ class TfTypeTFclass extends TfType
 /////////////////////////////////////////////
 // For calculated values
 // meta params:
-//     q = SQL SELECT query that returns a single value
+//     sql = SQL SELECT query that returns a single value
 //     Use the following vars:
 //        $tname, $pkey, $curid, $rowc and any $$fieldname (real ones, not calculated) from the table
 // examples for table orders and items:
@@ -3519,10 +3620,10 @@ class TfTypecalculated extends TfTypefictive {
 
 	function populate($fetch,&$table) {
 		parent::populate($fetch,$table);
-		if (empty($this->params['q']))
-			addToLog('<t>q</t> '._('Value is missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
+		if (empty($this->params['sql']))
+			addToLog('<t>sql</t> '._('Value is missing at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 		else
-			$this->q=$this->params['q'];
+			$this->sql=$this->params['sql'];
 	}
 
 	function get_query() {
@@ -3541,7 +3642,7 @@ class TfTypecalculated extends TfTypefictive {
 			}
 		}
 
-		$q=str_replace($search,$replace,$this->params['q']);
+		$q=str_replace($search,$replace,$this->params['sql']);
 		if (!preg_match('/^[\\s\\(]*SELECT /i',$q)) {
 			addToLog(_('Only SELECT queries allowed at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
 			if (DEBUG) addToLog('<sql>'.he($q).'</sql>',LOGBAD,__LINE__,true);
@@ -3553,17 +3654,18 @@ class TfTypecalculated extends TfTypefictive {
 
 	function view() {
 		// cache value and query
-		if ($this->lastrowc!==$this->table->rowc) {
-			$this->lastrowc=$this->table->rowc;
-			$this->q=$this->get_query();
-			if ($this->q)
-				if ($res=mysql_query($this->q))
+		if (!$this->table || $this->table->rowc===false || $this->table->rowc===null || $this->lastrowc!==$this->table->rowc) {
+			$this->sql=$this->get_query();
+			if ($this->sql)
+				if ($res=mysql_query($this->sql))
 					if ($row=mysql_fetch_row($res))
-						if (array_key_exists(0,$row))
+						if (array_key_exists(0,$row)) {
+							if ($this->table) $this->lastrowc=$this->table->rowc;
 							return $this->value=$row[0];
+						}
 
 			addToLog(_('Error with calculated query at').' <f>'.$this->fetch['label'].'</f>',LOGBAD,__LINE__);
-			if (DEBUG) addToLog('<sqlerr>'.mysql_error().'</sqlerr> <sql>'.he($this->q).'</sql>',LOGBAD,__LINE__,true);
+			if (DEBUG) addToLog('<sqlerr>'.mysql_error().'</sqlerr> <sql>'.he($this->sql).'</sql>',LOGBAD,__LINE__,true);
 			return _('QUERY ERROR');
 		} else {
 			return $this->value;
@@ -3573,17 +3675,17 @@ class TfTypecalculated extends TfTypefictive {
 	function to_select_orderby($direction) {
 		// query is cached?
 		if (empty($this->table) || empty($this->table->rowc) || $this->lastrowc!==$this->table->rowc)
-			$this->q=$this->get_query();
-		return "($this->q) $direction";
+			$this->sql=$this->get_query();
+		return "($this->sql) $direction";
 	}
 
 	function to_select_where($method,$query,$not=false) {
 		// query is cached?
 		if (empty($this->table) || empty($this->table->rowc) || $this->lastrowc!==$this->table->rowc)
-			$this->q=$this->get_query();
-		if (empty($this->q)) return '';
+			$this->sql=$this->get_query();
+		if (empty($this->sql)) return '';
 
-		$where=($not?'NOT ':'')."($this->q)";
+		$where=($not?'NOT ':'')."($this->sql)";
 			if ($method=='has') $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='a' )  $where.=" LIKE '".mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query)).'%'."'";
 		elseif ($method=='z' )  $where.=" LIKE '".'%'.mysql_real_escape_string(str_replace(array("\\", '_', '%'), array("\\\\", "\\_", "\\%"), $query))."'";
@@ -3694,17 +3796,12 @@ class TfTable {
 			$this->pkey = $this->params['pkey'];
 	}
 
-	function userCan($user, $action) {   // This user can make this action? (like TftUserCan)
-		global $tf;
-		if (empty($user))
-			$user = tfGetUserGroup();
-		$action = strtolower($action);
-		$user = strtolower($user);
-		if (array_key_exists($action, $tf['permissionMap']))
-			$action = $tf['permissionMap'][$action];
-		if (!array_key_exists('users' . $action, $this->fetch))
-			return null;
-		return strpos(',' . strtolower($this->fetch['users' . $action]) . ',', ',' . $user . ',') !== false;
+	// Return true if the $user has permission to do the $action.
+	// $action can be TFVIEW TFEDIT TFADD TFDEL
+	// If $user is empty, using tfGetUserGroup()
+	function userCan($user, $action) {
+		if (empty($user)) $user = tfGetUserGroup();
+		return strpos(','.$this->fetch["allowed$action"].',',",$user,") !== false;
 	}
 
 	// Get or Set a value from the extra params field.

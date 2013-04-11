@@ -73,6 +73,7 @@ $fields['-- html']=array(DIVIDER,_('Project, HTML and display options'));
 $fields['html.title']=array(STRING,_('Project name (html &lt;title> tag and home link)'));
 //$fields['html.theme']=array(THEME,_('Select a theme. <A href="http://bootswatch.com/#gallery" target="_blank">View gallery</A>'));
 $fields['html.chosen'] = array(BOOL,_('Use pretty select boxes'));
+$fields['html.autocomplete'] = array(BOOL,_('Auto complete values by browser? Can be set per field with meta parameter <code>autocomplete=on/off</code>'));
 $fields['html.toplinks']=array(TEXT,_('Links to the top bar. One link per line.<br>Format: <code>name|link|parameters (e.g target=_blank)</code>'));
 $fields['html.head']=array(TEXT,_('Will be put inside the <head> tag'));
 $fields['html.body']=array(TEXT,_('Will be put first in the <body>'));
@@ -227,7 +228,7 @@ if (empty($user)) {
 	exit;
 }
 // check user permissions
-if (!TftUserCan($user, 'edit', '', '')) {
+if (!TftUserCan($user, TFEDIT, '', '')) {
 	echo('<h4 class=text-error>'._('Sorry, you are not super user').'</h4>');
 	include(__DIR__.'/inc/footer.php');
 	exit;

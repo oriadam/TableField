@@ -4,7 +4,7 @@
   Handle mysqldump
   ================
 
-  Requires super-user 'view' permission.
+  Requires super-user TFVIEW permission.
 
   URL Parameters:
   act=dl&fn=filename.ext - Download a file
@@ -16,7 +16,7 @@
 
   Note: Scheduled backups are called from footer.php like this:
 	$_GET=array('act'=>'dump','zip'=>'2','silent'=>1);
-	include('tfout.php')
+	include('tfbackup.php')
 
  */
 global $tf;
@@ -29,7 +29,7 @@ chdir(__DIR__.'/'.OUTDIR);
 
 $act=@$_GET['act'];
 
-if (empty($tf['tf.tfout-no-user-check'])) {
+if (empty($tf['tf.tfbackup-no-user-check'])) {
 	// check super user
 	$user = tfGetUserGroup();
 	if (empty($user)) {
@@ -41,7 +41,7 @@ if (empty($tf['tf.tfout-no-user-check'])) {
 		exit;
 	}
 	// check user permissions
-	if (!TftUserCan($user, 'view', '', '')) {
+	if (!TftUserCan($user, TFVIEW, '', '')) {
 		include(__DIR__.'/inc/header.php');
 		echo('<h4 class=text-error>'._('Sorry, you are not super user').'</h4>');
 		include(__DIR__.'/inc/footer.php');

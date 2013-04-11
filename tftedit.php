@@ -18,7 +18,7 @@ if (empty($user)) {
 }
 
 // check user permissions
-if (!TftUserCan($user, 'edit', '', '')) {
+if (!TftUserCan($user, TFEDIT, '', '')) {
 	if ($tf['debug']) {
 		fatal("User group $user have no super-admin edit permissions");
 	} else {
@@ -275,7 +275,7 @@ if ($mode == 'class') {
 if ($mode == 'permissions') {
 	if (Post('datasent') == 'yeah baby') {
 		foreach ($_POST['fields'] as $k => $fname) {
-			sqlRun("UPDATE $tblinfo SET `usersview`=".sqlv($_POST['views'][$k]).",`usersedit`=".sqlv($_POST['edits'][$k]).",`usersnew`=".sqlv($_POST['news'][$k]).",`usersdel`=".sqlv($_POST['dels'][$k])." WHERE `tname`=$tnamev AND `fname`=".sqlv($fname));
+			sqlRun("UPDATE $tblinfo SET `allowed1`=".sqlv($_POST['views'][$k]).",`allowed2`=".sqlv($_POST['edits'][$k]).",`allowed3`=".sqlv($_POST['adds'][$k]).",`allowed4`=".sqlv($_POST['dels'][$k])." WHERE `tname`=$tnamev AND `fname`=".sqlv($fname));
 		}
 	}
 	echo "
@@ -283,17 +283,17 @@ if ($mode == 'permissions') {
   <form accept-charset='iso-8859-1,utf-8' enctype='multipart/form-data' name=frm method=post action='" . reGet() . "'>
   <input type=hidden name=datasent value='yeah baby' />
   <table class=tftedit>
-  <th class=none></th><th class=th align=center>" . _('view') . "</th><th class=th align=center>" . _('edit') . "</th><th class=th align=center>" . _('new') . "</th><th class=th align=center>" . _('del') . "</th><th align=left style='font-size:74%'><b><i>Mass<br>-Fill</i></b></th>";
+  <th class=none></th><th class=th align=center>" . _('view') . "</th><th class=th align=center>" . _('edit') . "</th><th class=th align=center>" . _('add') . "</th><th class=th align=center>" . _('del') . "</th><th align=left style='font-size:74%'><b><i>Mass<br>-Fill</i></b></th>";
 
 	$known = array(); // suggestions
 	$res = sqlRun("
-      SELECT DISTINCT `usersview` as `names` FROM $tblinfo
+      SELECT DISTINCT `allowed1` as `names` FROM $tblinfo
       UNION
-      SELECT DISTINCT `usersedit` as `names` FROM $tblinfo
+      SELECT DISTINCT `allowed2` as `names` FROM $tblinfo
       UNION
-      SELECT DISTINCT `usersnew`  as `names` FROM $tblinfo
+      SELECT DISTINCT `allowed3`  as `names` FROM $tblinfo
       UNION
-      SELECT DISTINCT `usersdel`  as `names` FROM $tblinfo
+      SELECT DISTINCT `allowed4`  as `names` FROM $tblinfo
       ORDER BY `names` ASC");
 	while ($row = mysql_fetch_row($res)) {
 		if (!in_array($row[0], $known))
@@ -305,7 +305,7 @@ if ($mode == 'permissions') {
 			$known[] = $row[0];
 	}
 
-	$res = sqlRun("SELECT `fname`,`usersview`,`usersedit`,`usersnew`,`usersdel` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
+	$res = sqlRun("SELECT `fname`,`allowed1`,`allowed2`,`allowed3`,`allowed4` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
 	$cnt = 0;
 	while ($row = mysql_fetch_row($res)) {
 		$tr = 'class=tr' . ((($cnt % 2) == 0) ? '1' : '2');
@@ -334,13 +334,13 @@ if ($mode == 'permissions') {
 		echo "</select> <input name='edits[$cnt]' type=text size=18 value='" . fix4html1($row[2]) . "' />&nbsp;";
 
 		echo "</td><td>";
-		echo "<select name='news_select[$cnt]' style='width:61px;' onChange=\"document.frm['news[$cnt]'].value=this.value;\">";
+		echo "<select name='adds_select[$cnt]' style='width:61px;' onChange=\"document.frm['adds[$cnt]'].value=this.value;\">";
 		echo "<option value='" . fix4html1($row[3]) . "'>$row[3]</option>";
 		foreach ($known as $cl) {
 			if ($cl != $row[3])
 				echo "<option value='" . fix4html1($cl) . "'>$cl</option>";
 		}
-		echo "</select> <input name='news[$cnt]' type=text size=18 value='" . fix4html1($row[3]) . "' />&nbsp;";
+		echo "</select> <input name='adds[$cnt]' type=text size=18 value='" . fix4html1($row[3]) . "' />&nbsp;";
 
 		echo "</td><td>";
 		echo "<select name='dels_select[$cnt]' style='width:61px;' onChange=\"document.frm['dels[$cnt]'].value=this.value;\">";
@@ -362,7 +362,7 @@ if ($mode == 'permissions') {
 	echo "<tr><td><b><i>Mass-Fill:</i></b></td>";
 	echo "<td align=center><a class=csMassFill onclick=\"massFill('views')\" href='#'>&#x21D1;</a></td>";
 	echo "<td align=center><a class=csMassFill onclick=\"massFill('edits')\" href='#'>&#x21D1;</a></td>";
-	echo "<td align=center><a class=csMassFill onclick=\"massFill('news' )\" href='#'>&#x21D1;</a></td>";
+	echo "<td align=center><a class=csMassFill onclick=\"massFill('adds' )\" href='#'>&#x21D1;</a></td>";
 	echo "<td align=center><a class=csMassFill onclick=\"massFill('dels' )\" href='#'>&#x21D1;</a></td>";
 
 	echo "</tr></table><br>";
@@ -386,7 +386,7 @@ if ($mode == 'permissions') {
       var v=document.getElementById('idMassFill').value;
       document.frm['views['+i+']'].value=v;
       document.frm['edits['+i+']'].value=v;
-      document.frm['news[' +i+']'].value=v;
+      document.frm['adds[' +i+']'].value=v;
       document.frm['dels[' +i+']'].value=v;
     }
     </script>";
@@ -437,13 +437,12 @@ if ($mode == 'comments') {
 	if (Post('datasent') == 'yeah baby') {
 		foreach ($_POST['fields'] as $k => $fname) {
 			sqlRun("UPDATE $tblinfo SET
-			   `commentedit`=".sqlv($_POST['commentedit'][$k])
-			.',`commentview`='.sqlv($_POST['commentview'][$k])
-			.',`commentnew`='.sqlv($_POST['commentnew'][$k])
-			.',`commentdel`='.sqlv($_POST['commentdel'][$k])
-			.',`actionsedit`='.sqlv($_POST['actionsedit'][$k])
-			.',`actionsview`='.sqlv($_POST['actionsview'][$k])
-			.',`actionsnew`='.sqlv($_POST['actionsnew'][$k])
+			   `comment1`=".sqlv($_POST['comment1'][$k])
+			.',`comment2`='.sqlv($_POST['comment2'][$k])
+			.',`comment3`='.sqlv($_POST['comment3'][$k])
+			.',`actions1`='.sqlv($_POST['actions1'][$k])
+			.',`actions2`='.sqlv($_POST['actions2'][$k])
+			.',`actions3`='.sqlv($_POST['actions3'][$k])
 			." WHERE `tname`=$tnamev AND `fname`=".sqlv($fname));
 		}
 	}
@@ -455,13 +454,13 @@ if ($mode == 'comments') {
    <th class=none></th>"
 	. "<th class=th align=center>" . _('view') . "</th>"
 	. "<th class=th align=center>" . _('edit') . "</th>"
-	. "<th class=th align=center>" . _('new') . "</th>"
+	. "<th class=th align=center>" . _('add') . "</th>"
 	. "<th class=th align=center>" . _('del') . "</th>"
 	. "<th class=th align=center>" . _('action') . ' ' . _('view') . "</th>"
 	. "<th class=th align=center>" . _('action') . ' ' . _('edit') . "</th>"
-	. "<th class=th align=center>" . _('action') . ' ' . _('new') . "</th>"
+	. "<th class=th align=center>" . _('action') . ' ' . _('add') . "</th>"
 	;
-	$res = sqlRun("SELECT `fname`,`commentview`,`commentedit`,`commentnew`,`commentdel`,`actionsview`,`actionsedit`,`actionsnew` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
+	$res = sqlRun("SELECT `fname`,`comment1`,`comment2`,`comment3`,`actions1`,`actions2`,`actions3` FROM $tblinfo WHERE `tname`=$tnamev ORDER BY (`fname`='') DESC,`order` DESC,`fname`");
 	$cnt = 0;
 	while ($row = mysql_fetch_row($res)) {
 		$tr = 'class=tr' . ((($cnt % 2) == 0) ? '1' : '2');
@@ -471,13 +470,12 @@ if ($mode == 'comments') {
 		echo "
     <tr $tr><th class=th style='text-align:left;'>$name</th>";
 		echo "<input type=hidden name='fields[$cnt]' value='" . fix4html1($row[0]) . "'>";
-		echo "<td class=td><input name='commentview[$cnt]' type=text size=18 value='" . fix4html1($row[1]) . "' /></td>";
-		echo "<td class=td><input name='commentedit[$cnt]' type=text size=18 value='" . fix4html1($row[2]) . "' /></td>";
-		echo "<td class=td><input name='commentnew[$cnt]'  type=text size=18 value='" . fix4html1($row[3]) . "' /></td>";
-		echo "<td class=td><input name='commentdel[$cnt]'  type=text size=18 value='" . fix4html1($row[4]) . "' /></td>";
-		echo "<td class=td><input name='actionsview[$cnt]' type=text size=18 value='" . fix4html1($row[5]) . "' /></td>";
-		echo "<td class=td><input name='actionsedit[$cnt]' type=text size=18 value='" . fix4html1($row[6]) . "' /></td>";
-		echo "<td class=td><input name='actionsnew[$cnt]'  type=text size=18 value='" . fix4html1($row[7]) . "' /></td>";
+		echo "<td class=td><input name='comment1[$cnt]' type=text size=18 value='" . fix4html1($row[1]) . "' /></td>";
+		echo "<td class=td><input name='comment2[$cnt]' type=text size=18 value='" . fix4html1($row[2]) . "' /></td>";
+		echo "<td class=td><input name='comment3[$cnt]'  type=text size=18 value='" . fix4html1($row[3]) . "' /></td>";
+		echo "<td class=td><input name='actions1[$cnt]' type=text size=18 value='" . fix4html1($row[5]) . "' /></td>";
+		echo "<td class=td><input name='actions2[$cnt]' type=text size=18 value='" . fix4html1($row[6]) . "' /></td>";
+		echo "<td class=td><input name='actions3[$cnt]'  type=text size=18 value='" . fix4html1($row[7]) . "' /></td>";
 		echo "</tr>";
 		$cnt++;
 	}
@@ -578,10 +576,10 @@ if ($mode == 'edit') {
 					$newfield = trim($_POST['newfields'][$k]);
 					if ($newfield != '') {
 						// get users from table general info
-						$sql="SELECT `usersview`,`usersedit`,`usersdel`,`usersnew` FROM $tblinfo WHERE tname=$tnamev AND fname=''";
+						$sql="SELECT `allowed1`,`allowed2`,`allowed3`,`allowed4` FROM $tblinfo WHERE tname=$tnamev AND fname=''";
 						$res=mysql_query($sql);
 						$row=mysql_fetch_row($res);
-						$sql="INSERT INTO $tblinfo (`tname`,`fname`,`label`,`oknull`,`usersview`,`usersedit`,`usersdel`,`usersnew`) VALUES ($tnamev,".sqlv($newfield).",".sqlv(ucwords($newfield)).',1,'.sqlv($row[0]).','.sqlv($row[1]).','.sqlv($row[2]).','.sqlv($row[3]).')';
+						$sql="INSERT INTO $tblinfo (`tname`,`fname`,`label`,`oknull`,`allowed1`,`allowed2`,`allowed3`,`allowed4`) VALUES ($tnamev,".sqlv($newfield).",".sqlv(ucwords($newfield)).',1,'.sqlv($row[0]).','.sqlv($row[1]).','.sqlv($row[2]).','.sqlv($row[3]).')';
 						echo "<!-- $sql -->";
 						if (sqlRun($sql))
 							echo "<div style='color:green'>Field added $newfield</div>";

@@ -49,6 +49,7 @@ $tf['html.footerscript'] = ''; // text. A javascript that will run at the footer
 $tf['html.rtl'] = false; // boolean. Is the UI right-to-left? setting this to TRUE will include tfimg/tfrtl.css
 $tf['html.charset'] = 'UTF-8'; // string. Character set of TF. Should be UTF-8 (html charset <meta> tag)
 $tf['html.chosen'] = true; // boolean. Use Chosen jQueryUI plugin for selects.
+$tf['html.autocomplete'] = true; // boolean. Default autocomplete behavior. Note that META table can override this per field.
 $tf['tf.nosy'] = false; // boolean. call a select and only update changed values. report to log which values were changed.
 $tf['debug'] = false; // boolean. Should you want debug notifications - turn this on.
 $tf['html.errors'] = 1 * E_ALL; // numeric. Show errors? which ones? see error_reporting() documentation for help: http://php.net/errorfunc.constants

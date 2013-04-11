@@ -26,3 +26,5 @@ content: "\f04a";
 .bs-docs-example-legend { left:auto; right:-1px; }
 
 [class*="span"] { float:right; }
+
+.chzn-container-single-nosearch .chzn-search input { left:auto; right:-9000px; }

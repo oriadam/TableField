@@ -90,16 +90,17 @@ body.mini #idForm { margin-top:20px; }
 .act.disabled {color:#ccc; cursor:default }
 .act.clicked {color:#ccc; }
 .act.icon-white { color:#fff; }
-.act.on { color:#fff; }
+.act.on,.on,.on .act { color:#08c; }
 
 #idCtrlBar,#idCtrlBarMini { position: fixed;margin: 0;top: 43px; z-index:950; right:auto; left:auto; }
 #idCtrlBarMini { top:3px; }
-#idCtrlLayout { opacity:1; }
-#idCtrlLayout i { font-size:14px; cursor:pointer; color:#000; margin:0 1px; }
-#idCtrlLayout i.icon-white { color:#08c; }
-#idCtrlLayout i.icon-resize-small { color:#050; }
-#idCtrlLayout i.icon-resize-full  { color:#050; }
+#idCtrlMenu { margin:auto; position:absolute; }
+#idCtrlMenu i { font-size:14px; cursor:pointer; color:#000; margin:0 1px; }
+#idCtrlMenu i.icon-white { color:#08c; }
+#idCtrlMenu i.icon-resize-small { color:#050; }
+#idCtrlMenu i.icon-resize-full  { color:#050; }
 body.layout-b .inlineEdit.tfRow { display:inline-block;}
+#idCtrlMenu { position:absolute; background:#eee; list-style-type:none; }
 .inlineEdit,iframe.inlineEdit { margin:0; padding:0; border:none; overflow:visible; }
 .ui-dialog { z-index:1200; }
 .ui-dialog .ui-dialog-title { font-size:11pt; font-weight:normal; font-family:sans-serif; }
@@ -187,10 +188,10 @@ table,.table,table.table { border-color:#ddd; border-collapse: collapse; }
 .subtableiframe     { overflow:visible; }
 .subdiv             { }
 
-.csNewTitleTr       { background:#4ae; }
-.csNewTitle         { text-align:center; font-weight:bold; letter-spacing: 3px; color:#fff; border-radius: 6px; }
-.actNew .csNewTitle { background:#6de; }
-.mini .csNewTitle   { font-size:10px; line-height:11px; }
+.csAddTitleTr       { background:#4ae; }
+.csAddTitle         { text-align:center; font-weight:bold; letter-spacing: 3px; color:#fff; border-radius: 6px; }
+.actAdd .csAddTitle { background:#6de; }
+.mini .csAddTitle   { font-size:10px; line-height:11px; }
 
 label.upthis,label.delthis { padding:0 2px; }
 
@@ -199,7 +200,7 @@ label.upthis,label.delthis { padding:0 2px; }
 
 .upthis i { color:#888; font-size:18px; font-weight:normal; }
 .actUpdate .upthis i,
-.actNew .upthis i  { color:#0a0; font-weight:bolder; }
+.actAdd .upthis i  { color:#0a0; font-weight:bolder; }
 .upthis i.icon-plus-sign { font-size:15px; }
 
 .actDel            { }
@@ -214,11 +215,11 @@ table.actUpdate    { border:1px solid #606090; }
 tr.actUpdate    td { background-color:#e0f9f0; }
 table.actUpdate td { background-color:#e0f9f0; }
 
-.actNew            { }
-tr.actNew          { }
-table.actNew       { border:1px solid #609060; }
-tr.actNew       td { background-color:#e0fee0; }
-table.actNew    td { background-color:#e0fee0; }
+.actAdd            { }
+tr.actAdd          { }
+table.actAdd       { border:1px solid #609060; }
+tr.actAdd       td { background-color:#e0fee0; }
+table.actAdd    td { background-color:#e0fee0; }
 
 .tfChg,input.tfChg,select.tfChg { border:1px solid #00fe00; background-color:#daffda; }
 
@@ -226,12 +227,10 @@ table.actNew    td { background-color:#e0fee0; }
 .tftedit .icon-chevron-down { cursor:pointer; }
 
 #idLog             {
-	direction:ltr;
 	margin:0;
 	width:90%;
 	left:5%;
 }
-
 #idLog span        { display:block; margin:1px 0px; padding:1px 0px; padding-left:24px; background-repeat:no-repeat; background-position:left top; }
 #idLog span        { }
 #idLog span.logDetail { padding-left:36px; background-image:none; }
@@ -257,8 +256,8 @@ table.actNew    td { background-color:#e0fee0; }
 #idLog .logSame  { color:#444; }
 #idLog .logTitle { color:#222; font-weight:bold; padding-left:10px; }
 #idLog .logDebug { color:#117; }
-sql { font-size: 10px; font-family: monospace; color: #009; }
-sqlerr { }
+sqlerr,sql { direction:ltr; display:inline-block; }
+sql { font-size: 10px; font-family: monospace; color: #555; }
 
 #tfStats             { box-shadow: 5px 5px 8px #888; border:1px solid #888; width:96%; margin:1%; }
 .tfStatsField        { display:inline-block; padding:4px; margin:2px; font-size:8pt; }
@@ -313,7 +312,7 @@ img.csPgLink       { }
 
 /************************************************ TF Types classes *****************************************************/
 
-#idForm { display:block; margin:0 0 100px 0; padding:0; }
+#idForm { display:block; margin:0; padding:0; }
 form input { width:109px; border:1px solid #eee; border-radius:4px; border-color:#ddd #eee #ddd #eee; margin:0 1px; padding:0 3px; }
 form input[type=number],#idForm input[type=number] { width:50px; }
 form input[type=radio] ,
@@ -387,6 +386,6 @@ label.tfKSCB_Off { color:gray; }
 .ui-dialog-titlebar-close:before { content:'X'; font-size:12px; line-height:14px; }
 .ui-dialog button.ui-dialog-titlebar-close {font-size:12px; line-height:12px; font-family: Arial;}
 
-td.view_TfTypeboolean, td.edit_TfTypeboolean, td.new_TfTypeboolean { text-align:center; }
+.layout-list td.TfTypeboolean { text-align:center; }
 
 #filelist,#fn { direction:ltr; text-align:left; }

@@ -1,29 +1,12 @@
 <?php
 global $tf;
 
-// map of actions for the userCan() function
-$tf['permissionMap'] = array(
-	''      =>'view',
-	'access'=>'view',
-	'watch' =>'view',
-	'see'   =>'view',
-	'read'  =>'view',
-	'r'     =>'view',
-	'a'     =>'new',
-	'add'   =>'new',
-	'change'=>'edit',
-	'chg'   =>'edit',
-	'modify'=>'edit',
-	'write' =>'edit',
-	'w'     =>'edit',
-	'update'=>'edit',
-	'upd'   =>'edit',
-	'remove'=>'del',
-	'delete'=>'del',
-	'erase' =>'del',
-	'drop'  =>'del',
-	'actualdel'   =>'del',
-	'actualdelete'=>'del');
+// optional actions for permissions and modes
+// these values are hard coded in the info table field names. do not change it!
+define('TFVIEW',1);
+define('TFEDIT',2);
+define('TFADD',3);
+define('TFDEL',4);
 
 // log errors in global tf['log']
 define('LOGINFO',1);
@@ -115,18 +98,16 @@ function TftCreateTft() {
         ,`orderby`     TINYINT UNSIGNED DEFAULT 0 NOT NULL
         ,`odirasc`     BOOL             DEFAULT 1 NOT NULL
         ,`default`     VARCHAR(255)     $charsetf
-        ,`usersview`   VARCHAR(255)     $charsetf
-        ,`usersedit`   VARCHAR(255)     $charsetf
-        ,`usersnew`    VARCHAR(255)     $charsetf
-        ,`usersdel`    VARCHAR(255)     $charsetf
-        ,`commentview` VARCHAR(255)     $charsetf
-        ,`commentedit` VARCHAR(255)     $charsetf
-        ,`commentnew`  VARCHAR(255)     $charsetf
-        ,`commentdel`  VARCHAR(255)     $charsetf
-        ,`actionsview` VARCHAR(255)     $charsetf
-        ,`actionsedit` VARCHAR(255)     $charsetf
-        ,`actionsnew`  VARCHAR(255)     $charsetf
-        ,`actionsdel`  VARCHAR(255)     $charsetf
+        ,`allowed1`   VARCHAR(255)     $charsetf
+        ,`allowed2`   VARCHAR(255)     $charsetf
+        ,`allowed3`    VARCHAR(255)     $charsetf
+        ,`allowed4`    VARCHAR(255)     $charsetf
+        ,`comment1` VARCHAR(255)     $charsetf
+        ,`comment2` VARCHAR(255)     $charsetf
+        ,`comment3`  VARCHAR(255)     $charsetf
+        ,`actions1` VARCHAR(255)     $charsetf
+        ,`actions2` VARCHAR(255)     $charsetf
+        ,`actions3`  VARCHAR(255)     $charsetf
         ,`remarks`     VARCHAR(255)     $charsetf
         ,`params`        VARCHAR(255)     DEFAULT ''
         ,INDEX(`tname`,`fname`)
@@ -362,15 +343,17 @@ function TftEmptyTables() {
 }
 
 // return true or false, whether the $user can do $action on the $table.$field
-// $action can be either 'view','edit','del' or 'new'
+// $action can be either TFVIEW TFEDIT TFADD TFDEL
 function TftUserCan($user, $action, $tname, $fname = '', $row = null) {
 	global $tf;
-	if (array_key_exists($action, $tf['permissionMap']))
-		$action = $tf['permissionMap'][$action];
-	if (empty($user))
-		$user = tfGetUserGroup();
+	if (empty($user)) $user = tfGetUserGroup();
 
-	if (!is_array($row) || !array_key_exists('users' . $action, $row)) {
+	// Quick database query method
+	$row=mysql_fetch_row(mysql_query('SEleCT COUNT(*) FROM '.sqlf($tf['tbl.info']).' WHERE (`tname`='.sqlv($tname).' AND `fname`='.sqlv($fname).' AND 0<FIND_IN_SET('.sqlv($user).','.sqlf("allowed$action").'))'));
+	return $row[0] > 0;
+
+	// cached method
+	if (!is_array($row) || !array_key_exists("allowed$action", $row)) {
 		if (!empty($tf['cache']["row..$tname..$fname"])) {
 			$row=$tf['cache']["row..$tname..$fname"];
 		} else {
@@ -380,13 +363,7 @@ function TftUserCan($user, $action, $tname, $fname = '', $row = null) {
 			$tf['cache']["row..$tname..$fname"]=$row;
 		}
 	}
-	return strpos(',' . strtolower($row['users' . $action]) . ',', ',' . $user . ',') !== false;
-
-	/*/ Quick database option
-	$res = mysql_query('SEleCT COUNT(*) FROM '.sqlf($tf['tbl.info']).' WHERE (`tname`='.sqlv($tname).' AND `fname`='.sqlv($fname).' AND FIND_IN_SET('.sqlv($user).','.sqlf('users'.$action).')>0)';);
-	if (!$res) fatal("Error reading tf info table at line ".__LINE__);
-	$row = mysql_fetch_row($res);
-	return $row[0] > 0;//*/
+	return strpos(','.$row["allowed$action"].',',",$user,") !== false;
 }
 
 // return an array of all tables listed

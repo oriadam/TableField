@@ -51,7 +51,7 @@ if (count($_POST)) {
 			if (!in_array($t,$tftables)) {
 				/////////////////////////// MAGIC HAPPENS HERE ////////////////////
 				addToLog(_('Adding Table')." <f>$t</f>",LOGTITLE,__LINE__);
-				$sql='INSERT INTO `'.$tf['tbl.info'].'` SET `tname`='.sqlv($t).",`fname`='',`label`=".sqlv(ucwords(str_replace('_',' ',$t))).",`usersview`='root',`usersedit`='root',`usersdel`='root',`usersnew`='root'";
+				$sql='INSERT INTO `'.$tf['tbl.info'].'` SET `tname`='.sqlv($t).",`fname`='',`label`=".sqlv(ucwords(str_replace('_',' ',$t))).",`allowed1`='root',`allowed2`='root',`allowed3`='root',`allowed4`='root'";
 				;
 				if (DEBUG) addToLog($sql,LOGDEBUG,__LINE__);
 				mysql_query($sql);
@@ -65,9 +65,8 @@ if (count($_POST)) {
 					$cols[$f]['label']=ucwords(str_replace('_',' ',$f));
 					$cols[$f]['indexed']=!empty($row['Key']);
 					$cols[$f]['oknull']=1*chkBool($row['Null'],0);
-					$cols[$f]['okempty']=1;
 					if ($row['Default']!==null) $cols[$f]['default']=$row['Default'];
-					$cols[$f]['usersview']=$cols[$f]['usersedit']=$cols[$f]['usersnew']=$cols[$f]['usersdel']='root';
+					$cols[$f]['allowed1']=$cols[$f]['allowed2']=$cols[$f]['allowed3']=$cols[$f]['allowed4']='root';
 
 					//// Guess Class
 					$type=preg_replace('/\(.*\)/','',strtolower($row['Type'])); // remove (size)
