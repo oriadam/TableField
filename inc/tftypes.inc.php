@@ -2350,7 +2350,7 @@ class TfTypedate extends TfType {
 			$this->format=$this->params['format'];
 		}
 		$this->params['pattern']='^(19[0-9][0-9]|20[0-9][0-9])-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])$';
-		if ($this->fetch['okempty']) $this->params['pattern'].='|^$';
+		if ($this->fetch['okempty']) $this->params['pattern'].='|^$|^0000-00-00$';
 		if ($this->fetch['okmin']<1970) $this->fetch['okmin']=null;
 		if ($this->fetch['okmax']<1970) $this->fetch['okmax']=null;
 	}

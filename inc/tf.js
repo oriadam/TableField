@@ -108,15 +108,12 @@ function searchSubmit(clearSearch) {
 			if (f) {
 				var how=e.find('.search-how').get(0).value;
 				var q=e.find('.search-query').get(0).value;
-				if (q || how=='b' || how=='n' || how=='e') {
-					if (how=='b'||how=='n'||how=='e') q=''; // for Boolean, is Null, is Empty - query is irrelevant
-					var not='';
-					if (e.find('.search-not').get(0).checked) not='-';
-					var chain='';
-					var c=e.find('.search-chain').get(0);
-					if (c.options[c.selectedIndex].value=='or') chain='or';
-					search['s'+index]=encodeURI(f.replace(/\./,'%2E') +'.'+not+how+'.'+q.replace(/\./,'%2E')+'.'+chain); // double encode dots
-				}
+				var not='';
+				if (e.find('.search-not').get(0).checked) not='-';
+				var chain='';
+				var c=e.find('.search-chain').get(0);
+				if (c.options[c.selectedIndex].value=='or') chain='or';
+				search['s'+index]=encodeURI(f.replace(/\./,'%2E') +'.'+not+how+'.'+q.replace(/\./,'%2E')+'.'+chain); // double encode dots
 			}
 		});
 	}

@@ -1390,7 +1390,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		echo '</div>';
 	}
 
-	if (!$tf['nopage']) {
+	if (!$tf['nopage'] && (!$tf['mini'] || $pages>1)) {
 
 		echo '<div id=idPaging class="nav nav-pills navbar-fixed-bottom n1avbar-inner">';
 
