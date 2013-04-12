@@ -630,21 +630,28 @@ class TfTypeenum extends TfType {
 			@$array[_('Total ').$v]+=1;
 	}
 
+	function encode($str) {
+		return str_replace(array('-','.'),array('%2d','%2e'),urlencode($str));
+	}
+	function decode($str) {
+		return urldecode($str);
+	}
+
 	function search_methods() {
 		$return=array();
 		foreach ($this->values as $v)
 			if (empty($this->params["label-$v"]))
-				$return[$v]=$v;
+				$return[$this->encode($v)]=$v;
 			else
-				$return[$v]=eh($this->params["label-$v"]);
+				$return[$this->encode($v)]=eh($this->params["label-$v"]);
 		return $return;
 	}
 
 	function to_select_where($method,$query,$not=false) {
 		if ($not)
-			return sqlf($this->fname).'<>'.sqlv($method);
+			return sqlf($this->fname).'<>'.sqlv($this->decode($method));
 		else
-			return sqlf($this->fname).'='.sqlv($method);
+			return sqlf($this->fname).'='.sqlv($this->decode($method));
 	}
 
 } // class TfTypeenum
@@ -716,16 +723,17 @@ class TfTypeenums extends TfTypeenum {
 		$return=array();
 		foreach ($this->values as $v)
 			if (empty($this->params["label-$v"])) {
-				$return[$v]=$v;
-				$return["~$v"]=_('Has ').$v;
+				$return[$this->encode($v)]=$v;
+				$return[$this->encode("~$v")]=_('Has ').$v;
 			} else {
-				$return[$v]=$this->params["label-$v"];
-				$return["~$v"]=_('Has ').eh($this->params["label-$v"]);
+				$return[$this->encode($v)]=$this->params["label-$v"];
+				$return[$this->encode("~$v")]=_('Has ').eh($this->params["label-$v"]);
 			}
 		return $return;
 	}
 
 	function to_select_where($method,$query,$not=false) {
+		$method=$this->decode($method);
 		if ($method{0}=='~')
 			return ($not?'0=':'0<').'FIND_IN_SET('.sqlv(substr($method,1)).','.sqlf($this->fname).')';
 		else

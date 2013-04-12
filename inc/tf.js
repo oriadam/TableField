@@ -89,7 +89,7 @@ function AnyChanges(frm) {
 //               gte = Greater Then or Equal to: (f<=Q)
 //               lt = Little Than: (f>Q)
 //               lte = Little Then or Equal to: (f>=Q)
-search={p:null,pp:null,ppp:null,id:null,s0:null,s1:null,s2:null,s3:null,s4:null,s5:null,s6:null,s7:null,s8:null,s9:null,s10:null,s11:null,s12:null};
+search={p:null,ppp:null,id:null,s0:null,s1:null,s2:null,s3:null,s4:null,s5:null,s6:null,s7:null,s8:null,s9:null,s10:null,s11:null,s12:null};
 function searchSubmit(clearSearch) {
 
 	if (clearSearch) {

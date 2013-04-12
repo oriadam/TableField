@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TableField\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-11 06:01+0200\n"
-"PO-Revision-Date: 2013-04-11 06:01+0200\n"
+"POT-Creation-Date: 2013-04-12 05:48+0200\n"
+"PO-Revision-Date: 2013-04-12 05:48+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -948,8 +948,8 @@ msgid "Go Back"
 msgstr ""
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:112
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3343
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3347
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3351
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3355
 msgid "Null not allowed"
 msgstr ""
 
@@ -1002,7 +1002,7 @@ msgid "Mean Negatives"
 msgstr ""
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:168
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2290
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2298
 msgid "Total Empty"
 msgstr ""
 
@@ -1059,7 +1059,7 @@ msgid "≥"
 msgstr ""
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:262
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2269
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2277
 msgid "is Null"
 msgstr ""
 
@@ -1081,342 +1081,342 @@ msgstr ""
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:583
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:587
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3624
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3632
 msgid "Value is missing at"
 msgstr ""
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:602
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:671
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:678
 msgid "Value not in list"
 msgstr ""
 
 #: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:630
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:709
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:711
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:716
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:718
 msgid "Total "
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:682
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:689
 msgid "Select at least one item"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:720
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:723
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:727
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:730
 msgid "Has "
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:756
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:764
 msgid "Primary key is not editable"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:822
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:854
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:830
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:862
 msgid "Text too long"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:824
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:856
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:832
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:864
 msgid "Text too short"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:915
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:923
 msgid "Email is empty"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:919
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:934
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:939
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:927
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:942
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:947
 msgid "Email address domain is not reachable"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:929
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:937
 msgid "Invalid email address"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1093
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1198
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1459
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1974
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2844
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3349
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1101
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1206
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1467
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1982
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2852
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3357
 msgid "Cannot be left empty"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1097
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1200
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1105
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1208
 msgid "Not a number"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1099
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1107
 msgid "Not supporting decimal point"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1101
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1202
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1109
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1210
 msgid "Number too big"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1103
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1204
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1111
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1212
 msgid "Number too small"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1256
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1264
 msgid "Password validation mismatched"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1269
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1321
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1277
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1329
 msgid "Enter new password"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1277
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1333
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1285
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1341
 msgid "password mismatched"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1306
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1314
 msgid "Please type current password"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1357
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1365
 msgid "Open full screen"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1359
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1376
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1367
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1384
 msgid "Change direction (RTL/LTR)"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1374
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1382
 msgid "preview"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1375
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1383
 msgid "edit HTML"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1468
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1986
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1476
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1994
 msgid "File exceeds upload_max_filesize"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1471
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1989
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1479
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1997
 msgid "File exceeds MAX_FILE_SIZE"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1474
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1992
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1482
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2000
 msgid "File was only partially uploaded"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1477
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1995
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1485
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2003
 msgid "No file was uploaded"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1481
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1999
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1489
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2007
 msgid "PHP Missing a temporary folder"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1487
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2005
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1495
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2013
 msgid "File does not exist in temp folder"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1490
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1510
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2008
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1498
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1518
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2016
 msgid "Error reading file size"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1492
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1512
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2010
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1500
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1520
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2018
 msgid "File too big"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1494
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1514
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2012
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1502
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1522
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2020
 msgid "File too small"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1496
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1516
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2014
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1504
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1524
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2022
 msgid "File is empty"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1501
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1524
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2020
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1509
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1532
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2028
 msgid "File extension not allowed"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1518
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1526
 msgid "File does not exist"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1578
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1591
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1586
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1599
 msgid "No filename given"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1585
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1593
 msgid "No overwrite permission for this filename"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1595
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1603
 msgid "filename already exists"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1799
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1807
 msgid "Error uploading file"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1827
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:1835
 msgid "Delete failed"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2039
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2047
 msgid "delete"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2221
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2229
 msgid "True"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2223
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2231
 msgid "False"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2225
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2233
 msgid "-"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2242
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2250
 msgid "Must be 1/0"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2270
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2273
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2278
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2281
 msgid "is On"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2288
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2296
 msgid "Total Yes"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2289
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2297
 msgid "Total No"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2645
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2653
 msgid "First"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2646
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2654
 msgid "Zero"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2647
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2655
 msgid "Last"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2648
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2656
 msgid "Reset"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2683
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2685
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2691
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2693
 msgid " Stars"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2730
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2750
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2752
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2768
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2818
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2821
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2868
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2937
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3053
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3060
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2738
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2758
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2760
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2776
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2826
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2829
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2876
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2945
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3061
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3068
 msgid "value missing at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2734
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2755
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2772
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2786
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2795
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2826
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2742
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2763
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2780
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2794
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2803
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2834
 msgid "expression not balanced at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2806
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2814
 msgid "not a number at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2846
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2854
 msgid "Cannot be null"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2852
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2894
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2908
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3120
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3149
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3186
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2860
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2902
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2916
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3128
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3157
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3194
 msgid "Error reading data at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2854
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2862
 msgid "Error reading xtable"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2920
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3198
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:2928
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3206
 msgid "nothing"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3117
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3146
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3125
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3154
 msgid "XKey not found at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3170
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3178
 msgid "value is wrong at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3544
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3552
 msgid "Delete this row"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3545
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3553
 msgid "Delete this row?"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3556
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3564
 msgid "Done. Save changes to edit the new parameter."
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3556
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3564
 msgid "Add param"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3647
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3655
 msgid "Only SELECT queries allowed at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3667
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3675
 msgid "Error with calculated query at"
 msgstr ""
 
-#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3669
+#: /home/oria/Dropbox/work/orius1/www/tf.tablefield.com/shirts/inc/tftypes.inc.php:3677
 msgid "QUERY ERROR"
 msgstr ""
 
