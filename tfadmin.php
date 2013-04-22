@@ -825,7 +825,10 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		} else { // multi-where
 
 			// search given by URL query GET
-			$where='';
+			// OR is separating all previous conditions together
+			// For example: s1=first.eq.salad.and s2=main.eq.pasta.or s3=first.eq.salad.and s4=main.eq.quinoa.
+			//       Means: (`first`='salad' AND `main`='pasta') OR (`first`='salad' AND `main`='quinoa')
+			$where='(';
 			$having='';
 			$nextchain='';
 			// search
@@ -840,7 +843,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 								$having.=substr($q,7);
 							} else {
 								$where.="$nextchain ($q)";
-								$nextchain=$s['chain']=='or'?' OR':' AND';
+								$nextchain=$s['chain']=='or'?') OR (':' AND';
 							}
 						} else {
 							if ($q===false) addToLog(_("Bad search method at")." <f>$s[f]</f>: <t>".he($s['how'].'.'.$s['q']).'</t>',LOGBAD,__LINE__);
@@ -849,6 +852,8 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					}
 				}
 			}
+			if ($where=='(') $where='';
+			else $where="$where)";
 
 			// const values given by URL query (note - this is not a search, this is a direct by-value caluse.
 			// so DO NOT use to_select_where() here

@@ -89,18 +89,33 @@ function AnyChanges(frm) {
 //               gte = Greater Then or Equal to: (f<=Q)
 //               lt = Little Than: (f>Q)
 //               lte = Little Then or Equal to: (f>=Q)
-search={p:null,ppp:null,id:null,s0:null,s1:null,s2:null,s3:null,s4:null,s5:null,s6:null,s7:null,s8:null,s9:null,s10:null,s11:null,s12:null};
+search={p:null,pp:null,ppp:null,id:null,s0:null,s1:null,s2:null,s3:null,s4:null,s5:null,s6:null,s7:null,s8:null,s9:null,s10:null,s11:null,s12:null};
 function searchSubmit(clearSearch) {
-
+	search.pp=getQueryParam('pp');
+	/*var ppp=getQueryParam('ppp');
+	if (ppp=='01') ppp=null;
+	*/
 	if (clearSearch) {
-		if (getQueryParam('ppp'))
-			search.pp=getQueryParam('ppp');
+	/*
+		if (ppp)
+			search.pp=ppp;
+		else
+			if (search.pp==='01')
+				search.pp=null;
+	*/
 	} else {
 		var id=document.getElementById('idSearchID').value;
 		if (id) {
 			search.id=id;
-			search.ppp=getQueryParam('ppp') || getQueryParam('pp');  // save Previous Per-Page value
-			search.pp='1';
+			/*
+			search.ppp=ppp || search.pp;  // save Previous Per-Page value
+			if (search.ppp==='01')
+				search.ppp=null;
+			search.pp='01';
+		} else {
+			if (search.pp==='01')
+				search.pp=null;
+			*/
 		}
 		$('.search-line:not(.hidden)').each(function(index,e) {
 			e=$(e);
@@ -113,7 +128,7 @@ function searchSubmit(clearSearch) {
 				var chain='';
 				var c=e.find('.search-chain').get(0);
 				if (c.options[c.selectedIndex].value=='or') chain='or';
-				search['s'+index]=encodeURI(f.replace(/\./,'%2E') +'.'+not+how+'.'+q.replace(/\./,'%2E')+'.'+chain); // double encode dots
+				search['s'+index]=encodeURI(f.replace(/\./g,'%2E') +'.'+not+how+'.'+q.replace(/\./g,'%2E')+'.'+chain); // double encode dots
 			}
 		});
 	}
@@ -127,10 +142,12 @@ function tfPopulateSearch(count) {
 	var opt;
 	sel.options.length=0; // empty current options
 	for (var i in vals) {
-		opt=document.createElement('OPTION');
-		opt.text=vals[i];
-		opt.value=i;
-		sel.add(opt);
+		if (vals[i]) {
+			opt=document.createElement('OPTION');
+			opt.text=vals[i];
+			opt.value=i;
+			sel.add(opt);
+		}
 	}
 }
 
@@ -182,6 +199,15 @@ function tfFormSubmit(frm,confirmSend) {
 			} else {
 				if ((e.name.indexOf('___')===0 && !e.value) || !ar['___up['+id+']'] || !ar['___up['+id+']'].value) // special ___up[] ___del[] ___id[] but false, or
 					e.className='tf_remove_me'; // keep only when true/not empty
+				else 
+					if (e.type=='checkbox')
+						if (e.checked) {
+							e.type='text';
+							e.value=1;
+						} else {
+							e.type='text';
+							e.value=0;
+						}
 			}
 		} else {
 			e.className='tf_remove_me';

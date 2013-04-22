@@ -1358,13 +1358,13 @@ class TfTypetext extends TfTypestring {
 	}
 
 	function htmlInput($override=array()) {
-		return '<textarea '.$this->intag($override).' >'
+		return '<nobr><textarea '.$this->intag($override).' >'
 				. $this->value  //  fix4html3($this->value)
 				. '</textarea>'
 				.'<div class=tfhtmlicons>'
-				.'<i class="icon-share" onclick="'."\$('#$this->eid').dialog({width:'70%',height:450,modal:true,resizable:true,draggable:true,closeText:'X',title:'".fix4js2($this->fetch['label'])."',close:function(){\$(this).dialog('destroy')}});".'" title="'._('Open full screen').'"></i>'
-				.'<i class="icon-exchange" onclick="'."if (document.getElementById('$this->eid').style.direction=='rtl') document.getElementById('$this->eid').style.direction='ltr'; '
-				.'else document.getElementById('$this->eid').style.direction='rtl';".'" title="'._('Change direction (RTL/LTR)').'"></i></div>';
+				.'<i class="act icon-share" onclick="'."document.getElementById('$this->eid').oldwidth=document.getElementById('$this->eid').style.width; \$('#$this->eid').dialog({width:'70%',height:450,modal:true,resizable:true,draggable:true,closeText:'X',title:'".fix4js2($this->fetch['label'])."',close:function(){\$(this).dialog('destroy');document.getElementById('$this->eid').width=document.getElementById('$this->eid').oldwidth;}}); document.getElementById('$this->eid').style.width='96%';".'" title="'._('Open full screen').'"></i>'
+				.'<i class="act icon-exchange" onclick="'."if (document.getElementById('$this->eid').style.direction=='rtl') document.getElementById('$this->eid').style.direction='ltr'; "
+				."else document.getElementById('$this->eid').style.direction='rtl';".'" title="'._('Change direction (RTL/LTR)').'"></i></div></nobr>';
 	}
 
 }
