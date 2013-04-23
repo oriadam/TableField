@@ -29,7 +29,7 @@ if (empty($user)) {
 	exit;
 }
 // check user permissions
-if (!TftUserCan($user, 'edit', '', '')) {
+if (!TftUserCan($user, TFEDIT, '', '')) {
 	echo('<h4 class=text-error>'._('Sorry, you are not super user').'</h4>');
 	include(__DIR__.'/inc/footer.php');
 	exit;
