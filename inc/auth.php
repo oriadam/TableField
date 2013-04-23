@@ -140,6 +140,17 @@ if (!function_exists('tfGetUserGroup')) {
 	}
 }
 
+if (!function_exists('tfGetUserId')) {
+	function tfGetUserId() {
+		//if (!tfCheckLogin()) return false;
+		global $tf;
+		if (empty($_SESSION[$tf['db.pre'].'USERID']))
+			return false;
+		else
+			return $_SESSION[$tf['db.pre'].'USERID'];
+	}
+}
+
 if (!function_exists('tfPassGoodEnough')) {
 
 	function tfPassGoodEnough($pass) {

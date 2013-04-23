@@ -9,7 +9,7 @@ if (file_exists(__DIR__.'/../custom/footer.html')) {
 	echo file_get_contents(__DIR__.'/../custom/footer.html');
 }
 if (file_exists(__DIR__.'/../custom/footer.php')) {
-	echo include(__DIR__.'/../custom/footer.php');
+	include(__DIR__.'/../custom/footer.php');
 }
 if (!empty($tf['html.footer'])) {
 	echo $tf['html.footer'];

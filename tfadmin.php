@@ -505,8 +505,14 @@ function displayMainMenu() {
 	echo '<div class="container-fluid well text-center">';
 	foreach ($tables as $t) {
 		// TftUserCan($user, $action, $tname, $fname = '', $row = null) {
-		if ($t['tname']!='' && TftUserCan($tf['user'],TFVIEW,$t['tname'],'',$t)) {
-			echo "<a href=\"./?t=$t[tname]\" class='btn maintablelink'>$t[label]</a>";
+		if ($t['tname']!='') {
+			if (TftUserCan($tf['user'],TFVIEW,$t['tname'],'',$t)) {
+				echo "<a href=\"./?t=$t[tname]\" class='btn maintablelink'>$t[label]</a>";
+			} else if (TftUserCan($tf['user'],TFEDIT,$t['tname'],'',$t)) {
+				echo "<a href=\"./?t=$t[tname]&a=".TFADD."\" class='btn maintablelink'>$t[label]</a>";
+			} else if (TftUserCan($tf['user'],TFADD,$t['tname'],'',$t)) {
+				echo "<a href=\"./?t=$t[tname]&a=".TFADD."\" class='btn maintablelink'>$t[label]</a>";
+			}
 		}
 	}
 	echo '</div>';
@@ -1381,7 +1387,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	}
 
 	// statistics
-	if (!$tf['quiet'] && $tf['stats']!==false) {
+	if (!$tf['quiet'] && !empty($tf['stats'])) {
 		echo '<div id="tfStats">';
 		foreach($tf['stats'] as $fname=>$stats) {
 			$t->fields[$fname]->to_statistics_end($stats);

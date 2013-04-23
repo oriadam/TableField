@@ -473,9 +473,9 @@ if ($mode == 'comments') {
 		echo "<td class=td><input name='comment1[$cnt]' type=text size=18 value='" . fix4html1($row[1]) . "' /></td>";
 		echo "<td class=td><input name='comment2[$cnt]' type=text size=18 value='" . fix4html1($row[2]) . "' /></td>";
 		echo "<td class=td><input name='comment3[$cnt]'  type=text size=18 value='" . fix4html1($row[3]) . "' /></td>";
-		echo "<td class=td><input name='actions1[$cnt]' type=text size=18 value='" . fix4html1($row[5]) . "' /></td>";
-		echo "<td class=td><input name='actions2[$cnt]' type=text size=18 value='" . fix4html1($row[6]) . "' /></td>";
-		echo "<td class=td><input name='actions3[$cnt]'  type=text size=18 value='" . fix4html1($row[7]) . "' /></td>";
+		echo "<td class=td><input name='actions1[$cnt]' type=text size=18 value='" . fix4html1($row[4]) . "' /></td>";
+		echo "<td class=td><input name='actions2[$cnt]' type=text size=18 value='" . fix4html1($row[5]) . "' /></td>";
+		echo "<td class=td><input name='actions3[$cnt]'  type=text size=18 value='" . fix4html1($row[6]) . "' /></td>";
 		echo "</tr>";
 		$cnt++;
 	}
