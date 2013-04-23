@@ -202,9 +202,11 @@ function tfFormSubmit(frm,confirmSend) {
 				else 
 					if (e.type=='checkbox')
 						if (e.checked) {
+							e.size=1;
 							e.type='text';
 							e.value=1;
 						} else {
+							e.size=1;
 							e.type='text';
 							e.value=0;
 						}

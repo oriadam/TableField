@@ -72,7 +72,7 @@ if (file_exists(__DIR__.'/../custom/header.pre.php')) {
 	}
 	?>
 </head>
-<body class="<?=empty($tf['mini'])?'':'mini'?> layout-<?=@$tf['d']?> mode-<?=@$tf['mode']?> <?=$tf['t']? 'table-'.@$tf['t']->tname:''?>">
+<body class="<?=empty($tf['mini'])?'':'mini'?> layout-<?=@$tf['d']?> mode-<?=@$tf['mode']?> <?=@$tf['t']? 'table-'.@$tf['t']->tname:''?>">
 <?php
 if (file_exists(__DIR__.'/../custom/header.body.php'))
 	include(__DIR__.'/../custom/header.body.php');

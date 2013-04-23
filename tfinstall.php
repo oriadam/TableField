@@ -67,7 +67,7 @@ if (!file_exists(FLAGNAME) && count($_POST)) {
 	// Validate using regular expressions
 	$v_name = '/[a-zA-Z0-9_]/';
 	$e_name = 'Please use only Abc and underscores.';
-	$vec = '0-9a-zA-Z.!#$%&*+-=?^_`{|}~'; // valid email chars
+	$vec = '0-9a-zA-Z\\.\\$%&\\+\\-=^_~'; // valid email chars
 	$v_email = "/[$vec]+\\@[$vec]+\\.[$vec][$vec]+/";
 
 	if (!isset($errors['db_pre']) && !empty($_POST['db_pre']) && !preg_match($v_name, $_POST['db_pre']))
@@ -125,7 +125,7 @@ if (!file_exists(FLAGNAME) && count($_POST)) {
 			unlink(FILENAME);
 		}
 		if (file_exists(FILENAME)) {
-			$errors['fatal'] = 'Cannot remove previously created file ('.FILENAME.') Please remove it yourself, make sure it has write permissions then refresh to resend data';
+			$errors['fatal'].='Cannot remove previously created file ('.FILENAME.') Please remove it yourself, make sure it has write permissions then refresh to resend data';
 		} else {
 
 			// Generate dbconfig code
@@ -146,7 +146,7 @@ global $tf;
 //			$str.="\n\$tf['root.email']='" . fixstr($_POST['root_email'])."';";
 			// Write it to a real file
 			if (!file_put_contents(FILENAME, $str)) {
-				$errors['fatal'] = 'Cannot write to '.FILENAME.' file! Please make sure "custom" folder has write permissions';
+				$errors['fatal'].='Cannot write to '.FILENAME.' file! Please make sure "custom" folder has write permissions';
 			} else {
 				echo "<h4 class=text-success>Config file created successfully!</h4>";
 				$newdb = str_replace(array(
@@ -181,15 +181,33 @@ global $tf;
 				    $_POST['root_name'],
 				    $_POST['root_email']), file_get_contents(__DIR__.'/inc/newdb.sql'));
 				$sqls = explode('--START_QUERY--', $newdb);
-				foreach ($sqls as $sql) {
+				foreach ($sqls as $sql)
 					if (!empty($sql)) {
 						mysql_query($sql);
 						$err = mysql_error();
-						if (!empty($err)) {
-							$errors['fatal'].="SQL Error: $err";
-						}
+						if (!empty($err))
+							$errors['fatal'].="<div>SQL Error: $err <code>$sql</code></div>";
 					}
-				}
+
+				// Remove bad tf tables in case of error
+					$res=mysql_query("SELECT COUNT(*) FROM `$_POST[tbl_info]`");
+					if ($res)
+						if ($row=mysql_fetch_array($res))
+							if ($row[0]==0)
+								mysql_query("DROP TABLE `$_POST[tbl_info]`");
+
+					$res=mysql_query("SELECT COUNT(*) FROM `$_POST[tbl_meta]`");
+					if ($res)
+						if ($row=mysql_fetch_array($res))
+							if ($row[0]==0)
+								mysql_query("DROP TABLE IF EXISTS `$_POST[tbl_meta]`");
+
+					$res=mysql_query("SELECT COUNT(*) FROM `$_POST[tbl_users]`");
+					if ($res)
+						if ($row=mysql_fetch_array($res))
+							if ($row[0]==0)
+								mysql_query("DROP TABLE `$_POST[tbl_users]`");
+
 			}//no problem writing to tfconfig
 		}// no tfconfig already exist problem
 	}// no errors
@@ -215,15 +233,27 @@ if (file_exists(FILENAME) && file_exists(FLAGNAME)) {
 }
 
 if (file_exists(FILENAME) && !file_exists(FLAGNAME) && $tf['db.ok']) {
+	$ok=false;
 	$res = mysql_query("SELECT count(*) FROM " . $tf['tbl.info'] . " WHERE 1=1");
-	$count = 0;
 	if ($res) {
 		$row = mysql_fetch_row($res);
 		if (!empty($row[0])) {
-			$count = $row[0];
+			$res = mysql_query("SELECT count(*) FROM " . $tf['tbl.meta'] . " WHERE 1=1");
+			if ($res) {
+				$row = mysql_fetch_row($res);
+				if (!empty($row[0])) {
+					$res = mysql_query("SELECT count(*) FROM " . $tf['tbl.users'] . " WHERE 1=1");
+					if ($res) {
+						$row = mysql_fetch_row($res);
+						if (!empty($row[0])) {
+							$ok=true;
+						}
+					}
+				}
+			}
 		}
 	}
-	if ($count > 0) {
+	if ($ok) {
 		// All seems OK - disable tfinstall.php because it finished its work
 		touch(FLAGNAME);
 		// tfinstall.php is done (forever!) - redirect to config utility
@@ -234,7 +264,7 @@ if (file_exists(FILENAME) && !file_exists(FLAGNAME) && $tf['db.ok']) {
 		}
 		exit;
 	} else {
-		$errors['fatal']='Connected to DB but could not read TF tables! Please review settings again and check DB integrity';
+		$errors['fatal'].='Connected to DB but could not read TF tables! Please review settings again and check DB integrity';
 	}
 }
 
