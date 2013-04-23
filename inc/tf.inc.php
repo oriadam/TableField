@@ -24,6 +24,7 @@ function addToLog($msg, $type=0,$line=0,$detail=false) {
 	elseif ($type==LOGSAME ) $style='logSame' .(!$detail?' icon-info-sign':'');
 	elseif ($type==LOGDEBUG) $style='logDebug'.(!$detail?' icon-wrench':'');
 	elseif ($type==LOGTITLE) $style='logTitle';
+	else $style='';
 	if ($detail) $style.=' logDetail';
 	if ($line) $line="title='line $line'";
 	$tf['log'].="<span class='$style' $line>$msg</span>";
