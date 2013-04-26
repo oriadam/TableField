@@ -626,6 +626,8 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 	foreach($tf['id'] as $val) $tf['sqlv_id'][]=sqlv($val);
 	$tf['sqlv_id']=implode(',',$tf['sqlv_id']);
 
+	$total=0; // here for scope reasons
+
 	//////////////////////////// END INIT VARS ///////////////////////////
 
 	$actionsTitle='';
@@ -688,7 +690,7 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		// save button
 		if ($tf['mode']===TFEDIT || $tf['mode']===TFADD) { // send form - save changes
 			echo '<button id=idCtrlSave class="'.$btn.' btn-primary" type="submit" form="idForm"><i class="act icon-thumbs-up icon-white"></i> '._('Save changes').'</button>';
-			if (DEBUG) echo '<label title="Debug form prepare"><i class="act icon-stethoscope"></i><input type=checkbox id="idCtrlSaveConfirm"></label>';
+			if (DEBUG && !$tf['mini']) echo '<label title="Debug form prepare"><i class="act icon-stethoscope"></i><input type=checkbox id="idCtrlSaveConfirm"></label>';
 		}
 		// search
 		if (!$tf['nosearch']) {
@@ -702,19 +704,21 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 		echo '<button id=idCtrlLog '.(empty($tf['log'])? 'disabled':'').' href="#idLog" class="'.$btn.' '.$cs.'" data-toggle="modal"><i class="act icon-tasks'.(empty($tf['log'])? '':' icon-white').'"></i> '._('Log').'</button> ';
 
 		// layout
-		echo '<span class="dropdown"><a href="#" class="'.$btn.' dropdown-toggle act icon-cog" id=idCtrlLayout data-toggle="dropdown" title="'._('Options').'">'.($tf['mini']?'':_('Options')).'</a><ul class="dropdown-menu">'
-				.'<li><a id=idCtrlMain href="./?"><i class="act icon-home"></i> '._('Go to main menu').'</a></li>'
-				.'<li><a id=idCtrlList href="'.reGet(array('d'=>'l')).'" title="'._('List layout')       .'"><i class="act icon-list'     .($tf['d']=='l'?' on':'').'"></i>'._('List layout').'</a></li>'
-				.'<li><a id=idCtrlBox  href="'.reGet(array('d'=>'b')).'" title="'._('Boxes layout')      .'"><i class="act icon-th'       .($tf['d']=='b'?' on':'').'"></i>'._('Boxes layout').'</a></li>'
-				//.'<li><a id=idCtrlSS   href="'.reGet(array('d'=>'s')).'" title="'._('Spreadsheet Layout').'"><i class="act icon-table'    .($tf['d']=='s'?' on':'').'"></i>'._('Spreadsheet').'</a></li>'
-				.'<li><a id=idCtrlStat href="'.reGet(array('nst'=>1*(!$tf['nostats']))).'" title="'._('Switch statistics display').'"><i class="act icon-bar-chart'.($tf['nostats']?'':' on').'"></i>'._('Statistics').'</a></li>'
+		echo '<span id=idCtrlOptionsMenu class="dropdown"><a href="#" class="'.$btn.' dropdown-toggle act icon-cog" id=idCtrlLayout data-toggle="dropdown" title="'._('Options').'">'.($tf['mini']?'':_('Options')).'</a><ul class="dropdown-menu">';
+			if (TftUserCan($tf['user'],TFVIEW,'',''))
+				echo '<li><a id=idCtrlMain href="./?"><i class="act icon-home"></i> '._('Go to main menu').'</a></li>';
+				echo '<li><a id=idCtrlList href="'.reGet(array('d'=>'l')).'" title="'._('List layout')       .'"><i class="act icon-list'     .($tf['d']=='l'?' on':'').'"></i>'._('List layout').'</a></li>'
+					.'<li><a id=idCtrlBox  href="'.reGet(array('d'=>'b')).'" title="'._('Boxes layout')      .'"><i class="act icon-th'       .($tf['d']=='b'?' on':'').'"></i>'._('Boxes layout').'</a></li>';
+					//.'<li><a id=idCtrlSS   href="'.reGet(array('d'=>'s')).'" title="'._('Spreadsheet Layout').'"><i class="act icon-table'    .($tf['d']=='s'?' on':'').'"></i>'._('Spreadsheet').'</a></li>';
+			if ($tf['mode']==TFVIEW || $tf['mode']==TFEDIT)
+				echo '<li><a id=idCtrlStat href="'.reGet(array('nst'=>1*(!$tf['nostats']))).'" title="'._('Switch statistics display').'"><i class="act icon-bar-chart'.($tf['nostats']?'':' on').'"></i>'._('Statistics').'</a></li>'
 				.'<li><a id=idCtrlCSV href="'.reGet(array('d'=>'f','f'=>'csv','q'=>1)).'" title="'._('Export to comma separated values file').'"><i class="act icon-save"></i>'._('Save to CSV').'</a></li>'
 				.'<li><a id=idCtrlTSV href="'.reGet(array('d'=>'f','f'=>'tsv','q'=>1)).'" title="'._('Export to tab separated values file').'"><i class="act icon-save"></i>'._('Save to TSV').'</a></li>'
 				.'<li><a id=idCtrlSCSV href="'.reGet(array('d'=>'f','f'=>'tsv','q'=>1)).'" title="'._('Export to semicolon separated values file').'"><i class="act icon-save"></i>'._('Save to SCSV').'</a></li>';
-				if ($tf['mini'])
-					echo '<li><a id=idCtrlMini href="'.reGet(array('i'=>0)).'" title="'._('Full Mode').'"><i class="act icon-resize-full"></i>'._('Full mode').'</a></li>';
-				else
-					echo '<li><a id=idCtrlMini href="'.reGet(array('i'=>1)).'" title="'._('Mini Mode').'"><i class="act icon-resize-small"></i>'._('Mini mode').'</a></li>';
+			if ($tf['mini'])
+				echo '<li><a id=idCtrlMini href="'.reGet(array('i'=>0)).'" title="'._('Full Mode').'"><i class="act icon-resize-full"></i>'._('Full mode').'</a></li>';
+			else
+				echo '<li><a id=idCtrlMini href="'.reGet(array('i'=>1)).'" title="'._('Mini Mode').'"><i class="act icon-resize-small"></i>'._('Mini mode').'</a></li>';
 		echo '</ul></span>';
 
 		echo '</div>';//idCtrlBar
@@ -1253,6 +1257,10 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 				$rowc++;
 				$curid = $rowc;
 
+				// repeat title in list mode
+				if ($titleevery && (($rowc-1+$total) % $titleevery == 0))
+					echo $title;
+
 				$htmlActionsCur = str_replace(array('$curid','$id','$rowc','$c'),array($curid,$curid,$rowc,$rowc),$htmlActions);
 
 				foreach ($t->fields as $k => $f) {
@@ -1271,8 +1279,6 @@ function displayTable(&$t,&$tf,&$GET) { // pass by reference because there's no 
 					}
 				}
 
-				if ($titleevery && ($newscount+$rowc) % $titleevery == 0)
-					echo $title . "<tr>";
 
 				// actions
 				echo "<tr id='cont_$rowc' class='tr tfRow'>";

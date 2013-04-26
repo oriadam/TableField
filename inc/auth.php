@@ -75,7 +75,13 @@ if (!function_exists('tfCheckLogin')) {
 
 	function tfCheckLogin() {
 		global $tf;
-		if (empty($tf) || (!array_key_exists('db.pre',$tf)) || empty($_SESSION[$tf['db.pre'].'LOGIN_IP'])) return false;
+		if (!array_key_exists('db.pre',$tf)) return false;
+		if (empty($_SESSION[$tf['db.pre'].'LOGIN_IP'])) {
+			if (empty($tf['auth.anonymous']))
+				return false;
+			else
+				return true;
+		}
 		return ($_SESSION[$tf['db.pre'].'LOGIN_IP']==$_SERVER['REMOTE_ADDR']);
 	}
 
@@ -297,39 +303,38 @@ if (!function_exists('tfShowLogin')) {
 			}
 		}
 
-		if (!tfCheckLogin()) {
-			include_once(__DIR__.'/header.php');
-			echo '
-			<form method="post">
-			  <div class="span15">
-				<div class="control-group"><label><div class="control-label">'._('User name or Email').'</div><div class="controls"><input size="30" name="u" type="text" value="' . str_replace(array('"',"\n"), "", @$_POST['u']) . '"></div></label></div>
-				<div class="control-group"><label><div class="control-label">'._('Password').'</div><div class="controls"><input size="30" name="p" type="password"></div></label></div>
-				<div class="control-group"><div class="controls"><input class="btn" type="submit" value="'._('Login').'"></div></div>
-			  </div>
-			</form>';
-
-			include_once(__DIR__.'/footer.php');
-			exit;
-		}
+		echo '
+		<form method="post">
+		  <div class="span15">
+			<div class="control-group"><label><div class="control-label">'._('User name or Email').'</div><div class="controls"><input size="30" name="u" type="text" value="' . str_replace(array('"',"\n"), "", @$_POST['u']) . '"></div></label></div>
+			<div class="control-group"><label><div class="control-label">'._('Password').'</div><div class="controls"><input size="30" name="p" type="password"></div></label></div>
+			<div class="control-group"><div class="controls"><input class="btn" type="submit" value="'._('Login').'"></div></div>
+		  </div>
+		</form>';
 	}
 
 }
 
 /////////////////////////////////////// SHOW LOGIN ////////////////////////////////////
 if (!function_exists('tfAuthFlow')) {
-	function tfAutoFlow() {
-		if (!tfHandleLogOff()) {
-			if (!tfCheckLogin()) {
-				include_once(__DIR__.'/header.php');
-				tfShowLogin();
-				include_once(__DIR__.'/footer.php');
-				exit;
-			}
+	function tfAuthFlow() {
+		$login=array_key_exists('login',$_GET);
+		if ($login) unset($_GET['login']);
+		$logoff=array_key_exists('logoff',$_GET);
+		if ($logoff) {
+			unset($_GET['logoff']);
+			tfClearLogin();
+		}
+		if ($login || !tfCheckLogin()) {
+			include_once(__DIR__.'/header.php');
+			tfShowLogin();
+			include_once(__DIR__.'/footer.php');
+			exit;
 		}
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////
 if (!empty($tf['db.name'])) { // dont test authorization when database is not yet set
-	tfAutoFlow();
+	tfAuthFlow();
 }

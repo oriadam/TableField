@@ -180,6 +180,9 @@ table,.table,table.table { border-color:#ddd; border-collapse: collapse; }
 	border-radius: 10px;
 	border: 1px solid #ddd;
 }
+.tableBox:empty { display:none; }
+.table tr:empty { display:none; }
+
 .table tr           { margin:0px; padding:0px; border:none;}
 .th                 { font-weight:bold; white-space: nowrap; padding:0 2px; font-size:10pt; }
 .thActions          { padding:0 4px; text-align:center; }
@@ -226,6 +229,7 @@ table.actAdd    td { background-color:#e0fee0; }
 .tftedit .icon-chevron-up,
 .tftedit .icon-chevron-down { cursor:pointer; }
 
+#idCtrlLog.disabled { visibility:hidden; position:absolute; }
 #idLog             {
 	margin:0;
 	width:90%;

@@ -144,13 +144,18 @@ function displayNavBar() {
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="<?=tfGetUserGroup()?>"><i class="icon-user icon-white"></i> <?=tfGetUserName()?>  <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><A><?=_('Hello,')?> <?=tfGetUserName()?></A></li>
-						<li><A><?=_('Username:')?> <?=tfGetUserLogin()?></A></li>
-						<li><A><?=_('Group:')?> <?=tfGetUserGroup()?></A></li>
-						<li class="divider"></li>
-						<li><a href="chpass.php"><?=_('Change your password')?></a></li>
-						<li class="divider"></li>
-						<li><a href="?logoff"><?=_('Log off')?></a></li>
+						<? if (tfGetUserId()===false) { ?>
+							<li><A><?=_('Hello, anonymous user')?></A></li>
+							<li><a href="?login"><?=_('Log in')?></a></li>
+						<? } else { ?>
+							<li><A><?=_('Hello,')?> <?=tfGetUserName()?></A></li>
+							<li><A><?=_('Username:')?> <?=tfGetUserLogin()?></A></li>
+							<li><A><?=_('Group:')?> <?=tfGetUserGroup()?></A></li>
+							<li class="divider"></li>
+							<li><a href="chpass.php"><?=_('Change your password')?></a></li>
+							<li class="divider"></li>
+							<li><a href="?logoff"><?=_('Log off')?></a></li>
+						<? } ?>
 					</ul>
 				</li>
 			</ul>
